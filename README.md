@@ -53,6 +53,30 @@ foreach(i=1:3) %dopar% {
 ```
 
 
+## Futures for plyr
+The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.  For example,
+```r
+library("doFuture")
+registerDoFuture()
+plan(multiprocess)
+
+library("plyr")
+x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
+llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
+## $a
+##  25%  50%  75%
+## 3.25 5.50 7.75
+## 
+## $beta
+##       25%       50%       75%
+## 0.2516074 1.0000000 5.0536690
+## 
+## $logic
+## 25% 50% 75%
+## 0.0 0.5 1.0
+```
+
+
 ## doFuture replaces existing doNnn packages
 
 Due to the generic nature of future, the [doFuture] package
@@ -151,30 +175,6 @@ plan(cluster, cluster=cl)
 
 Comment: There is currently no known future implementation and therefore no known [doFuture] alternative to the [doRedis] packages.
 
-
-
-## Futures for plyr
-The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.  For example,
-```r
-library("doFuture")
-registerDoFuture()
-plan(multiprocess)
-
-library("plyr")
-x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
-llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
-## $a
-##  25%  50%  75%
-## 3.25 5.50 7.75
-## 
-## $beta
-##       25%       50%       75%
-## 0.2516074 1.0000000 5.0536690
-## 
-## $logic
-## 25% 50% 75%
-## 0.0 0.5 1.0
-```
 
 
 [BatchJobs]: http://cran.r-project.org/package=BatchJobs
