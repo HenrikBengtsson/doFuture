@@ -35,11 +35,10 @@ foreach(i=1:3) %dopar% {
 
 To do the same on high-performance computing (HPC) cluster, the
 [future.BatchJobs] package can be used.  Assuming BatchJobs has
-been configured for the HPC cluster, the all that needs to be
-added to the above is:
+been configured for the HPC cluster, then all that needs to be
+modified is to use:
 ```r
-library('future.BatchJobs')
-plan(batchjobs)
+plan(future.BatchJobs::batchjobs)
 ```
 
 
