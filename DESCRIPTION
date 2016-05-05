@@ -10,7 +10,8 @@ Suggests:
 VignetteBuilder: R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: Provides a backend for the %dopar% function using the future package's Future API.
+Description: Provides a backend for the %dopar% function using the future
+    package's Future API.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/doFuture

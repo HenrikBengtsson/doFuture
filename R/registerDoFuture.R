@@ -1,5 +1,8 @@
 #' Registers the future \%dopar\% backend
 #'
+#' Register the \code{\link{doFuture}} parallel adaptor to be used by
+#' the \pkg{foreach} package.
+#'
 #' @return Nothing
 #'
 #' @importFrom foreach setDoPar
@@ -14,5 +17,6 @@ registerDoFuture <- function() {
       workers = numberOfFutureWorkers()
     )
   }
+
   setDoPar(doFuture, data=NULL, info=info)
 }

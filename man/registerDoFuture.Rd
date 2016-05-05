@@ -10,7 +10,8 @@ registerDoFuture()
 Nothing
 }
 \description{
-Registers the future \%dopar\% backend
+Register the \code{\link{doFuture}} parallel adaptor to be used by
+the \pkg{foreach} package.
 }
 \keyword{utilities}
 
