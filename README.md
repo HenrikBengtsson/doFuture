@@ -33,7 +33,7 @@ foreach(i=1:3) %dopar% {
 }
 ```
 
-## doFuture bring foreach to the HPC cluster
+## Futures bring foreach to the HPC cluster
 To do the same on high-performance computing (HPC) cluster, the
 [future.BatchJobs] package can be used.  Assuming BatchJobs has
 been configured correctly, then following foreach iterations will
