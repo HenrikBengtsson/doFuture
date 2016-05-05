@@ -6,6 +6,7 @@
 .check
 .devel
 .test
+.future
 *.o
 *.dll
 *.Rout
