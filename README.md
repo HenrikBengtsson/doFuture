@@ -43,7 +43,7 @@ plan(future.BatchJobs::batchjobs)
 
 ## Comparison to other doNnn packages
 
-Due to the generic nature of future, the [doParallel] package
+Due to the generic nature of future, the [doFuture] package
 provides the same functionality as many of the existing doNnn
 packages combined.
 
