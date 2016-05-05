@@ -22,7 +22,7 @@ by the operating system, then multiple background R sessions will
 instead be used to resolve the futures.
 
 ```r
-library('doFuture')
+library("doFuture")
 registerDoFuture()
 plan(multiprocess)
 
@@ -40,9 +40,9 @@ been configured correctly, then following foreach iterations will
 be submitted to the HPC job scheduler and distributed for
 evaluation on one of the compute nodes.
 ```r
-library('doFuture')
+library("doFuture")
 registerDoFuture()
-library('future.BatchJobs')
+library("future.BatchJobs")
 plan(batchjobs)
 
 mu <- 1.0
@@ -66,13 +66,13 @@ packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
 
 <tr style="vertical-align: center;">
 <td>
-<pre><code class="r">library('doMC')
+<pre><code class="r">library("doMC")
 registerDoMC()
 
 </code></pre>
 </td>
 <td>
-<pre><code class="r">library('doFuture')
+<pre><code class="r">library("doFuture")
 registerDoFuture()
 plan(multicore)
 </code></pre>
@@ -81,13 +81,13 @@ plan(multicore)
 
 <tr style="vertical-align: center;">
 <td>
-<pre><code class="r">library('doParallel')
+<pre><code class="r">library("doParallel")
 registerDoParallel()
 
 </code></pre>
 </td>
 <td>
-<pre><code class="r">library('doFuture')
+<pre><code class="r">library("doFuture")
 registerDoFuture()
 plan(multiprocess)
 </code></pre>
@@ -96,14 +96,14 @@ plan(multiprocess)
 
 <tr style="vertical-align: center;">
 <td>
-<pre><code class="r">library('doParallel')
+<pre><code class="r">library("doParallel")
 cl <- makeCluster(4)
 registerDoParallel(cl)
 
 </code></pre>
 </td>
 <td>
-<pre><code class="r">library('doFuture')
+<pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
 plan(cluster, cluster=cl)
@@ -114,14 +114,14 @@ plan(cluster, cluster=cl)
 
 <tr style="vertical-align: center;">
 <td>
-<pre><code class="r">library('doMPI')
+<pre><code class="r">library("doMPI")
 cl <- startMPIcluster(count=4)
 registerDoMPI(cl)
 
 </code></pre>
 </td>
 <td>
-<pre><code class="r">library('doFuture')
+<pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4, type="MPI")
 plan(cluster, cluster=cl)
@@ -132,14 +132,14 @@ plan(cluster, cluster=cl)
 
 <tr style="vertical-align: center;">
 <td>
-<pre><code class="r">library('doSNOW')
+<pre><code class="r">library("doSNOW")
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 
 </code></pre>
 </td>
 <td>
-<pre><code class="r">library('doFuture')
+<pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
 plan(cluster, cluster=cl)
