@@ -109,10 +109,25 @@ cl <- makeCluster(4)
 plan(cluster, cluster=cl)
 ```
 
+### doMPI()
+Instead of using
+```r
+library('doMPI')
+cl <- startMPIcluster(count=4)
+registerDoMPI(cl)
+```
+one can use
+```r
+library('doFuture')
+registerDoFuture()
+cl <- makeCluster(4, type="MPI")
+plan(cluster, cluster=cl)
+```
+
 ### doSNOW()
 Instead of using
 ```r
-library('doSNOW)
+library('doSNOW')
 cl <- makeCluster(4)
 registerDoSNOW(cl)
 ```
