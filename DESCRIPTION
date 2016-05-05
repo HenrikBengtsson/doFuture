@@ -1,10 +1,10 @@
 Package: doFuture
-Version: 0.1.0
+Version: 0.1.1
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     future (>= 0.13.0),
-    foreach (>= 1.2.0),
-    iterators (>= 1.0.0)
+    foreach (>= 1.4.3),
+    iterators (>= 1.0.8)
 Suggests:
     R.rsp
 VignetteBuilder: R.rsp
