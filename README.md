@@ -156,11 +156,11 @@ Comment: There is currently no known future implementation and therefore no know
 ## Futures for plyr
 The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.  For example,
 ```r
-library(doFuture)
+library("doFuture")
 registerDoFuture()
 plan(multiprocess)
 
-library(plyr)
+library("plyr")
 x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
 llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 ## $a
