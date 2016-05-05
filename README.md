@@ -15,6 +15,8 @@ vignettes of the [future] package.
 
 The [doFuture] package provides a `%dopar%` adaptor for the [foreach]
 package that works with _any_ type of future.
+The doFuture package is cross platform just as the future package.
+
 Below is an example showing how to make `%dopar%` work with
 _multiprocess_ futures.  A multiprocess future will be evaluated in
 parallel using forked processes.  If process forking is not supported
@@ -66,11 +68,11 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 ## $a
 ##  25%  50%  75%
 ## 3.25 5.50 7.75
-## 
+##
 ## $beta
 ##       25%       50%       75%
 ## 0.2516074 1.0000000 5.0536690
-## 
+##
 ## $logic
 ## 25% 50% 75%
 ## 0.0 0.5 1.0
