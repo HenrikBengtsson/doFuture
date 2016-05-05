@@ -33,105 +33,135 @@ foreach(i=1:3) %dopar% {
 }
 ```
 
+## doFuture bring foreach to the HPC cluster
 To do the same on high-performance computing (HPC) cluster, the
 [future.BatchJobs] package can be used.  Assuming BatchJobs has
-been configured for the HPC cluster, then just use:
+been configured correctly, then following foreach iterations will
+be submitted to the HPC job scheduler and distributed for
+evaluation on one of the compute nodes.
 ```r
-plan(future.BatchJobs::batchjobs)
+library('doFuture')
+registerDoFuture()
+library('future.BatchJobs')
+plan(batchjobs)
+
+mu <- 1.0
+sigma <- 2.0
+foreach(i=1:3) %dopar% {
+  rnorm(i, mean=mu, sd=sigma)
+}
 ```
 
 
-## doFuture inplace of existing doNnn packages
+## doFuture replaces existing doNnn packages
 
 Due to the generic nature of future, the [doFuture] package
 provides the same functionality as many of the existing doNnn
-packages combined.
+packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
 
-### doMC package
-Instead of using
-```r
-library('doMC')
+<table style="width: 100%;">
+<tr>
+<th>doNnn usage</th><th>doFuture alternative</th>
+</tr>
+
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library('doMC')
 registerDoMC()
-```
-one can use
-```r
-library('doFuture')
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library('doFuture')
 registerDoFuture()
 plan(multicore)
-```
+</code></pre>
+</td>
+</tr>
 
-### doParallel package
-Instead of using
-```r
-library('doParallel')
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library('doParallel')
 registerDoParallel()
-```
-one can use
-```r
-library('doFuture')
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library('doFuture')
 registerDoFuture()
 plan(multiprocess)
-```
+</code></pre>
+</td>
+</tr>
 
-Instead of using
-```r
-library('doParallel')
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library('doParallel')
 cl <- makeCluster(4)
 registerDoParallel(cl)
-```
-one can use
-```r
-library('doFuture')
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library('doFuture')
 registerDoFuture()
 cl <- makeCluster(4)
 plan(cluster, cluster=cl)
-```
+</code></pre>
+</td>
+</tr>
 
-### doMPI package
-Instead of using
-```r
-library('doMPI')
+
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library('doMPI')
 cl <- startMPIcluster(count=4)
 registerDoMPI(cl)
-```
-one can use
-```r
-library('doFuture')
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library('doFuture')
 registerDoFuture()
 cl <- makeCluster(4, type="MPI")
 plan(cluster, cluster=cl)
-```
+</code></pre>
+</td>
+</tr>
 
-### doSNOW package
-Instead of using
-```r
-library('doSNOW')
+
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library('doSNOW')
 cl <- makeCluster(4)
 registerDoSNOW(cl)
-```
-one can use
-```r
-library('doFuture')
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library('doFuture')
 registerDoFuture()
 cl <- makeCluster(4)
 plan(cluster, cluster=cl)
-```
+</code></pre>
+</td>
+</tr>
+
+<table>
+
+Comment: There is currently no known future implementation and therefore no known [doFuture] alternative to the [doRedis] packages.
 
 
-### doRedis package
 
-There is currently no known future implementation and therefore no known [doFuture] alternative to the [doRedis] packages.
-
-
-
-## Using futures with plyr
-The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing.  For example,
+## Futures for plyr
+The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.  For example,
 ```r
 library(doFuture)
 registerDoFuture()
 plan(multiprocess)
 
 library(plyr)
+x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
 llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 ## $a
 ##  25%  50%  75%
@@ -149,6 +179,10 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 
 [BatchJobs]: http://cran.r-project.org/package=BatchJobs
 [doFuture]: https://github.com/HenrikBengtsson/doFuture
+[doMC]: http://cran.r-project.org/package=doMC
+[doMPI]: http://cran.r-project.org/package=doMPI
+[doParallel]: http://cran.r-project.org/package=doParallel
+[doSNOW]: http://cran.r-project.org/package=doSNOW
 [foreach]: http://cran.r-project.org/package=foreach
 [future]: http://cran.r-project.org/package=future
 [future.BatchJobs]: https://github.com/HenrikBengtsson/future.BatchJobs
