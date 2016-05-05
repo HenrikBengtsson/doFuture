@@ -177,16 +177,17 @@ Comment: There is currently no known future implementation and therefore no know
 
 
 
-[BatchJobs]: http://cran.r-project.org/package=BatchJobs
+[BatchJobs]: https://cran.r-project.org/package=BatchJobs
 [doFuture]: https://github.com/HenrikBengtsson/doFuture
-[doMC]: http://cran.r-project.org/package=doMC
-[doMPI]: http://cran.r-project.org/package=doMPI
-[doParallel]: http://cran.r-project.org/package=doParallel
-[doSNOW]: http://cran.r-project.org/package=doSNOW
-[foreach]: http://cran.r-project.org/package=foreach
-[future]: http://cran.r-project.org/package=future
+[doMC]: https://cran.r-project.org/package=doMC
+[doMPI]: https://cran.r-project.org/package=doMPI
+[doParallel]: https://cran.r-project.org/package=doParallel
+[doRedis]: https://cran.r-project.org/package=doRedis
+[doSNOW]: https://cran.r-project.org/package=doSNOW
+[foreach]: https://cran.r-project.org/package=foreach
+[future]: https://cran.r-project.org/package=future
 [future.BatchJobs]: https://github.com/HenrikBengtsson/future.BatchJobs
-[plyr]: http://cran.r-project.org/package=plyr
+[plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
 R package doFuture is only available via [GitHub](https://github.com/HenrikBengtsson/doFuture) and can be installed in R as:
@@ -194,6 +195,13 @@ R package doFuture is only available via [GitHub](https://github.com/HenrikBengt
 source('http://callr.org/install#HenrikBengtsson/doFuture')
 ```
 
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
+```
+This will install the package from source.  
 
 
 
