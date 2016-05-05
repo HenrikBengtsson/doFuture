@@ -2,18 +2,11 @@
 
 
 ## Installation
-R package doFuture is only available via [GitHub](https://github.com/) and can be installed in R as:
+R package doFuture is only available via [GitHub](https://github.com/HenrikBengtsson/doFuture) and can be installed in R as:
 ```r
-source('http://callr.org/install#')
+source('http://callr.org/install#HenrikBengtsson/doFuture')
 ```
 
-### Pre-release version
-
-To install the pre-release version that is available in branch `HEAD`, use:
-```r
-source('http://callr.org/install#@HEAD')
-```
-This will install the package from source.  
 
 
 
