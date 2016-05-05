@@ -10,7 +10,8 @@ registerDoFuture <- function() {
   info <- function(data, item) {
     switch(item,
       name = "doFuture",
-      version = packageVersion("doFuture")
+      version = packageVersion("doFuture"),
+      workers = numberOfFutureWorkers()
     )
   }
   setDoPar(doFuture, data=NULL, info=info)

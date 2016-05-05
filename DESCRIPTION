@@ -1,5 +1,5 @@
 Package: doFuture
-Version: 0.1.1
+Version: 0.1.2
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     future (>= 0.13.0),

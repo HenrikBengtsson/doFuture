@@ -1,8 +1,16 @@
 Package: doFuture
 =================
 
+Version: 0.1.2 [2016-05-05]
+o Now foreach::getDoParWorkers() gives useful information with
+  registerDoFuture() in most cases.  In cases where the number of
+  workers cannot be inferred easily from future::plan() it will
+  default to returning a large number (=99).
+
+
 Version: 0.1.1 [2016-05-05]
-o Proper values for getDoParName() and getDoParVersion().
+o Now foreach::getDoParName() and foreach::getDoParVersion() gives
+  useful information with registerDoFuture().
 
 Version: 0.1.0 [2016-05-04]
 o Created.
