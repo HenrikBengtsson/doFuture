@@ -15,5 +15,5 @@ source('http://callr.org/install#HenrikBengtsson/doFuture')
 | Resource:     | GitHub        | Travis CI     | Appveyor         |
 | ------------- | ------------------- | ------------- | ---------------- |
 | _Platforms:_  | _Multiple_          | _Linux_       | _Windows_        |
-| R CMD check   |  |  |  |
+| R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a> | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
 | Test coverage |                     |    |                  |
