@@ -1,10 +1,10 @@
 library("doFuture")
-registerDoFuture()
-
+oopts <- options(mc.cores=2L, warn=1L)
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture() ...")
+registerDoFuture()
 
 res0 <- NULL
 
@@ -30,3 +30,5 @@ for (strategy in strategies) {
 } ## for (strategy ...)
 
 message("*** doFuture() ... DONE")
+
+options(oopts)

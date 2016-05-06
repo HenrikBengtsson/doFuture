@@ -1,4 +1,7 @@
 library("doFuture")
+oopts <- options(mc.cores=2L, warn=1L)
+strategies <- future:::supportedStrategies()
+strategies <- setdiff(strategies, "multiprocess")
 
 message("*** registerDoFuture() ...")
 
@@ -10,8 +13,18 @@ message(getDoParWorkers())
 
 registerDoFuture()
 message("doFuture() %dopar% information:")
-message(getDoParName())
-message(getDoParVersion())
-message(getDoParWorkers())
+
+for (strategy in strategies) {
+  message(sprintf("- plan('%s') ...", strategy))
+  plan(strategy)
+
+  message(getDoParName())
+  message(getDoParVersion())
+  message(getDoParWorkers())
+
+  message(sprintf("- plan('%s') ... DONE", strategy))
+} ## for (strategy ...)
 
 message("*** registerDoFuture() ... DONE")
+
+options(oopts)
