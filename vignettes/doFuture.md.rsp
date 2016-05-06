@@ -62,7 +62,7 @@ To do the same on high-performance computing (HPC) cluster, the
 [future.BatchJobs] package can be used.  Assuming BatchJobs has
 been configured correctly, then following foreach iterations will
 be submitted to the HPC job scheduler and distributed for
-evaluation on one of the compute nodes.
+evaluation on the compute nodes.
 ```r
 library("doFuture")
 registerDoFuture()
