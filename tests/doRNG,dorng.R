@@ -7,6 +7,8 @@ registerDoFuture()
 ## Adopted from demo("doRNG", package="doRNG")
 if (require("doRNG")) {
 
+  message("*** doFuture() w/ doRNG + %dorng% ...")
+
   ## There's a bug in doRNG (<= 1.6.0) causing the first iteration
   ## of these tests to fail due to non-reproducibility of s1 and s1.2,
   ## cf. https://github.com/renozao/doRNG/issues/1.  /HB 2016-05-07
@@ -40,6 +42,8 @@ if (require("doRNG")) {
 
     message(sprintf("- plan('%s') ... DONE", strategy))
   } ## for (strategy ...)
+
+  message("*** doFuture() w/ doRNG + %dorng% ... DONE")
 
 } ## if (require("doRNG"))
 

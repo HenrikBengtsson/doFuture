@@ -1,8 +1,10 @@
 Package: doFuture
 =================
 
-Version: 0.1.2-9000 [2016-05-05]
+Version: 0.1.2-9000 [2016-05-07]
 o Added package help page, i.e. help("doFuture").
+o REPRODUCIBILITY: Added package tests asserting random number
+  generator (RNG) reproducibility using the doRNG package.
 
 
 Version: 0.1.2 [2016-05-05]
