@@ -6,6 +6,7 @@ Depends:
     foreach (>= 1.4.3),
     iterators (>= 1.0.8)
 Suggests:
+    doRNG (>= 1.6),
     R.rsp
 VignetteBuilder: R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
