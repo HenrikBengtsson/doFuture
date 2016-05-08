@@ -1,16 +1,18 @@
 Package: doFuture
-Version: 0.1.2
+Version: 0.1.3
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     future (>= 0.13.0),
     foreach (>= 1.4.3),
     iterators (>= 1.0.8)
 Suggests:
+    doRNG (>= 1.6),
     R.rsp
 VignetteBuilder: R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: Provides a backend for the %dopar% function using the future package's Future API.
+Description: Provides a backend for the %dopar% function using the future
+    package's Future API.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/doFuture

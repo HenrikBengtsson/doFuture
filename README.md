@@ -15,6 +15,8 @@ vignettes of the [future] package.
 
 The [doFuture] package provides a `%dopar%` adaptor for the [foreach]
 package that works with _any_ type of future.
+The doFuture package is cross platform just as the future package.
+
 Below is an example showing how to make `%dopar%` work with
 _multiprocess_ futures.  A multiprocess future will be evaluated in
 parallel using forked processes.  If process forking is not supported
@@ -38,7 +40,7 @@ To do the same on high-performance computing (HPC) cluster, the
 [future.BatchJobs] package can be used.  Assuming BatchJobs has
 been configured correctly, then following foreach iterations will
 be submitted to the HPC job scheduler and distributed for
-evaluation on one of the compute nodes.
+evaluation on the compute nodes.
 ```r
 library("doFuture")
 registerDoFuture()
@@ -66,11 +68,11 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 ## $a
 ##  25%  50%  75%
 ## 3.25 5.50 7.75
-## 
+##
 ## $beta
 ##       25%       50%       75%
 ## 0.2516074 1.0000000 5.0536690
-## 
+##
 ## $logic
 ## 25% 50% 75%
 ## 0.0 0.5 1.0
@@ -177,16 +179,17 @@ Comment: There is currently no known future implementation and therefore no know
 
 
 
-[BatchJobs]: http://cran.r-project.org/package=BatchJobs
+[BatchJobs]: https://cran.r-project.org/package=BatchJobs
 [doFuture]: https://github.com/HenrikBengtsson/doFuture
-[doMC]: http://cran.r-project.org/package=doMC
-[doMPI]: http://cran.r-project.org/package=doMPI
-[doParallel]: http://cran.r-project.org/package=doParallel
-[doSNOW]: http://cran.r-project.org/package=doSNOW
-[foreach]: http://cran.r-project.org/package=foreach
-[future]: http://cran.r-project.org/package=future
+[doMC]: https://cran.r-project.org/package=doMC
+[doMPI]: https://cran.r-project.org/package=doMPI
+[doParallel]: https://cran.r-project.org/package=doParallel
+[doRedis]: https://cran.r-project.org/package=doRedis
+[doSNOW]: https://cran.r-project.org/package=doSNOW
+[foreach]: https://cran.r-project.org/package=foreach
+[future]: https://cran.r-project.org/package=future
 [future.BatchJobs]: https://github.com/HenrikBengtsson/future.BatchJobs
-[plyr]: http://cran.r-project.org/package=plyr
+[plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
 R package doFuture is only available via [GitHub](https://github.com/HenrikBengtsson/doFuture) and can be installed in R as:
@@ -194,6 +197,13 @@ R package doFuture is only available via [GitHub](https://github.com/HenrikBengt
 source('http://callr.org/install#HenrikBengtsson/doFuture')
 ```
 
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
+```
+This will install the package from source.  
 
 
 

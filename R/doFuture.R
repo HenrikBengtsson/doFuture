@@ -1,6 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future values
+#' @importFrom future future resolve value
 doFuture <- function(obj, expr, envir, data) {
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
@@ -43,7 +43,10 @@ doFuture <- function(obj, expr, envir, data) {
   } ## for (ii ...)
 
   ## Resolve futures
-  results <- values(fs)
+  resolve(fs, value=TRUE)
+
+  ## Gather values
+  results <- lapply(fs, FUN=value, signal=FALSE)
 
   ## check for errors before calling combine function if error handling
   ## is 'stop' so we can exit early
