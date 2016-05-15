@@ -22,7 +22,7 @@ tweakPlyr <- function() {
 ## Package for which examples should be run
 pkg <- "plyr"
 
-message(sprintf("*** doFuture() - all %s examples ...", pkg)
+message(sprintf("*** doFuture() - all %s examples ...", pkg))
 
 library("future")
 options(warnPartialMatchArgs=FALSE)
@@ -60,6 +60,6 @@ for (strategy in strategies) {
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
-message(sprintf("*** doFuture() - all %s examples ... DONE", pkg)
+message(sprintf("*** doFuture() - all %s examples ... DONE", pkg))
 
 options(oopts)
