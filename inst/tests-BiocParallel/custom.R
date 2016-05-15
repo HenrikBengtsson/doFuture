@@ -19,6 +19,7 @@ library("doFuture")
 registerDoFuture()
 
 res0 <- list()
+p <- SerialParam()
 res0$a <- bplapply(1:10, sqrt, BPPARAM=p)
 res0$b <- bpvec(1:10, sqrt, BPPARAM=p)
 str(res0)
