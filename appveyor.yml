@@ -40,7 +40,7 @@ install:
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r foreach future iterators
-  - travis-tool.sh install_r R.rsp
+  - travis-tool.sh install_r doRNG markdown R.rsp
   - travis-tool.sh install_github HenrikBengtsson/future@develop
 
 test_script:

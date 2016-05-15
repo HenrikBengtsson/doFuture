@@ -51,7 +51,7 @@ before_install:
 
 install:
  - $RENV install_r foreach future iterators
- - $RENV install_r R.rsp
+ - $RENV install_r doRNG markdown R.rsp
  - $RENV install_github HenrikBengtsson/future@develop
 
 script:
