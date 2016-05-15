@@ -41,6 +41,7 @@ build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_r foreach future iterators
   - travis-tool.sh install_r R.rsp
+  - travis-tool.sh install_github HenrikBengtsson/future@develop
 
 test_script:
   - travis-tool.sh run_tests
