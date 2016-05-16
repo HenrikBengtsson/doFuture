@@ -81,7 +81,7 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 
 ## doFuture replaces existing doNnn packages
 
-Due to the generic nature of future, the [doFuture] package
+Due to the generic nature of futures, the [doFuture] package
 provides the same functionality as many of the existing doNnn
 packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
 
@@ -132,7 +132,7 @@ registerDoParallel(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
@@ -150,7 +150,7 @@ registerDoMPI(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4, type="MPI")
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
@@ -168,7 +168,7 @@ registerDoSNOW(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
@@ -213,4 +213,4 @@ This will install the package from source.
 | ------------- | ------------------- | ------------- | ---------------- |
 | _Platforms:_  | _Multiple_          | _Linux_       | _Windows_        |
 | R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a> | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
-| Test coverage |                     |    |                  |
+| Test coverage |                     | <a href="https://coveralls.io/r/HenrikBengtsson/doFuture"><img src="https://coveralls.io/repos/HenrikBengtsson/doFuture/badge.svg?branch=develop" alt="Coverage Status"/></a>   |                  |

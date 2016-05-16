@@ -103,7 +103,7 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 
 ## doFuture replaces existing doNnn packages
 
-Due to the generic nature of future, the [doFuture] package
+Due to the generic nature of futures, the [doFuture] package
 provides the same functionality as many of the existing doNnn
 packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
 
@@ -154,7 +154,7 @@ registerDoParallel(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
@@ -172,7 +172,7 @@ registerDoMPI(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4, type="MPI")
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
@@ -190,7 +190,7 @@ registerDoSNOW(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, cluster=cl)
+plan(cluster, workers=cl)
 </code></pre>
 </td>
 </tr>
