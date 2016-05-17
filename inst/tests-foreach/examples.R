@@ -16,6 +16,7 @@ options(warnPartialMatchArgs=FALSE)
 oopts <- options(mc.cores=2L, warn=1L, digits=3L)
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
+if (require("future.BatchJobs")) strategies <- c(strategies, "batchjobs")
 strategies <- getOption("doFuture.tests.strategies", strategies)
 
 library("doFuture")
