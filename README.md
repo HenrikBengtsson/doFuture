@@ -209,8 +209,8 @@ This will install the package from source.
 
 ## Software status
 
-| Resource:     | GitHub        | Travis CI     | Appveyor         |
-| ------------- | ------------------- | ------------- | ---------------- |
-| _Platforms:_  | _Multiple_          | _Linux_       | _Windows_        |
-| R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a> | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
-| Test coverage |                     | <a href="https://coveralls.io/r/HenrikBengtsson/doFuture"><img src="https://coveralls.io/repos/HenrikBengtsson/doFuture/badge.svg?branch=develop" alt="Coverage Status"/></a>   |                  |
+| Resource:     | GitHub        | Travis CI      | Appveyor         |
+| ------------- | ------------------- | -------------- | ---------------- |
+| _Platforms:_  | _Multiple_          | _Linux & OS X_ | _Windows_        |
+| R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a>  | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
+| Test coverage |                     | <a href="https://codecov.io/gh/HenrikBengtsson/doFuture"><img src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a>    |                  |
