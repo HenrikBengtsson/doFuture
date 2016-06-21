@@ -28,6 +28,9 @@ matrix:
 r_github_packages:
   - jimhester/covr
 
+before_install:
+  - R -e "install.packages('future', type='source')"
+
 after_success:
   - Rscript -e 'covr::codecov(quiet=FALSE)'
 
