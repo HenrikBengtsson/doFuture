@@ -69,5 +69,15 @@ for (strategy in strategies) {
 
 message("*** doFuture() - error handling w/ 'remove' ... DONE")
 
+message("*** doFuture() - invalid accumulator ...")
+
+## This replicates how foreach:::doSEQ() handles it
+boom <- function(...) stop("boom!")
+res <- foreach(i = 1:3, .combine=boom) %dopar% { i }
+print(res)
+stopifnot(is.null(res))
+
+message("*** doFuture() - invalid accumulator ... DONE")
+
 source("incl/end.R")
 
