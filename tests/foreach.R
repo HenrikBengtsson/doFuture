@@ -3,9 +3,6 @@ source("incl/start.R")
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
 
-## To please R CMD check
-plyr <- "plyr"
-
 message("*** doFuture - reproducibility ...")
 
 res0 <- NULL
