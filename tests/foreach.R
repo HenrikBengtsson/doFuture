@@ -28,6 +28,8 @@ for (strategy in strategies) {
   if (require(plyr, character.only=TRUE)) {
     message("*** dplyr w / doFuture ...")
 
+    print(sessionInfo())
+
     x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
     y0 <- llply(x, quantile, probs = 1:3/4, .parallel = FALSE)
     print(y0)
@@ -40,6 +42,8 @@ for (strategy in strategies) {
 
   if (require(BiocParallel, character.only=TRUE)) {
     message("*** BiocParallel w / doFuture + future.BatchJobs ...")
+
+    print(sessionInfo())
 
     y0 <- list()
     p <- SerialParam()
@@ -67,6 +71,8 @@ for (strategy in strategies) {
 } ## for (strategy ...)
 
 message("*** doFuture - reproducibility ... DONE")
+
+print(sessionInfo())
 
 source("incl/end.R")
 

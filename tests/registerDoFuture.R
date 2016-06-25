@@ -27,4 +27,6 @@ for (strategy in strategies) {
 
 message("*** registerDoFuture() ... DONE")
 
+print(sessionInfo())
+
 source("incl/end.R")
