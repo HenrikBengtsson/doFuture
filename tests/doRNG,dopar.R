@@ -1,8 +1,7 @@
-library("doFuture")
-oopts <- options(mc.cores=2L, warn=1L)
+source("incl/start.R")
+
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
-registerDoFuture()
 
 ## Adopted from demo("doRNG", package="doRNG")
 if (require("doRNG")) {
@@ -62,6 +61,4 @@ if (require("doRNG")) {
 
 } ## if (require("doRNG"))
 
-registerDoSEQ()
-rm(list="strategies")
-options(oopts)
+source("incl/end.R")

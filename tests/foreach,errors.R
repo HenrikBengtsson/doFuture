@@ -1,9 +1,7 @@
-library("doFuture")
-oopts <- options(mc.cores=2L, warn=1L)
+source("incl/start.R")
+
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
-
-registerDoFuture()
 
 message("*** doFuture() - error handling w/ 'stop' ...")
 
@@ -71,4 +69,5 @@ for (strategy in strategies) {
 
 message("*** doFuture() - error handling w/ 'remove' ... DONE")
 
-options(oopts)
+source("incl/end.R")
+
