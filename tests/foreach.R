@@ -41,6 +41,31 @@ for (strategy in strategies) {
     message("*** dplyr w / doFuture ... DONE")
   } ## if (require(plyr))
 
+  if (require(BiocParallel, character.only=TRUE)) {
+    message("*** BiocParallel w / doFuture + future.BatchJobs ...")
+
+    y0 <- list()
+    p <- SerialParam()
+    y0$a <- bplapply(1:5, sqrt, BPPARAM=p)
+    y0$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    str(y0)
+
+    register(SerialParam(), default=TRUE)
+    p <- DoparParam()
+    y1 <- list()
+    y1$a <- bplapply(1:5, sqrt, BPPARAM=p)
+    y1$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    stopifnot(identical(y1, y0))
+  
+    register(DoparParam(), default=TRUE)
+    y2 <- list()
+    y2$a <- bplapply(1:5, sqrt, BPPARAM=p)
+    y2$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    stopifnot(identical(y2, y0))
+
+    message("*** BiocParallel w / doFuture + future.BatchJobs ... DONE")
+  } ## if (require(BiocParallel))
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 

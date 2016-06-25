@@ -37,6 +37,7 @@ if (require("doRNG")) {
     set.seed(1234)
     s1.2 <- foreach(i=1:4) %dorng% { runif(1) }
     s2.2 <- foreach(i=1:4) %dorng% { runif(1) }
+    str(list(s1.2=s1.2, s2.2=s2.2))
     stopifnot(identical(s1, s1.2), identical(s2, s2.2))
 
     message(sprintf("- plan('%s') ... DONE", strategy))
