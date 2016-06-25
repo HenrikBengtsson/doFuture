@@ -30,8 +30,8 @@ plan(multiprocess)
 
 mu <- 1.0
 sigma <- 2.0
-foreach(i=1:3) %dopar% {
-  rnorm(i, mean=mu, sd=sigma)
+x <- foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
+  rnorm(i, mean = mu, sd = sigma)
 }
 ```
 
@@ -49,8 +49,8 @@ plan(batchjobs)
 
 mu <- 1.0
 sigma <- 2.0
-foreach(i=1:3) %dopar% {
-  rnorm(i, mean=mu, sd=sigma)
+x <- foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
+  rnorm(i, mean = mu, sd = sigma)
 }
 ```
 
@@ -63,8 +63,8 @@ registerDoFuture()
 plan(multiprocess)
 
 library("plyr")
-x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE,FALSE,FALSE,TRUE))
-llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
+x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
+y <- llply(x, quantile, probs = 1:3/4, .parallel = TRUE)
 ## $a
 ##  25%  50%  75%
 ## 3.25 5.50 7.75
@@ -79,6 +79,75 @@ llply(x, quantile, probs = 1:3/4, .parallel=TRUE)
 ```
 
 
+## Futures and BiocParallel
+The [BiocParallel] package supports any `%dopar%` adaptor as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
+```r
+library("doFuture")
+registerDoFuture()
+plan(multiprocess)
+library("BiocParallel")
+register(DoparParam(), default = TRUE)
+
+mu <- 1.0
+sigma <- 2.0
+x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
+  rnorm(i, mean = mu, sd = sigma)
+})
+```
+
+
+## doFuture takes care of global variables for foreach
+
+The foreach package has some support for automated handling of globals, but it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `a` and `b` are properly exported when we do
+```r
+> library("foreach")
+> registerDoParallel(parallel::makeCluster(2))
+> mu <- 1.0
+> sigma <- 2.0
+> x <- foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
+> str(x)
+List of 3
+ $ : num -1.42
+ $ : num [1:2] 3.12 -1.33
+ $ : num [1:3] -0.0376 -0.1446 1.6368
+```
+it falls short as soon as we try
+```r
+> foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
+> x <- foo()
+Error in { : task 1 failed - "object 'mu' not found"
+```
+The solution is to explicitly export global variables, e.g.
+```r
+> foo <- function() {
++   foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
++     rnorm(i, mean = mu, sd = sigma)
++   }
++ }
+> x <- foo()
+```
+
+However, when using the `%dopar%` adaptor of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+```r
+> library("foreach")
+> registerDoFuture()
+> plan(cluster, workers=parallel::makeCluster(2))
+> mu <- 1.0
+> sigma <- 2.0
+> foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
+> x <- foo()
+> str(x)
+List of 3
+ $ : num 0.358
+ $ : num [1:2] 3.317 -0.689
+ $ : num [1:3] -0.104 1.237 2.474
+```
+
+Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.
+
+
+
+
 ## doFuture replaces existing doNnn packages
 
 Due to the generic nature of futures, the [doFuture] package
@@ -88,6 +157,21 @@ packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
 <table style="width: 100%;">
 <tr>
 <th>doNnn usage</th><th>doFuture alternative</th>
+</tr>
+
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library("foreach")
+registerDoSEQ()
+
+</code></pre>
+</td>
+<td>
+<pre><code class="r">library("doFuture")
+registerDoFuture()
+plan(eager)
+</code></pre>
+</td>
 </tr>
 
 <tr style="vertical-align: center;">
@@ -180,6 +264,7 @@ Comment: There is currently no known future implementation and therefore no know
 
 
 [BatchJobs]: https://cran.r-project.org/package=BatchJobs
+[BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
 [doFuture]: https://github.com/HenrikBengtsson/doFuture
 [doMC]: https://cran.r-project.org/package=doMC
 [doMPI]: https://cran.r-project.org/package=doMPI
