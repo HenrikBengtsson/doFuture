@@ -27,9 +27,11 @@ matrix:
 
 r_github_packages:
   - jimhester/covr
+  - HenrikBengtsson/future.BatchJobs@develop
 
 before_install:
   - R -e "install.packages('future', type='source')"
+  - R -e "install.packages('plyr')"
 
 after_success:
   - Rscript -e 'covr::codecov(quiet=FALSE)'

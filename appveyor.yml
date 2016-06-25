@@ -42,6 +42,8 @@ build_script:
   - travis-tool.sh install_r foreach future iterators
   - travis-tool.sh install_r doRNG markdown R.rsp
   - travis-tool.sh install_github HenrikBengtsson/future@develop
+  - travis-tool.sh install_github HenrikBengtsson/future.BatchJobs@develop
+  - travis-tool.sh install_r plyr
 
 test_script:
   - travis-tool.sh run_tests
