@@ -1,13 +1,13 @@
-library("doFuture")
-oopts <- options(mc.cores=2L, warn=1L)
+source("incl/start.R")
+
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
-registerDoFuture()
 
 ## Adopted from demo("doRNG", package="doRNG")
 if (require("doRNG")) {
 
   message("*** doFuture() w/ doRNG + %nopar% ...")
+  print(sessionInfo())
 
   ## There's a bug in doRNG (<= 1.6.0) causing the first iteration
   ## of these tests to fail due to non-reproducibility of s1 and s1.2,
@@ -62,6 +62,4 @@ if (require("doRNG")) {
 
 } ## if (require("doRNG"))
 
-registerDoSEQ()
-rm(list="strategies")
-options(oopts)
+source("incl/end.R")

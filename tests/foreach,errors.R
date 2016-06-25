@@ -1,9 +1,7 @@
-library("doFuture")
-oopts <- options(mc.cores=2L, warn=1L)
+source("incl/start.R")
+
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
-
-registerDoFuture()
 
 message("*** doFuture() - error handling w/ 'stop' ...")
 
@@ -71,4 +69,17 @@ for (strategy in strategies) {
 
 message("*** doFuture() - error handling w/ 'remove' ... DONE")
 
-options(oopts)
+message("*** doFuture() - invalid accumulator ...")
+
+## This replicates how foreach:::doSEQ() handles it
+boom <- function(...) stop("boom!")
+res <- foreach(i = 1:3, .combine=boom) %dopar% { i }
+print(res)
+stopifnot(is.null(res))
+
+message("*** doFuture() - invalid accumulator ... DONE")
+
+print(sessionInfo())
+
+source("incl/end.R")
+

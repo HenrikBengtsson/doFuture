@@ -5,6 +5,7 @@
 #'
 #' @return Nothing
 #'
+#' @importFrom future nbrOfWorkers
 #' @importFrom foreach setDoPar
 #' @importFrom utils packageVersion
 #' @export
@@ -14,7 +15,7 @@ registerDoFuture <- function() {
     switch(item,
       name = "doFuture",
       version = packageVersion("doFuture"),
-      workers = numberOfFutureWorkers()
+      workers = nbrOfWorkers()
     )
   }
 

@@ -1,6 +1,18 @@
 Package: doFuture
 =================
 
+Version: 0.2.0 [2016-06-25]
+o ROBUSTNESS: Added package redundancy tests that runs all examples
+  of the 'foreach' and the 'plyr' packages using doFuture and all
+  known types of futures.  These tests are not package tests and
+  need to be run manually.  The test scripts are available in package
+  directory path <- system.file("tests2", package="doFuture") and can
+  be run as source(file.path(path, "plyr", "examples.R")).
+o ROBUSTNESS: Added package tests validating foreach() on regular as
+  well as future.BatchJobs futures.  Same for plyr and BiocParallel
+  apply functions.
+
+
 Version: 0.1.3 [2016-05-07]
 o Added package help page, i.e. help("doFuture").
 o REPRODUCIBILITY: Added package tests asserting random number

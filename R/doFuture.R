@@ -48,22 +48,9 @@ doFuture <- function(obj, expr, envir, data) {
   ## Gather values
   results <- lapply(fs, FUN=value, signal=FALSE)
 
-  ## check for errors before calling combine function if error handling
-  ## is 'stop' so we can exit early
-  if (identical(obj$errorHandling, "stop")) {
-    errorIndex <- 1L
-    for (r in results) {
-      if (inherits(r, "error")) {
-        msg <- sprintf('task %d failed - "%s"', errorIndex,
-                       conditionMessage(r))
-        stop(simpleError(msg, call=expr))
-      }
-      errorIndex <- errorIndex + 1L
-    }
-  }
 
-
-  ## Combine results
+  ## Combine results (and identify errors)
+  ## NOTE: This is adopted from foreach:::doSEQ()
   tryCatch({
     accumulator(results, tags=seq_along(results))
   }, error = function(e) {
@@ -73,16 +60,16 @@ doFuture <- function(obj, expr, envir, data) {
   })
 
 
-  ## check for errors
-  errorValue <- getErrorValue(it)
-  errorIndex <- getErrorIndex(it)
-
   ## throw an error or return the combined results
+  ## NOTE: This is adopted from foreach:::doSEQ()
+  errorValue <- getErrorValue(it)
   if (identical(obj$errorHandling, "stop") && !is.null(errorValue)) {
+    errorIndex <- getErrorIndex(it)
     msg <- sprintf('task %d failed - "%s"', errorIndex,
                    conditionMessage(errorValue))
     stop(simpleError(msg, call=expr))
   }
+
 
   getResult(it)
 } ## doFuture()
