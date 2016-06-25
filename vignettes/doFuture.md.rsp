@@ -326,7 +326,7 @@ Comment: There is currently no known future implementation and therefore no know
 
 [BatchJobs]: https://cran.r-project.org/package=BatchJobs
 [BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
-[doFuture]: https://github.com/HenrikBengtsson/doFuture
+[doFuture]: https://cran.r-project.org/package=doFuture
 [doMC]: https://cran.r-project.org/package=doMC
 [doMPI]: https://cran.r-project.org/package=doMPI
 [doParallel]: https://cran.r-project.org/package=doParallel

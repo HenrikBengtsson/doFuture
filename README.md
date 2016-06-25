@@ -265,7 +265,7 @@ Comment: There is currently no known future implementation and therefore no know
 
 [BatchJobs]: https://cran.r-project.org/package=BatchJobs
 [BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
-[doFuture]: https://github.com/HenrikBengtsson/doFuture
+[doFuture]: https://cran.r-project.org/package=doFuture
 [doMC]: https://cran.r-project.org/package=doMC
 [doMPI]: https://cran.r-project.org/package=doMPI
 [doParallel]: https://cran.r-project.org/package=doParallel
@@ -277,9 +277,9 @@ Comment: There is currently no known future implementation and therefore no know
 [plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
-R package doFuture is only available via [GitHub](https://github.com/HenrikBengtsson/doFuture) and can be installed in R as:
+R package doFuture is available on [CRAN](http://cran.r-project.org/package=doFuture) and can be installed in R as:
 ```r
-source('http://callr.org/install#HenrikBengtsson/doFuture')
+install.packages('doFuture')
 ```
 
 ### Pre-release version
@@ -294,8 +294,8 @@ This will install the package from source.
 
 ## Software status
 
-| Resource:     | GitHub        | Travis CI      | Appveyor         |
+| Resource:     | CRAN        | Travis CI      | Appveyor         |
 | ------------- | ------------------- | -------------- | ---------------- |
 | _Platforms:_  | _Multiple_          | _Linux & OS X_ | _Windows_        |
-| R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a>  | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
+| R CMD check   | <a href="http://cran.r-project.org/web/checks/check_results_doFuture.html"><img border="0" src="http://www.r-pkg.org/badges/version/doFuture" alt="CRAN version"></a> | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a>  | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
 | Test coverage |                     | <a href="https://codecov.io/gh/HenrikBengtsson/doFuture"><img src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a>    |                  |
