@@ -25,7 +25,10 @@ matrix:
     - os: osx
       r: devel
 
-r_github_packages:
+bioc_packages:
+  - BiocParallel
+  
+_github_packages:
   - jimhester/covr
   - HenrikBengtsson/future.BatchJobs@develop
 
