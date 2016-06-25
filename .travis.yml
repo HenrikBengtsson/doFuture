@@ -35,6 +35,7 @@ _github_packages:
 before_install:
   - R -e "install.packages('future', type='source')"
   - R -e "install.packages('plyr')"
+  - R -e "install.packages('covr')"
 
 after_success:
   - Rscript -e 'covr::codecov(quiet=FALSE)'
