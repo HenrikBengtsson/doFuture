@@ -24,7 +24,7 @@ package supports.
 To use futures with the \pkg{foreach} package, load \pkg{doFuture},
 use \code{\link{registerDoFuture}()} to register
 it to be used as a \code{\%dopar\%} adaptor, and select the type
-of future you wish to use via \code{\link[future:plan]{plan()}}.
+of future you wish to use via \code{\link[future:plan]{plan}()}.
 }
 \examples{
 \donttest{

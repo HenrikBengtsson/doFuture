@@ -273,7 +273,7 @@ Comment: There is currently no known future implementation and therefore no know
 [doSNOW]: https://cran.r-project.org/package=doSNOW
 [foreach]: https://cran.r-project.org/package=foreach
 [future]: https://cran.r-project.org/package=future
-[future.BatchJobs]: https://github.com/HenrikBengtsson/future.BatchJobs
+[future.BatchJobs]: https://cran.r-project.org/package=future.BatchJobs
 [plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
