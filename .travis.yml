@@ -12,7 +12,6 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: --as-cran
-env: _R_CHECK_FULL_=true  ## Package specific
 latex: false
 #r_github_packages:
 #  - HenrikBengtsson/globals@develop
@@ -32,7 +31,6 @@ matrix:
         - Rscript -e 'covr::codecov(quiet=FALSE)'
       env:
         - NB='w/ covr'  ## Just a label
-        - _R_CHECK_FULL_=true
     - os: linux
       r: devel
     - os: osx
