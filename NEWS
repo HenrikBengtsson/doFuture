@@ -1,6 +1,10 @@
 Package: doFuture
 =================
 
+Version: 0.2.1-9000 [2016-09-08]
+o ...
+
+
 Version: 0.2.1 [2016-09-07]
 o BUG FIX: Internal R expression created to attach packages was
   not fully correct (but it still worked).
