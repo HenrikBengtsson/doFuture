@@ -10,38 +10,35 @@
 language: r
 sudo: false
 cache: packages
-
-os:
-  - linux
-  - osx
-
-r:
-  - oldrel
-  - release
-  - devel
+warnings_are_errors: false
+r_check_args: --as-cran
+latex: false
+#r_github_packages:
+#  - HenrikBengtsson/globals@develop
+#  - HenrikBengtsson/future@develop
 
 matrix:
-  exclude:
-    - os: osx
+  include:
+    - os: linux
+      r: oldrel
+    - os: linux
+      r: release
+      r_github_packages:
+#        - HenrikBengtsson/globals@develop
+#        - HenrikBengtsson/future@develop
+        - jimhester/covr
+      after_success:
+        - Rscript -e 'covr::codecov(quiet=FALSE)'
+      env:
+        - NB='w/ covr'  ## Just a label
+    - os: linux
       r: devel
-
-bioc_packages:
-  - BiocParallel
-  
-_github_packages:
-  - jimhester/covr
-  - HenrikBengtsson/future.BatchJobs@develop
-
-before_install:
-  - R -e "install.packages('future', type='source')"
-  - R -e "install.packages('plyr')"
-  - R -e "install.packages('covr')"
-
-after_success:
-  - Rscript -e 'covr::codecov(quiet=FALSE)'
-
+    - os: osx
+      r: oldrel
+    - os: osx
+      r: release
+    
 notifications:
   email:
     on_success: change
     on_failure: change
-

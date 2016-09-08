@@ -1,6 +1,11 @@
 Package: doFuture
 =================
 
+Version: 0.2.1 [2016-09-07]
+o BUG FIX: Internal R expression created to attach packages was
+  not fully correct (but it still worked).
+
+
 Version: 0.2.0 [2016-06-25]
 o ROBUSTNESS: Added package redundancy tests that runs all examples
   of the 'foreach' and the 'plyr' packages using doFuture and all

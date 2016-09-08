@@ -13,13 +13,12 @@ doFuture <- function(obj, expr, envir, data) {
   ## Any packages to be on the search path?
   pkgs <- obj$packages
   if (length(pkgs) > 0L) {
-    exprs <- lapply(pkgs, FUN=function(pkg) {
-      parse(text=sprintf('library("%s")', pkg))
-    })
+    exprs <- lapply(pkgs, FUN=function(p) call("library", p))
     exprs <- c(exprs, expr)
     expr <- Reduce(function(a, b) {
       substitute({ a; b }, list(a=a, b=b))
     }, x=exprs)
+    exprs <- NULL
   }
 
   ## Iterate

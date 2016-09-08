@@ -45,7 +45,7 @@ evaluation on the compute nodes.
 library("doFuture")
 registerDoFuture()
 library("future.BatchJobs")
-plan(batchjobs)
+plan(batchjobs_slurm)
 
 mu <- 1.0
 sigma <- 2.0
@@ -100,7 +100,7 @@ x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
 
 The foreach package has some support for automated handling of globals, but it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `a` and `b` are properly exported when we do
 ```r
-> library("foreach")
+> library("doParallel")
 > registerDoParallel(parallel::makeCluster(2))
 > mu <- 1.0
 > sigma <- 2.0
@@ -129,9 +129,9 @@ The solution is to explicitly export global variables, e.g.
 
 However, when using the `%dopar%` adaptor of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
 ```r
-> library("foreach")
+> library("doFuture")
 > registerDoFuture()
-> plan(cluster, workers=parallel::makeCluster(2))
+> plan(cluster, workers=2)
 > mu <- 1.0
 > sigma <- 2.0
 > foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
@@ -144,7 +144,6 @@ List of 3
 ```
 
 Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.
-
 
 
 
@@ -273,7 +272,7 @@ Comment: There is currently no known future implementation and therefore no know
 [doSNOW]: https://cran.r-project.org/package=doSNOW
 [foreach]: https://cran.r-project.org/package=foreach
 [future]: https://cran.r-project.org/package=future
-[future.BatchJobs]: https://github.com/HenrikBengtsson/future.BatchJobs
+[future.BatchJobs]: https://cran.r-project.org/package=future.BatchJobs
 [plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
@@ -282,13 +281,6 @@ R package doFuture is available on [CRAN](http://cran.r-project.org/package=doFu
 install.packages('doFuture')
 ```
 
-### Pre-release version
-
-To install the pre-release version that is available in branch `develop`, use:
-```r
-source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
-```
-This will install the package from source.  
 
 
 
