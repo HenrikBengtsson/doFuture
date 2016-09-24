@@ -281,6 +281,13 @@ R package doFuture is available on [CRAN](http://cran.r-project.org/package=doFu
 install.packages('doFuture')
 ```
 
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
+```
+This will install the package from source.  
 
 
 
