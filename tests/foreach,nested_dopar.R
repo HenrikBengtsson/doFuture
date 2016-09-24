@@ -27,9 +27,8 @@ for (strategy1 in strategies) {
         plan_b <- future::plan("list")
 	str(plan_b)
         stopifnot(
-	  inherits(plan_b[[1]], "future")
-	  ## FIXME: This should be the default future. /HB 2016-09-22
-##	  inherits(plan_b[[1]], getOption("future.default", "eager"))
+	  inherits(plan_b[[1]], "future"),
+	  inherits(plan_b[[1]], getOption("future.default", "eager"))
 	)
 	
         list(a = a, plan_a = plan_a,
@@ -56,9 +55,8 @@ for (strategy1 in strategies) {
 	  x_aa_bb$a == a,
 	  x_aa_bb$b == b,
 	  inherits(x_aa_bb$plan_a[[1]], strategy2),
-	  inherits(x_aa_bb$plan_b[[1]], "future")
-	  ## FIXME: This should be the default future. /HB 2016-09-22
-##	  inherits(x_aa_bb$plan_b[[1]], getOption("future.default", "eager"))
+	  inherits(x_aa_bb$plan_b[[1]], "future"),
+	  inherits(x_aa_bb$plan_b[[1]], getOption("future.default", "eager"))
 	)
       }
     }
