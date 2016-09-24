@@ -1,9 +1,12 @@
 Package: doFuture
 =================
 
-Version: 0.2.1-9000 [2016-09-08]
-o ...
-
+Version: 0.2.1-9000 [2016-09-24]
+o BUG FIX: Nested future strategies were not respected by nested
+  %dopar% calls, because doFuture forgot to remind foreach that
+  doFuture should be used also deeped down.  Thank you Alex Vorobiev
+  for reporting on this.
+  
 
 Version: 0.2.1 [2016-09-07]
 o BUG FIX: Internal R expression created to attach packages was

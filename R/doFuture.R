@@ -21,6 +21,10 @@ doFuture <- function(obj, expr, envir, data) {
     exprs <- NULL
   }
 
+  ## Tell foreach to keep using futures also in nested calls
+  expr <- substitute({ doFuture::registerDoFuture(); e }, list(e = expr))
+  
+  
   ## Iterate
   fs <- list()
   for (ii in seq_along(argsList)) {
