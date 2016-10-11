@@ -1,7 +1,11 @@
 Package: doFuture
 =================
 
-Version: 0.2.1-9000 [2016-09-24]
+Version: 0.2.1-9000 [2016-10-10]
+o Now argument '.export' of foreach() is acknowledged such that if
+  a character vector of variables names to be exported is specified,
+  then those variables and nothing else are exported to future.
+  If NULL, then automatic lookup of global variables is used.
 o BUG FIX: Nested future strategies were not respected by nested
   %dopar% calls, because doFuture forgot to remind foreach that
   doFuture should be used also deeped down.  Thank you Alex Vorobiev

@@ -10,6 +10,18 @@ doFuture <- function(obj, expr, envir, data) {
   argsList <- as.list(it)
   accumulator <- makeAccum(it)
 
+  ## Global variables?
+  export <- unique(obj$export)
+  if (is.null(export)) {
+    ## Automatic lookup of global variables by default
+    ## NOTE: To fully emulate foreach's behavior in most
+    ##       cases, we could disable this. /HB 2016-10-10
+    globals <- getOption("doFuture.globals.nullexport", TRUE)
+  } else {
+    globals <- unique(c(export, it$argnames))
+  }
+  export <- NULL
+  
   ## Any packages to be on the search path?
   pkgs <- obj$packages
   if (length(pkgs) > 0L) {
@@ -23,8 +35,7 @@ doFuture <- function(obj, expr, envir, data) {
 
   ## Tell foreach to keep using futures also in nested calls
   expr <- substitute({ doFuture::registerDoFuture(); e }, list(e = expr))
-  
-  
+
   ## Iterate
   fs <- list()
   for (ii in seq_along(argsList)) {
@@ -40,7 +51,7 @@ doFuture <- function(obj, expr, envir, data) {
     ## This is inefficient.  Ideally one should be able
     ## to setup a future where one specifies globals and
     ## packages explicitly. /HB 2016-05-04
-    f <- future(expr, substitute=FALSE, envir=env)
+    f <- future(expr, substitute=FALSE, envir=env, globals=globals)
 
     fs[[ii]] <- f
   } ## for (ii ...)
