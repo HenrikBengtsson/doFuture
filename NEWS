@@ -8,7 +8,7 @@ o Now argument '.export' of foreach() is acknowledged such that if
   If NULL, then automatic lookup of global variables is used.
 o BUG FIX: Nested future strategies were not respected by nested
   %dopar% calls, because doFuture forgot to remind foreach that
-  doFuture should be used also deeped down.  Thank you Alex Vorobiev
+  doFuture should be used also deeper down.  Thank you Alex Vorobiev
   for reporting on this.
   
 
