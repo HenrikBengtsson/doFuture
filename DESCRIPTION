@@ -2,7 +2,7 @@ Package: doFuture
 Version: 0.2.1-9000
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
-    future (>= 1.0.1),
+    future (>= 1.1.1),
     foreach (>= 1.4.3),
     iterators (>= 1.0.8)
 Suggests:
