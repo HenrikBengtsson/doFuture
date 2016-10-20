@@ -13,9 +13,6 @@ cache: packages
 warnings_are_errors: false
 r_check_args: --as-cran
 latex: false
-#r_github_packages:
-#  - HenrikBengtsson/globals@develop
-#  - HenrikBengtsson/future@develop
 
 matrix:
   include:
@@ -24,8 +21,6 @@ matrix:
     - os: linux
       r: release
       r_github_packages:
-#        - HenrikBengtsson/globals@develop
-#        - HenrikBengtsson/future@develop
         - jimhester/covr
       after_success:
         - Rscript -e 'covr::codecov(quiet=FALSE)'
