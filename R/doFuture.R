@@ -18,6 +18,7 @@ doFuture <- function(obj, expr, envir, data) {
     ##       cases, we could disable this. /HB 2016-10-10
     globals <- getOption("doFuture.globals.nullexport", TRUE)
   } else {
+    ## Export also the other foreach arguments
     globals <- unique(c(export, it$argnames))
   }
   export <- NULL
