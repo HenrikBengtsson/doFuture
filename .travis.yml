@@ -15,7 +15,11 @@ r_check_args: --as-cran
 latex: false
 
 r_packages:
+  - plyr
   - future.BatchJobs
+  
+bioc_packages:
+  - BiocParallel
  
 matrix:
   include:
