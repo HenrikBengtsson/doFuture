@@ -1,6 +1,17 @@
 Package: doFuture
 =================
 
+Version: 0.3.0 [2016-10-27]
+o Now argument '.export' of foreach() is acknowledged such that if
+  a character vector of variables names to be exported is specified,
+  then those variables and nothing else are exported to future.
+  If NULL, then automatic lookup of global variables is used.
+o BUG FIX: Nested future strategies were not respected by nested
+  %dopar% calls, because doFuture forgot to remind foreach that
+  doFuture should be used also deeper down.  Thank you Alex Vorobiev
+  for reporting on this.
+  
+
 Version: 0.2.1 [2016-09-07]
 o BUG FIX: Internal R expression created to attach packages was
   not fully correct (but it still worked).

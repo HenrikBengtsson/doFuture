@@ -281,13 +281,20 @@ R package doFuture is available on [CRAN](http://cran.r-project.org/package=doFu
 install.packages('doFuture')
 ```
 
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
+```
+This will install the package from source.  
 
 
 
 ## Software status
 
-| Resource:     | CRAN        | Travis CI      | Appveyor         |
-| ------------- | ------------------- | -------------- | ---------------- |
-| _Platforms:_  | _Multiple_          | _Linux & OS X_ | _Windows_        |
-| R CMD check   | <a href="http://cran.r-project.org/web/checks/check_results_doFuture.html"><img border="0" src="http://www.r-pkg.org/badges/version/doFuture" alt="CRAN version"></a> | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a>  | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
-| Test coverage |                     | <a href="https://codecov.io/gh/HenrikBengtsson/doFuture"><img src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a>    |                  |
+| Resource:     | CRAN        | Travis CI       | Appveyor         |
+| ------------- | ------------------- | --------------- | ---------------- |
+| _Platforms:_  | _Multiple_          | _Linux & macOS_ | _Windows_        |
+| R CMD check   | <a href="http://cran.r-project.org/web/checks/check_results_doFuture.html"><img border="0" src="http://www.r-pkg.org/badges/version/doFuture" alt="CRAN version"></a> | <a href="https://travis-ci.org/HenrikBengtsson/doFuture"><img src="https://travis-ci.org/HenrikBengtsson/doFuture.svg" alt="Build status"></a>   | <a href="https://ci.appveyor.com/project/HenrikBengtsson/dofuture"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/doFuture?svg=true" alt="Build status"></a> |
+| Test coverage |                     | <a href="https://codecov.io/gh/HenrikBengtsson/doFuture"><img src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a>     |                  |
