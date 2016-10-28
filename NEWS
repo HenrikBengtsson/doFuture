@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.2.1-9000 [2016-10-10]
+Version: 0.3.0 [2016-10-27]
 o Now argument '.export' of foreach() is acknowledged such that if
   a character vector of variables names to be exported is specified,
   then those variables and nothing else are exported to future.
