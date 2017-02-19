@@ -18,4 +18,4 @@ License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/doFuture
 BugReports: https://github.com/HenrikBengtsson/doFuture/issues
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

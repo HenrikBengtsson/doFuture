@@ -39,4 +39,3 @@ foreach(i=1:3) \%dopar\% {
 }
 }
 }
-
