@@ -43,11 +43,11 @@ build_script:
   - Rscript -e "c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())"
   - echo Current directory=%CD%
   - travis-tool.sh install_r foreach future iterators
-  - travis-tool.sh install_remotes HenrikBengtsson/future@develop
+  - travis-tool.sh install_github HenrikBengtsson/future@develop
   - travis-tool.sh install_r doRNG markdown R.rsp
   - travis-tool.sh install_bioc BiocParallel
   - travis-tool.sh install_r plyr future.BatchJobs
-  - travis-tool.sh install_remotes HenrikBengtsson/future.batchtools@develop
+  - travis-tool.sh install_github HenrikBengtsson/future.batchtools@develop
 
 test_script:
   - travis-tool.sh run_tests
