@@ -3,6 +3,12 @@ Package: doFuture
 
 Version: 0.3.0-9000 [2017-03-12]
 
+NEW FEATURES:
+
+ o SPEED / LOAD BALANCING: The doFuture %dopar% backend now processes all
+   elements in chunks such that each backend worker will process a subset
+   of data at once (and only once).
+  
 GLOBALS:
 
  o For consistency, globals and packages are now identified the same way

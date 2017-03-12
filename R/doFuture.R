@@ -30,7 +30,7 @@ doFuture <- function(obj, expr, envir, data) {
     globals <- getOption("doFuture.globals.nullexport", TRUE)
   } else {
     ## Export also the other foreach arguments
-    globals <- unique(c(export, argnames))
+    globals <- unique(c(export, "...future.x_ii"))
   }
   export <- NULL
   
@@ -48,52 +48,44 @@ doFuture <- function(obj, expr, envir, data) {
   ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
     doFuture::registerDoFuture()
-    .(expr)
+    
+    lapply(seq_along(...future.x_ii), FUN = function(jj) {
+      ...future.x_jj <- ...future.x_ii[[jj]]
+      ...future.env <- environment()
+      local({
+        for (name in names(...future.x_jj)) {
+          assign(name, ...future.x_jj[[name]], envir = ...future.env, inherits = FALSE)
+        }
+      })
+      tryCatch(.(expr), error = identity)
+    })
   })
 
+  if (debug) {
+    mdebug("- R expression:")
+    mprint(expr)
+  }
+  
   globals_envir <- new.env(parent = envir)
-  if (length(argnames) > 0) {
-    ## Add the arguments as dummy variables
-    mdebug("- Adding dummy variables for arguments: %s",
-           paste(sQuote(argnames), collapse = ", "))
-    for (name in argnames) {
-      mdebug("- argument: %s", sQuote(name))
-      assign(name, NULL, envir = globals_envir, inherits = TRUE)
-    }
-  }  
-
+  assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                               globals = globals, resolve = TRUE)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
-
+  rm(list = c("gp", "globals_envir", "pkgs"))
+  
   names_globals <- names(globals)  
   if (debug) {
     mdebug("- globals: [%d] %s", length(globals),
            paste(sQuote(names_globals), collapse = ", "))
     mstr(globals)
+    mdebug("- packages: [%d] %s", length(packages),
+           paste(sQuote(packages), collapse = ", "))
+    mdebug("- R expression:")
+    mprint(expr)
   }
   
-  ## Make sure all elements of `argnames` are in the 'globals' set.
-  ## If not, then add the missing ones.
-  globals_missing <- setdiff(argnames, names_globals)
-  if (length(globals_missing) > 0) {
-    ## Create dummy place holders
-    globals_extra <- vector("list", length = length(globals_missing))
-    names(globals_extra) <- globals_missing
-    attr(globals_extra, "resolved") <- TRUE
-    attr(globals_extra, "size") <- unclass(object.size(globals_extra))
-    globals <- c(globals, globals_extra)
-    names_globals <- names(globals)
-    if (debug) {
-      mdebug("- adding remaining arguments as globals: [%d] %s", length(globals_extra), paste(sQuote(globals_extra), collapse = ", "))
-      mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
-      mstr(globals)
-    }
-  }
-
-
   x <- argsList
   
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,14 +103,11 @@ doFuture <- function(obj, expr, envir, data) {
   ## 5. Create futures
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Add argument placeholders
-  globals_extra <- as.Globals(list(...future.x_ii = NULL))
-  attr(globals_extra, "resolved") <- TRUE
-  attr(globals_extra, "total_size") <- 0
-  globals <- c(globals, globals_extra)
+  stopifnot("...future.x_ii" %in% names(globals))
 
   ## FIXME:
-  attr(globals, "resolved") <- TRUE
-  attr(globals, "total_size") <- 0
+#  attr(globals, "resolved") <- TRUE
+#  attr(globals, "total_size") <- 0
   
   ## At this point a globals should be resolved and we should know their total size
   stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
@@ -126,7 +115,6 @@ doFuture <- function(obj, expr, envir, data) {
     ## To please R CMD check
   ...future.x_ii <- NULL
 
-  
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
   mdebug("Number of futures (= number of chunks): %d", nchunks)
@@ -140,79 +128,32 @@ doFuture <- function(obj, expr, envir, data) {
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- x[chunk]
     stopifnot(attr(globals_ii, "resolved"))
-    
-    fs[[ii]] <- future({
-      lapply(seq_along(...future.x_ii), FUN = function(jj) {
-         ...future.x_jj <- ...future.x_ii[[jj]]
-         ...future.FUN(...future.x_jj, ...)
-      })
-    }, envir = envir, lazy = future.lazy, globals = globals_ii, packages = packages)
+
+    fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
+                       globals = globals_ii, packages = packages)
     
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii"))
 
     mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
+  rm(list = c("chunks", "globals", "expr", "packages"))
   mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  stopifnot(length(fs) == nchunks)
   
-  
-  ## Iterate
-  fs <- list()
-  for (ii in seq_along(argsList)) {
-    if (debug) mdebug("- creating future #%d of %d ...", ii, nx)
-    args <- argsList[[ii]]
-    
-    ## WORKAROUND: foreach::times() passes an empty string in 'argList[[*]]'
-    names_args <- names(args)
-    names_args <- names_args[nzchar(names_args)]
-    if (debug) {
-      mdebug("- foreach::`%%dopar%%` arguments: [%d] %s", length(args), paste(sQuote(names_args), collapse = ", "))
-    }
-    ## Internal sanity check of Globals object
-    stopifnot(all(names_args %in% names(globals)))
-    
-    globals_ii <- globals
-    for (name in names_args) globals_ii[[name]] <- args[[name]]
-    ## Internal sanity check of Globals object
-    stopifnot(length(attr(globals_ii, "where")) == length(globals_ii))
-    if (debug) {
-      mdebug("- future globals: [%d] %s", length(globals_ii), paste(sQuote(names(globals_ii)), collapse = ", "))
-      mstr(globals_ii)
-    }
-    
-    ## FIXME: Although foreach already provides us with
-    ## globals and packages to load, the future() will do
-    ## its own search and import of globals and packages.
-    ## This is inefficient.  Ideally one should be able
-    ## to setup a future where one specifies globals and
-    ## packages explicitly. /HB 2016-05-04
-    f <- eval({
-      ## In case there's an error setting up the future, make sure to 
-      ## move on to the next one and only signal the error below.
-      ## NOTE: There shouldn't really be errors produced at this stage,
-      ## but who knows. /HB 2017-03-11
-      tryCatch({
-        future(expr, substitute = FALSE, envir = envir,
-               globals = globals_ii, packages = packages)
-      }, error = identity)
-    }, envir = envir)
-
-    if (debug) mprint(f)
-    
-    fs[[ii]] <- f
-    if (debug) mdebug("- creating future #%d of %d ... DONE", ii, nx)
-  } ## for (ii ...)
-  stopifnot(length(fs) == nx)
-
   ## Resolve futures
   if (debug) mdebug("- resolving future")
-  resolve(fs, value=TRUE)
+  resolve(fs, value = TRUE)
 
   ## Gather values
   if (debug) mdebug("- collecting values of future")
-  results <- lapply(fs, FUN=value, signal=FALSE)
-  stopifnot(length(results) == nx)
+  results <- lapply(fs, FUN = value, signal = FALSE)
+  rm(list = "fs")
+  stopifnot(length(results) == nchunks)
 
+  ## Reduce chunks
+  results <- Reduce(c, results)
+  stopifnot(length(results) == nx)
 
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
