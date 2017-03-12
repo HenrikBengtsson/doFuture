@@ -47,9 +47,9 @@ doFuture <- function(obj, expr, envir, data) {
   })
 
   globals_envir <- new.env(parent = envir)
-  if (length(argsList) > 0) {
+  if (length(it$argnames) > 0) {
     ## Add the arguments as dummy variables
-    for (name in names(argsList[[1]])) {
+    for (name in it$argnames) {
       assign(name, NULL, envir = globals_envir, inherits = TRUE)
     }
   }  
@@ -67,23 +67,21 @@ doFuture <- function(obj, expr, envir, data) {
     mstr(globals)
   }
   
-  ## Make sure all elements of `argsList[[1]]` are in the 'globals' set.
-  ## If not, add the missing ones
-  if (length(argsList) > 0) {
-    args <- argsList[[1]]
-    names_args <- names(args)
-    globals_missing <- setdiff(names_args, names_globals)
-    if (length(globals_missing) > 0) {
-      globals_extra <- args[globals_missing]
-      globals_extra <- resolve(globals_extra)
-      attr(globals_extra, "resolved") <- TRUE
-      attr(globals_extra, "size") <- unclass(object.size(globals_extra))
-      globals <- c(globals, globals_extra)
-      names_globals <- names(globals)
-      if (debug) {
-        mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
-        mstr(globals)
-      }
+  ## Make sure all elements of `it$argnames` are in the 'globals' set.
+  ## If not, then add the missing ones.
+  globals_missing <- setdiff(it$argnames, names_globals)
+  if (length(globals_missing) > 0) {
+    ## Create dummy place holders
+    globals_extra <- vector("list", length = length(globals_missing))
+    names(globals_extra) <- globals_missing
+    attr(globals_extra, "resolved") <- TRUE
+    attr(globals_extra, "size") <- unclass(object.size(globals_extra))
+    globals <- c(globals, globals_extra)
+    names_globals <- names(globals)
+    if (debug) {
+      mdebug("- adding remaining arguments as globals: [%d] %s", length(globals_extra), paste(sQuote(globals_extra), collapse = ", "))
+      mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+      mstr(globals)
     }
   }
   
