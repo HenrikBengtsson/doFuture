@@ -1,11 +1,12 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
 #' @importFrom future future resolve value
-#' @importFrom globals findGlobals as.Globals globalsByName
-#' @importFrom utils capture.output
+#' @importFrom globals as.Globals
+#' @importFrom utils capture.output object.size
 doFuture <- function(obj, expr, envir, data) {
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
+  getGlobalsAndPackages <- importFuture("getGlobalsAndPackages")
 
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
@@ -53,18 +54,35 @@ doFuture <- function(obj, expr, envir, data) {
     }
   }  
 
-  ns <- getNamespace("future")
-  getGlobalsAndPackages <- get("getGlobalsAndPackages", envir = ns, mode = "function")
   gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals, resolve = TRUE)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
 
-  names_globals <- names(globals)
-  
+  names_globals <- names(globals)  
   if (debug) {
     mdebug("- globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
     mstr(globals)
+  }
+  
+  ## Make sure all elements of `argsList[[1]]` are in the 'globals' set.
+  ## If not, add the missing ones
+  if (length(argsList) > 0) {
+    args <- argsList[[1]]
+    names_args <- names(args)
+    globals_missing <- setdiff(names_args, names_globals)
+    if (length(globals_missing) > 0) {
+      globals_extra <- args[globals_missing]
+      globals_extra <- resolve(globals_extra)
+      attr(globals_extra, "resolved") <- TRUE
+      attr(globals_extra, "size") <- unclass(object.size(globals_extra))
+      globals <- c(globals, globals_extra)
+      names_globals <- names(globals)
+      if (debug) {
+        mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+        mstr(globals)
+      }
+    }
   }
   
   ## Iterate
@@ -77,21 +95,6 @@ doFuture <- function(obj, expr, envir, data) {
     if (debug) {
       mdebug("- foreach::`%%dopar%%` arguments: [%d] %s", length(args), paste(sQuote(names_args), collapse = ", "))
     }
-
-    ## Make sure all elements of `argsList[[1]]` are in the 'globals' set.
-    ## If not, add the missing ones
-    globals_missing <- setdiff(names_args, names_globals)
-    if (length(globals_missing) > 0) {
-      globals_extra <- as.Globals(args[globals_missing])
-      globals_extra <- resolve(globals_extra)
-      globals <- c(globals, globals_extra)
-      names_globals <- names(globals)
-      if (debug) {
-        mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
-        mstr(globals)
-      }
-    }
-
     ## Internal sanity check of Globals object
     stopifnot(all(names(args) %in% names(globals)))
     
