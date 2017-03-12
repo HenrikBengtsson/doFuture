@@ -3,6 +3,7 @@
 #' @importFrom future future resolve value
 #' @importFrom globals as.Globals
 #' @importFrom utils capture.output object.size
+#' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
@@ -84,12 +85,74 @@ doFuture <- function(obj, expr, envir, data) {
       }
     }
   }
+
+
+  x <- argsList
+  
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 4. Load balancing ("chunking")
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  nx <- length(x)
+  nbr_of_futures <- nbrOfWorkers()
+  if (nbr_of_futures > nx) nbr_of_futures <- nx
+  
+  chunks <- splitIndices(nx, ncl = nbr_of_futures)
+  mdebug("Number of chunks: %d", length(chunks))   
+
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 5. Create futures
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Add argument placeholders
+  globals_extra <- as.Globals(list(...future.x_ii = NULL))
+  attr(globals_extra, "resolved") <- TRUE
+  attr(globals_extra, "total_size") <- 0
+  globals <- c(globals, globals_extra)
+
+  ## FIXME:
+  attr(globals, "resolved") <- TRUE
+  attr(globals, "total_size") <- 0
+  
+  ## At this point a globals should be resolved and we should know their total size
+  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+
+    ## To please R CMD check
+  ...future.x_ii <- NULL
+
+  
+  nchunks <- length(chunks)
+  fs <- vector("list", length = nchunks)
+  mdebug("Number of futures (= number of chunks): %d", nchunks)
+  
+  mdebug("Launching %d futures (chunks) ...", nchunks)
+  for (ii in seq_along(chunks)) {
+    chunk <- chunks[[ii]]
+    mdebug("Chunk #%d of %d ...", ii, length(chunks))
+
+    ## Subsetting outside future is more efficient
+    globals_ii <- globals
+    globals_ii[["...future.x_ii"]] <- x[chunk]
+    stopifnot(attr(globals_ii, "resolved"))
+    
+    fs[[ii]] <- future({
+      lapply(seq_along(...future.x_ii), FUN = function(jj) {
+         ...future.x_jj <- ...future.x_ii[[jj]]
+         ...future.FUN(...future.x_jj, ...)
+      })
+    }, envir = envir, lazy = future.lazy, globals = globals_ii, packages = packages)
+    
+    ## Not needed anymore
+    rm(list = c("chunk", "globals_ii"))
+
+    mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
+  } ## for (ii ...)
+  mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  
   
   ## Iterate
-  nchunks <- length(argsList)
   fs <- list()
   for (ii in seq_along(argsList)) {
-    if (debug) mdebug("- creating future #%d of %d ...", ii, nchunks)
+    if (debug) mdebug("- creating future #%d of %d ...", ii, nx)
     args <- argsList[[ii]]
     names_args <- names(args)
     if (debug) {
@@ -127,9 +190,9 @@ doFuture <- function(obj, expr, envir, data) {
     if (debug) mprint(f)
     
     fs[[ii]] <- f
-    if (debug) mdebug("- creating future #%d of %d ... DONE", ii, nchunks)
+    if (debug) mdebug("- creating future #%d of %d ... DONE", ii, nx)
   } ## for (ii ...)
-  stopifnot(length(fs) == nchunks)
+  stopifnot(length(fs) == nx)
 
   ## Resolve futures
   if (debug) mdebug("- resolving future")
@@ -138,7 +201,7 @@ doFuture <- function(obj, expr, envir, data) {
   ## Gather values
   if (debug) mdebug("- collecting values of future")
   results <- lapply(fs, FUN=value, signal=FALSE)
-  stopifnot(length(results) == nchunks)
+  stopifnot(length(results) == nx)
 
 
   ## Combine results (and identify errors)
@@ -151,7 +214,7 @@ doFuture <- function(obj, expr, envir, data) {
     print(e)
     NULL
   })
-  stopifnot(length(results) == nchunks)
+  stopifnot(length(results) == nx)
 
 
   ## throw an error or return the combined results
@@ -169,7 +232,7 @@ doFuture <- function(obj, expr, envir, data) {
 
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
-  stopifnot(length(res) <= nchunks)
+  stopifnot(length(res) <= nx)
 
   if (debug) mdebug("doFuture() ... DONE")
   
