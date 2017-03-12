@@ -1,6 +1,6 @@
 ## Record original state
 ovars <- ls()
-oopts <- options(warn=1L, mc.cores=2L, future.debug=TRUE)
+oopts <- options(warn=1L, mc.cores=2L, future.debug=TRUE, doFuture.debug=TRUE)
 oplan <- future::plan()
 
 future::plan(future::eager)
