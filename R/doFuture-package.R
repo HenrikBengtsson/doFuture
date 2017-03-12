@@ -53,7 +53,7 @@
 #' \code{res <- foreach() \%dopar\% { ... }} statement on the local machine
 #' to, say, another machine on the same network.  The solution to the
 #' problem is to explicitly export those variables by specifying them in
-#' the \code{.export} argument to \code{\link[foreach::foreach]{foreach}()},
+#' the \code{.export} argument to \code{\link[foreach:foreach]{foreach}()},
 #' e.g. \code{foreach(..., .export = c("mu", "sigma"))}.  Likewise, if the
 #' expression needs specific packages to be attached, they can be listed
 #' in argument \code{.packages} of \code{foreach()}.
