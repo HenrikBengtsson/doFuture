@@ -1,9 +1,10 @@
 source("incl/start.R")
 
-strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
+if (require(future.batchtools, character.only=TRUE)) {
 
-message("*** doFuture - reproducibility ...")
+message("*** doFuture + future.batchtools ...")
+
+strategies <- c("batchtools_local", "batchtools_interactive")
 
 res0 <- NULL
 
@@ -11,22 +12,36 @@ for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
 
+  message("- Explicitly exporting globals ...")
   mu <- 1.0
   sigma <- 2.0
-  res <- foreach(i=1:3, .packages="stats") %dopar% {
+  res1 <- foreach(i=1:3, .export=c("mu", "sigma"), .packages="stats") %dopar% {
     set.seed(0xBEEF)
     rnorm(i, mean=mu, sd=sigma)
   }
-  print(res)
+  print(res1)
 
   if (is.null(res0)) {
-    res0 <- res
+    res0 <- res1
   } else {
-    stopifnot(all.equal(res, res0))
+    stopifnot(all.equal(res1, res0))
   }
+  message("- Explicitly exporting globals ... DONE")
+
+  message("- Implicitly exporting globals (via future) ...")
+  mu <- 1.0
+  sigma <- 2.0
+  res2 <- foreach(i=1:3, .packages="stats") %dopar% {
+    set.seed(0xBEEF)
+    rnorm(i, mean=mu, sd=sigma)
+  }
+  print(res2)
+  stopifnot(all.equal(res2, res0))
+
+  message("- Implicitly exporting globals (via future) ... DONE")
 
   if (require(plyr, character.only=TRUE)) {
-    message("*** dplyr w / doFuture + parallel ...")
+    message("*** dplyr w / doFuture + future.batchtools ...")
 
     print(sessionInfo())
 
@@ -37,11 +52,11 @@ for (strategy in strategies) {
     print(y1)
     stopifnot(all.equal(y1, y0))
 
-    message("*** dplyr w / doFuture + parallel ... DONE")
+    message("*** dplyr w / doFuture + future.batchtools ... DONE")
   } ## if (require(plyr))
 
   if (require(BiocParallel, character.only=TRUE) && packageVersion("BiocParallel") >= "1.2.22") {
-    message("*** BiocParallel w / doFuture + parallel ...")
+    message("*** BiocParallel w / doFuture + future.batchtools ...")
 
     print(sessionInfo())
 
@@ -64,15 +79,16 @@ for (strategy in strategies) {
     y2$b <- bpvec(1:5, sqrt, BPPARAM=p)
     stopifnot(identical(y2, y0))
 
-    message("*** BiocParallel w / doFuture + parallel ... DONE")
+    message("*** BiocParallel w / doFuture + future.batchtools ... DONE")
   } ## if (require(BiocParallel))
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
-message("*** doFuture - reproducibility ... DONE")
-
 print(sessionInfo())
 
-source("incl/end.R")
+message("*** doFuture + future.batchtools ... DONE")
 
+} ## if (require(future.batchtools))
+
+source("incl/end.R")

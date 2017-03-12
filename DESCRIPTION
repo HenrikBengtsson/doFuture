@@ -10,7 +10,10 @@ Suggests:
     doRNG (>= 1.6),
     markdown,
     R.rsp
-VignetteBuilder: R.rsp
+VignetteBuilder:
+    R.rsp
+Remotes:
+    HenrikBengtsson/future@develop
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
 Description: Provides a '%dopar%' adaptor such that any type of futures can

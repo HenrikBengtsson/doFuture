@@ -1,14 +1,25 @@
 Package: doFuture
 =================
 
-Version: 0.3.0-9000 [2017-03-11]
+Version: 0.3.0-9000 [2017-03-12]
 
 GLOBALS:
 
  o For consistency, globals and packages are now identified the same way
    as they are when using regular futures.
  
- 
+SOFTWARE QUALITY:
+
+ o Now the package tests future.batchtools with foreach by itself, in
+   combination with plyr (parallel = TRUE) as well as with
+   BiocParallel::bplapply() and friends.  Similar tests are already done
+   using future.BatchJobs.
+
+ o Added test for foreach::times() %dopar% { ... }.  Especially, it is
+   now tested that global variables are properly identified.  Note that
+   it is not possible to specify neither globals not package in times().
+
+
 Version: 0.3.0 [2016-10-27]
 
 NEW FEATURES:

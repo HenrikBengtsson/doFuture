@@ -17,6 +17,10 @@ doFuture <- function(obj, expr, envir, data) {
   argsList <- as.list(it)
   accumulator <- makeAccum(it)
 
+  ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
+  argnames <- it$argnames
+  argnames <- argnames[nzchar(argnames)]
+  
   ## Global variables?
   export <- unique(obj$export)
   if (is.null(export)) {
@@ -26,7 +30,7 @@ doFuture <- function(obj, expr, envir, data) {
     globals <- getOption("doFuture.globals.nullexport", TRUE)
   } else {
     ## Export also the other foreach arguments
-    globals <- unique(c(export, it$argnames))
+    globals <- unique(c(export, argnames))
   }
   export <- NULL
   
@@ -48,41 +52,44 @@ doFuture <- function(obj, expr, envir, data) {
   })
 
   globals_envir <- new.env(parent = envir)
-  if (length(argsList) > 0) {
-    ## Add dummy variables
-    for (name in names(argsList[[1]])) {
+  if (length(argnames) > 0) {
+    ## Add the arguments as dummy variables
+    mdebug("- Adding dummy variables for arguments: %s",
+           paste(sQuote(argnames), collapse = ", "))
+    for (name in argnames) {
+      mdebug("- argument: %s", sQuote(name))
       assign(name, NULL, envir = globals_envir, inherits = TRUE)
     }
   }  
 
-  gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals, resolve = TRUE)
+  gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                              globals = globals, resolve = TRUE)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
 
   names_globals <- names(globals)  
   if (debug) {
-    mdebug("- globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+    mdebug("- globals: [%d] %s", length(globals),
+           paste(sQuote(names_globals), collapse = ", "))
     mstr(globals)
   }
   
-  ## Make sure all elements of `argsList[[1]]` are in the 'globals' set.
-  ## If not, add the missing ones
-  if (length(argsList) > 0) {
-    args <- argsList[[1]]
-    names_args <- names(args)
-    globals_missing <- setdiff(names_args, names_globals)
-    if (length(globals_missing) > 0) {
-      globals_extra <- args[globals_missing]
-      globals_extra <- resolve(globals_extra)
-      attr(globals_extra, "resolved") <- TRUE
-      attr(globals_extra, "size") <- unclass(object.size(globals_extra))
-      globals <- c(globals, globals_extra)
-      names_globals <- names(globals)
-      if (debug) {
-        mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
-        mstr(globals)
-      }
+  ## Make sure all elements of `argnames` are in the 'globals' set.
+  ## If not, then add the missing ones.
+  globals_missing <- setdiff(argnames, names_globals)
+  if (length(globals_missing) > 0) {
+    ## Create dummy place holders
+    globals_extra <- vector("list", length = length(globals_missing))
+    names(globals_extra) <- globals_missing
+    attr(globals_extra, "resolved") <- TRUE
+    attr(globals_extra, "size") <- unclass(object.size(globals_extra))
+    globals <- c(globals, globals_extra)
+    names_globals <- names(globals)
+    if (debug) {
+      mdebug("- adding remaining arguments as globals: [%d] %s", length(globals_extra), paste(sQuote(globals_extra), collapse = ", "))
+      mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+      mstr(globals)
     }
   }
 
@@ -154,15 +161,18 @@ doFuture <- function(obj, expr, envir, data) {
   for (ii in seq_along(argsList)) {
     if (debug) mdebug("- creating future #%d of %d ...", ii, nx)
     args <- argsList[[ii]]
+    
+    ## WORKAROUND: foreach::times() passes an empty string in 'argList[[*]]'
     names_args <- names(args)
+    names_args <- names_args[nzchar(names_args)]
     if (debug) {
       mdebug("- foreach::`%%dopar%%` arguments: [%d] %s", length(args), paste(sQuote(names_args), collapse = ", "))
     }
     ## Internal sanity check of Globals object
-    stopifnot(all(names(args) %in% names(globals)))
+    stopifnot(all(names_args %in% names(globals)))
     
     globals_ii <- globals
-    for (name in names(args)) globals_ii[[name]] <- args[[name]]
+    for (name in names_args) globals_ii[[name]] <- args[[name]]
     ## Internal sanity check of Globals object
     stopifnot(length(attr(globals_ii, "where")) == length(globals_ii))
     if (debug) {
@@ -232,7 +242,6 @@ doFuture <- function(obj, expr, envir, data) {
 
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
-  stopifnot(length(res) <= nx)
 
   if (debug) mdebug("doFuture() ... DONE")
   
