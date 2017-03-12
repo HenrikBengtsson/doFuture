@@ -10,6 +10,7 @@ hpaste <- future:::hpaste
 mdebug <- future:::mdebug
 
 ## To please R CMD check when using require().
+future.batchtools <- "future.batchtools"
 future.BatchJobs <- "future.BatchJobs"
 plyr <- "plyr"
 BiocParallel <- "BiocParallel"

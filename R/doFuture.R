@@ -48,20 +48,22 @@ doFuture <- function(obj, expr, envir, data) {
 
   globals_envir <- new.env(parent = envir)
   if (length(argsList) > 0) {
-    ## Add dummy variables
+    ## Add the arguments as dummy variables
     for (name in names(argsList[[1]])) {
       assign(name, NULL, envir = globals_envir, inherits = TRUE)
     }
   }  
 
-  gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals, resolve = TRUE)
+  gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                              globals = globals, resolve = TRUE)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
 
   names_globals <- names(globals)  
   if (debug) {
-    mdebug("- globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+    mdebug("- globals: [%d] %s", length(globals),
+           paste(sQuote(names_globals), collapse = ", "))
     mstr(globals)
   }
   

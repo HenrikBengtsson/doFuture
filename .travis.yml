@@ -20,7 +20,10 @@ r_packages:
   
 bioc_packages:
   - BiocParallel
- 
+
+r_github_packages:
+  - HenrikBengtsson/future.batchtools@develop
+
 matrix:
   include:
     - os: linux
