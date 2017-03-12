@@ -1,10 +1,15 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
 #' @importFrom future future resolve value
+#' @importFrom globals findGlobals as.Globals globalsByName
+#' @importFrom utils capture.output
 doFuture <- function(obj, expr, envir, data) {
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
 
+  debug <- getOption("doFuture.debug", FALSE)
+  if (debug) mdebug("doFuture() ...")
+  
   ## Setup
   it <- iter(obj)
   argsList <- as.list(it)
@@ -35,37 +40,107 @@ doFuture <- function(obj, expr, envir, data) {
   }
 
   ## Tell foreach to keep using futures also in nested calls
-  expr <- substitute({ doFuture::registerDoFuture(); e }, list(e = expr))
+  expr <- bquote({
+    doFuture::registerDoFuture()
+    .(expr)
+  })
 
+  globals_envir <- new.env(parent = envir)
+  if (length(argsList) > 0) {
+    ## Add dummy variables
+    for (name in names(argsList[[1]])) {
+      assign(name, NULL, envir = globals_envir, inherits = TRUE)
+    }
+  }  
+
+  ns <- getNamespace("future")
+  getGlobalsAndPackages <- get("getGlobalsAndPackages", envir = ns, mode = "function")
+  gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals, resolve = TRUE)
+  globals <- gp$globals
+  packages <- unique(c(gp$packages, pkgs))
+  expr <- gp$expr
+
+  names_globals <- names(globals)
+  
+  if (debug) {
+    mdebug("- globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+    mstr(globals)
+  }
+  
   ## Iterate
+  nchunks <- length(argsList)
   fs <- list()
   for (ii in seq_along(argsList)) {
+    if (debug) mdebug("- creating future #%d of %d ...", ii, nchunks)
     args <- argsList[[ii]]
+    names_args <- names(args)
+    if (debug) {
+      mdebug("- foreach::`%%dopar%%` arguments: [%d] %s", length(args), paste(sQuote(names_args), collapse = ", "))
+    }
 
-    ## "Export" arguments to future environment
-    env <- new.env(parent=envir)
-    for (name in names(args)) env[[name]] <- args[[name]]
+    ## Make sure all elements of `argsList[[1]]` are in the 'globals' set.
+    ## If not, add the missing ones
+    globals_missing <- setdiff(names_args, names_globals)
+    if (length(globals_missing) > 0) {
+      globals_extra <- as.Globals(args[globals_missing])
+      globals_extra <- resolve(globals_extra)
+      globals <- c(globals, globals_extra)
+      names_globals <- names(globals)
+      if (debug) {
+        mdebug("- updated globals: [%d] %s", length(globals), paste(sQuote(names_globals), collapse = ", "))
+        mstr(globals)
+      }
+    }
 
+    ## Internal sanity check of Globals object
+    stopifnot(all(names(args) %in% names(globals)))
+    
+    globals_ii <- globals
+    for (name in names(args)) globals_ii[[name]] <- args[[name]]
+    ## Internal sanity check of Globals object
+    stopifnot(length(attr(globals_ii, "where")) == length(globals_ii))
+    if (debug) {
+      mdebug("- future globals: [%d] %s", length(globals_ii), paste(sQuote(names(globals_ii)), collapse = ", "))
+      mstr(globals_ii)
+    }
+    
     ## FIXME: Although foreach already provides us with
     ## globals and packages to load, the future() will do
     ## its own search and import of globals and packages.
     ## This is inefficient.  Ideally one should be able
     ## to setup a future where one specifies globals and
     ## packages explicitly. /HB 2016-05-04
-    f <- future(expr, substitute=FALSE, envir=env, globals=globals)
+    f <- eval({
+      ## In case there's an error setting up the future, make sure to 
+      ## move on to the next one and only signal the error below.
+      ## NOTE: There shouldn't really be errors produced at this stage,
+      ## but who knows. /HB 2017-03-11
+      tryCatch({
+        future(expr, substitute = FALSE, envir = envir,
+               globals = globals_ii, packages = packages)
+      }, error = identity)
+    }, envir = envir)
 
+    if (debug) mprint(f)
+    
     fs[[ii]] <- f
+    if (debug) mdebug("- creating future #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
+  stopifnot(length(fs) == nchunks)
 
   ## Resolve futures
+  if (debug) mdebug("- resolving future")
   resolve(fs, value=TRUE)
 
   ## Gather values
+  if (debug) mdebug("- collecting values of future")
   results <- lapply(fs, FUN=value, signal=FALSE)
+  stopifnot(length(results) == nchunks)
 
 
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
+  if (debug) mdebug("- accumulating results")
   tryCatch({
     accumulator(results, tags=seq_along(results))
   }, error = function(e) {
@@ -73,12 +148,15 @@ doFuture <- function(obj, expr, envir, data) {
     print(e)
     NULL
   })
+  stopifnot(length(results) == nchunks)
 
 
   ## throw an error or return the combined results
   ## NOTE: This is adopted from foreach:::doSEQ()
+  errorHandling <- obj$errorHandling
+  if (debug) mdebug("- processing errors (handler = %s)", sQuote(errorHandling))
   errorValue <- getErrorValue(it)
-  if (identical(obj$errorHandling, "stop") && !is.null(errorValue)) {
+  if (identical(errorHandling, "stop") && !is.null(errorValue)) {
     errorIndex <- getErrorIndex(it)
     msg <- sprintf('task %d failed - "%s"', errorIndex,
                    conditionMessage(errorValue))
@@ -86,5 +164,11 @@ doFuture <- function(obj, expr, envir, data) {
   }
 
 
-  getResult(it)
+  if (debug) mdebug("- extracting results")
+  res <- getResult(it)
+  stopifnot(length(res) <= nchunks)
+
+  if (debug) mdebug("doFuture() ... DONE")
+  
+  res
 } ## doFuture()
