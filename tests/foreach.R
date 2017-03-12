@@ -26,7 +26,7 @@ for (strategy in strategies) {
   }
 
   if (require(plyr, character.only=TRUE)) {
-    message("*** dplyr w / doFuture ...")
+    message("*** dplyr w / doFuture + parallel ...")
 
     print(sessionInfo())
 
@@ -37,11 +37,11 @@ for (strategy in strategies) {
     print(y1)
     stopifnot(all.equal(y1, y0))
 
-    message("*** dplyr w / doFuture ... DONE")
+    message("*** dplyr w / doFuture + parallel ... DONE")
   } ## if (require(plyr))
 
   if (require(BiocParallel, character.only=TRUE) && packageVersion("BiocParallel") >= "1.2.22") {
-    message("*** BiocParallel w / doFuture + future.BatchJobs ...")
+    message("*** BiocParallel w / doFuture + parallel ...")
 
     print(sessionInfo())
 
@@ -64,7 +64,7 @@ for (strategy in strategies) {
     y2$b <- bpvec(1:5, sqrt, BPPARAM=p)
     stopifnot(identical(y2, y0))
 
-    message("*** BiocParallel w / doFuture + future.BatchJobs ... DONE")
+    message("*** BiocParallel w / doFuture + parallel ... DONE")
   } ## if (require(BiocParallel))
 
   message(sprintf("- plan('%s') ... DONE", strategy))
