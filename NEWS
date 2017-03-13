@@ -25,11 +25,14 @@ SOFTWARE QUALITY:
 
  o Added test for foreach::times() %dopar% { ... }.  Especially, it is
    now tested that global variables are properly identified.  Note that
-   it is not possible to specify neither globals not package in times().
+   times() does not allow you to specify neither '.export' nor '.packages'
+   so it is not really designed for processing in external R process.
+   Having said this, times() does indeed work also in those cases when
+   used with doFuture because it internally handles this automatically.
 
  o ROBUSTNESS: The package redundancy tests (not run by 'R CMD check'; needed
    to be run manually for now) that run 89 plyr examples with the doFuture
-   foreach adaptor, , now forces testing of '.parallel = TRUE' for all plyr
+   foreach adaptor, now forces testing of '.parallel = TRUE' for all plyr
    functions that support that argument.  Each example is run across various
    future strategies, including sequential, multicore, multisession, and
    cluster, as well as batchjobs_local and batchtools_local, if installed.
