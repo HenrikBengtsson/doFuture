@@ -39,7 +39,6 @@ strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
 if (require("future.BatchJobs")) strategies <- c(strategies, "batchjobs_local")
 if (require("future.batchtools")) strategies <- c(strategies, "batchtools_local")
-
 strategies <- getOption("doFuture.tests.strategies", strategies)
 
 library("doFuture")
@@ -47,6 +46,21 @@ registerDoFuture()
 library(pkg, character.only=TRUE)
 tweakPlyr()
 topics <- getOption("doFuture.tests.topics", findRdTopics(pkg))
+
+## Exclude a few tests that takes very long time to run:
+excl <- NULL
+## (1) example(raply) runs 100's of tasks that each parallelizes only
+##     few subtasks. Doing so using  batchjobs_local and
+##     batchtools_local futures will take quite some time, because of
+##     the overhead of creating BatchJobs / batchtools jobs.
+excl <- c(excl, "raply")
+## (2) example(rdply) is as above (but only over 20 iterations).
+excl <- c(excl, "rdply")
+
+## (2) Takes 45+ seconds each
+excl <- c(excl, "aaply", "quoted")
+excl <- getOption("doFuture.tests.topics.exclude", excl)
+topics <- setdiff(topics, excl)
 
 ## Some examples may give errors when used with futures
 excl <- getOption("doFuture.tests.topics.ignore", NULL)
@@ -59,13 +73,17 @@ for (strategy in strategies) {
   for (ii in seq_along(topics)) {
     topic <- topics[ii]
     message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ...", ii, length(topics), topic, pkg, strategy))
-
+    dt <- NULL
     ovars <- ls(all.names=TRUE)
-    example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    dt <- system.time({
+      example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    })
     graphics.off()
     rm(list=setdiff(ls(all.names=TRUE), c(ovars, "ovars")))
-
-    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE", ii, length(topics), topic, pkg, strategy))
+    dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
+    dt <- paste(sprintf("%s: %g", names(dt), dt), collapse = ", ")
+    message("  Total processing time for example: ", dt)
+    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, strategy, dt))
   } ## for (ii ...)
 
   message(sprintf("- plan('%s') ... DONE", strategy))

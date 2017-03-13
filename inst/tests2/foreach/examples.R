@@ -37,13 +37,17 @@ for (strategy in strategies) {
   for (ii in seq_along(topics)) {
     topic <- topics[ii]
     message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ...", ii, length(topics), topic, pkg, strategy))
-
+    dt <- NULL
     ovars <- ls(all.names=TRUE)
-    example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    dt <- system.time({
+      example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    })
     graphics.off()
     rm(list=setdiff(ls(all.names=TRUE), c(ovars, "ovars")))
-
-    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE", ii, length(topics), topic, pkg, strategy))
+    dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
+    dt <- paste(sprintf("%s: %g", names(dt), dt), collapse = ", ")
+    message("  Total processing time for example: ", dt)
+    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, strategy, dt))
   } ## for (ii ...)
 
   message(sprintf("- plan('%s') ... DONE", strategy))
