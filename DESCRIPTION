@@ -2,7 +2,7 @@ Package: doFuture
 Version: 0.3.0-9000
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
-    future (>= 1.3.0-9000),
+    future (>= 1.4.0),
     foreach (>= 1.4.3),
     iterators (>= 1.0.8),
     parallel,
@@ -14,7 +14,7 @@ Suggests:
 VignetteBuilder:
     R.rsp
 Remotes:
-    HenrikBengtsson/future@develop
+    HenrikBengtsson/future
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
 Description: Provides a '%dopar%' adaptor such that any type of futures can
