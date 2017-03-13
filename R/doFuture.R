@@ -1,8 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
 #' @importFrom future future resolve value
-#' @importFrom globals as.Globals
-#' @importFrom utils capture.output object.size
 #' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {
   stopifnot(inherits(obj, "foreach"))
@@ -12,6 +10,9 @@ doFuture <- function(obj, expr, envir, data) {
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
   
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 1. Input from foreach
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Setup
   it <- iter(obj)
   argsList <- as.list(it)
@@ -45,6 +46,10 @@ doFuture <- function(obj, expr, envir, data) {
     exprs <- NULL
   }
 
+  
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 2. The future expression to use
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
     doFuture::registerDoFuture()
@@ -65,7 +70,11 @@ doFuture <- function(obj, expr, envir, data) {
     mdebug("- R expression:")
     mprint(expr)
   }
+
   
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 3. Indentify globals and packages
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
@@ -85,36 +94,27 @@ doFuture <- function(obj, expr, envir, data) {
     mdebug("- R expression:")
     mprint(expr)
   }
-  
-  x <- argsList
+
+  ## At this point a globals should be resolved and we should know
+  ## their total size.
+  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+  ## Also make sure we've got our in-house '...future.x_ii' covered.
+  stopifnot("...future.x_ii" %in% names(globals))
+
   
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nx <- length(x)
+  nbr_of_elements <- length(argsList)
   nbr_of_futures <- nbrOfWorkers()
-  if (nbr_of_futures > nx) nbr_of_futures <- nx
-  
-  chunks <- splitIndices(nx, ncl = nbr_of_futures)
+  if (nbr_of_futures > nbr_of_elements) nbr_of_futures <- nbr_of_elements
+  chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
   mdebug("Number of chunks: %d", length(chunks))   
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 5. Create futures
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## Add argument placeholders
-  stopifnot("...future.x_ii" %in% names(globals))
-
-  ## FIXME:
-#  attr(globals, "resolved") <- TRUE
-#  attr(globals, "total_size") <- 0
-  
-  ## At this point a globals should be resolved and we should know their total size
-  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
-
-    ## To please R CMD check
-  ...future.x_ii <- NULL
-
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
   mdebug("Number of futures (= number of chunks): %d", nchunks)
@@ -126,7 +126,7 @@ doFuture <- function(obj, expr, envir, data) {
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
-    globals_ii[["...future.x_ii"]] <- x[chunk]
+    globals_ii[["...future.x_ii"]] <- argsList[chunk]
     stopifnot(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
@@ -140,7 +140,11 @@ doFuture <- function(obj, expr, envir, data) {
   rm(list = c("chunks", "globals", "expr", "packages"))
   mdebug("Launching %d futures (chunks) ... DONE", nchunks)
   stopifnot(length(fs) == nchunks)
+
   
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 6. Resolve futures, gather their values, and reduce
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Resolve futures
   if (debug) mdebug("- resolving future")
   resolve(fs, value = TRUE)
@@ -153,7 +157,7 @@ doFuture <- function(obj, expr, envir, data) {
 
   ## Reduce chunks
   results <- Reduce(c, results)
-  stopifnot(length(results) == nx)
+  stopifnot(length(results) == nbr_of_elements)
 
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
@@ -165,9 +169,12 @@ doFuture <- function(obj, expr, envir, data) {
     print(e)
     NULL
   })
-  stopifnot(length(results) == nx)
+  stopifnot(length(results) == nbr_of_elements)
 
 
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 7. Error handling
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## throw an error or return the combined results
   ## NOTE: This is adopted from foreach:::doSEQ()
   errorHandling <- obj$errorHandling
@@ -181,6 +188,9 @@ doFuture <- function(obj, expr, envir, data) {
   }
 
 
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 8. Final results
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
 

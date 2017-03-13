@@ -3,10 +3,10 @@ Version: 0.3.0-9000
 Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     future (>= 1.3.0-9000),
-    globals (>= 0.9.0),
     foreach (>= 1.4.3),
     iterators (>= 1.0.8),
-    parallel
+    parallel,
+    utils
 Suggests:
     doRNG (>= 1.6),
     markdown,
