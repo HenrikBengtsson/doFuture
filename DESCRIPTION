@@ -5,7 +5,8 @@ Depends:
     future (>= 1.3.0-9000),
     globals (>= 0.9.0),
     foreach (>= 1.4.3),
-    iterators (>= 1.0.8)
+    iterators (>= 1.0.8),
+    parallel
 Suggests:
     doRNG (>= 1.6),
     markdown,
