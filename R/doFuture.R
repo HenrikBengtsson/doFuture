@@ -97,7 +97,10 @@ doFuture <- function(obj, expr, envir, data) {
 
   ## At this point a globals should be resolved and we should know
   ## their total size.
-  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+  assert_resolved <- (packageVersion("future") >= "1.4.0")
+  if (assert_resolved) {
+    stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+  }
   ## Also make sure we've got our in-house '...future.x_ii' covered.
   stopifnot("...future.x_ii" %in% names(globals))
 
@@ -127,7 +130,7 @@ doFuture <- function(obj, expr, envir, data) {
     ## Subsetting outside future is more efficient
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- argsList[chunk]
-    stopifnot(attr(globals_ii, "resolved"))
+    if (assert_resolved) stopifnot(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
