@@ -6,16 +6,24 @@ findRdTopics <- function(package) {
 } ## findRdTopics()
 
 
-## Tweak plyr to always use .parallel=TRUE
+## Tweak all plyr functions with argument '.parallel'
 tweakPlyr <- function() {
   ns <- getNamespace("plyr")
-  llply <- getFromNamespace("llply", ns=ns)
-  formals(llply)$.parallel <- TRUE
-  assignInNamespace("llply", llply, ns=ns)
 
-  setup_parallel <- getFromNamespace("setup_parallel", ns=ns)
+  vars <- ls(envir = ns, all.names = TRUE)
+  for (var in vars) {
+    if (!exists(var, mode = "function", envir = ns)) next
+    fcn <- get(var, mode = "function", envir = ns)
+    fmls <- formals(fcn)
+    if (!".parallel" %in% names(fmls)) next
+    formals(fcn)$.parallel <- TRUE
+    message(" - plyr function tweaked: ", var)
+    assignInNamespace(var, fcn, ns=ns)
+  } 
+
+  setup_parallel <- getFromNamespace("setup_parallel", ns = ns)
   body(setup_parallel) <- body(setup_parallel)[-3]
-  assignInNamespace("setup_parallel", setup_parallel, ns=ns)
+  assignInNamespace("setup_parallel", setup_parallel, ns = ns)
 } ## tweakPlyr()
 
 
@@ -28,7 +36,10 @@ library("future")
 options(warnPartialMatchArgs=FALSE)
 oopts <- options(mc.cores=2L, warn=1L, digits=3L)
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
+strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
+if (require("future.BatchJobs")) strategies <- c(strategies, "batchjobs_local")
+if (require("future.batchtools")) strategies <- c(strategies, "batchtools_local")
+
 strategies <- getOption("doFuture.tests.strategies", strategies)
 
 library("doFuture")

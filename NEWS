@@ -3,7 +3,7 @@ Package: doFuture
 
 Version: 0.3.0-9000 [2017-03-12]
 
-NEW FEATURES:
+SIGNIFICANT CHANGES:
 
  o SPEED / LOAD BALANCING: The doFuture %dopar% backend now processes all
    elements in chunks such that each backend worker will process a subset
@@ -25,6 +25,14 @@ SOFTWARE QUALITY:
    now tested that global variables are properly identified.  Note that
    it is not possible to specify neither globals not package in times().
 
+ o ROBUSTNESS: The package redundancy tests (not run by 'R CMD check'; needed
+   to be run manually for now) that run all of plyr's 93 examples with the
+   doFuture foreach adaptor, , now forces testing of '.parallel = TRUE' for
+   all plyr functions that support that argument.  Each example is run across
+   various future strategies, including sequential, multicore, multisession,
+   and cluster, as well as batchjobs_local and batchtools_local, if installed.
+   See doFuture 0.2.0 notes below for how to run these tests.
+   
 
 Version: 0.3.0 [2016-10-27]
 
