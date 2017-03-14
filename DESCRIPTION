@@ -1,6 +1,6 @@
 Package: doFuture
-Version: 0.3.0-9000
-Title: Foreach Parallel Adaptor using the Future API of the 'future' Package
+Version: 0.4.0
+Title: A Universal Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     future (>= 1.4.0),
     foreach (>= 1.4.3),
