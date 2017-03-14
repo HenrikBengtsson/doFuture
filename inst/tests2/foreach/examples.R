@@ -15,8 +15,9 @@ library("future")
 options(warnPartialMatchArgs=FALSE)
 oopts <- options(mc.cores=2L, warn=1L, digits=3L)
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
-if (require("future.BatchJobs")) strategies <- c(strategies, "batchjobs")
+strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
+if (require("future.BatchJobs")) strategies <- c(strategies, "batchjobs_local")
+if (require("future.batchtools")) strategies <- c(strategies, "batchtools_local")
 strategies <- getOption("doFuture.tests.strategies", strategies)
 
 library("doFuture")
@@ -36,13 +37,17 @@ for (strategy in strategies) {
   for (ii in seq_along(topics)) {
     topic <- topics[ii]
     message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ...", ii, length(topics), topic, pkg, strategy))
-
+    dt <- NULL
     ovars <- ls(all.names=TRUE)
-    example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    dt <- system.time({
+      example(topic, package=pkg, character.only=TRUE, ask=FALSE)
+    })
     graphics.off()
     rm(list=setdiff(ls(all.names=TRUE), c(ovars, "ovars")))
-
-    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE", ii, length(topics), topic, pkg, strategy))
+    dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
+    dt <- paste(sprintf("%s: %g", names(dt), dt), collapse = ", ")
+    message("  Total processing time for example: ", dt)
+    message(sprintf("- #%d of %d example(%s, package='%s') using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, strategy, dt))
   } ## for (ii ...)
 
   message(sprintf("- plan('%s') ... DONE", strategy))

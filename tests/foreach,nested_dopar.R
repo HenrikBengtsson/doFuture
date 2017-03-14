@@ -30,14 +30,14 @@ for (strategy1 in strategies) {
 	message(capture.output(print(plan)))
         stopifnot(
 	  inherits(plan, "future"),
-	  packageVersion("future") <= "1.0.1" || inherits(plan, getOption("future.default", "eager"))
+	  inherits(plan, getOption("future.default", "eager"))
 	)
 	
         plan_b <- future::plan("list")
 	str(plan_b)
         stopifnot(
 	  inherits(plan_b[[1]], "future"),
-	  packageVersion("future") <= "1.0.1" || inherits(plan_b[[1]], getOption("future.default", "eager"))
+	  inherits(plan_b[[1]], getOption("future.default", "eager"))
 	)
 	
         list(a = a, plan_a = plan_a,
@@ -65,7 +65,7 @@ for (strategy1 in strategies) {
 	  x_aa_bb$b == b,
 	  inherits(x_aa_bb$plan_a[[1]], strategy2),
 	  inherits(x_aa_bb$plan_b[[1]], "future"),
-	  packageVersion("future") <= "1.0.1" || inherits(x_aa_bb$plan_b[[1]], getOption("future.default", "eager"))
+	  inherits(x_aa_bb$plan_b[[1]], getOption("future.default", "eager"))
 	)
       }
     }

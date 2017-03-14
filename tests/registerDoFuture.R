@@ -17,10 +17,13 @@ message("doFuture() %dopar% information:")
 for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
-
-  message(getDoParName())
-  message(getDoParVersion())
-  message(getDoParWorkers())
+  
+  message(name <- getDoParName())
+  stopifnot(name == "doFuture")
+  message(version <- getDoParVersion())
+  stopifnot(packageVersion(name) == version)
+  message(nbrOfWorkers <- getDoParWorkers())
+  stopifnot(nbrOfWorkers == nbrOfWorkers())
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)

@@ -4,6 +4,8 @@
 # REFERENCES:
 # * AppVeyor CI: https://ci.appveyor.com/
 # * r-appveyor: https://github.com/krlmlr/r-appveyor
+# * r-appveyor functions:
+#   https://raw.github.com/krlmlr/r-appveyor/master/r-travis/scripts/travis-tool.sh
 #
 # Validate your .appveyor.yml file at
 # https://ci.appveyor.com/tools/validate-yaml
@@ -38,11 +40,14 @@ install:
 # Adapt as necessary starting from here
 
 build_script:
+  - Rscript -e "c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())"
   - echo Current directory=%CD%
   - travis-tool.sh install_r foreach future iterators
+  - travis-tool.sh install_github HenrikBengtsson/future
   - travis-tool.sh install_r doRNG markdown R.rsp
   - travis-tool.sh install_bioc BiocParallel
   - travis-tool.sh install_r plyr future.BatchJobs
+  - travis-tool.sh install_github HenrikBengtsson/future.batchtools@develop
 
 test_script:
   - travis-tool.sh run_tests

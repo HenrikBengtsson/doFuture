@@ -15,7 +15,7 @@ for (strategy in strategies) {
   res <- try({
     foreach(i=1:10, .errorhandling="stop") %dopar% {
       set.seed(0xBEEF)
-      if (i %% 2 == 0) stop(sprintf("Index error %d", i))
+      if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
       rnorm(i, mean=mu, sd=sigma)
     }
   })
@@ -38,7 +38,7 @@ for (strategy in strategies) {
   sigma <- 2.0
   res <- foreach(i=1:10, .errorhandling="pass") %dopar% {
     set.seed(0xBEEF)
-    if (i %% 2 == 0) stop(sprintf("Index error %d", i))
+    if (i %% 2 == 0) stop(sprintf("Index error ('pass'), because i = %d", i))
     rnorm(i, mean=mu, sd=sigma)
   }
   str(res)
@@ -59,7 +59,7 @@ for (strategy in strategies) {
   sigma <- 2.0
   res <- foreach(i=1:10, .errorhandling="remove") %dopar% {
     set.seed(0xBEEF)
-    if (i %% 2 == 0) stop(sprintf("Index error %d", i))
+    if (i %% 2 == 0) stop(sprintf("Index error ('remove'), because i = %d", i))
     rnorm(i, mean=mu, sd=sigma)
   }
   str(res)

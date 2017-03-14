@@ -1,50 +1,112 @@
 Package: doFuture
 =================
 
-Version: 0.3.0 [2016-10-27]
-o Now argument '.export' of foreach() is acknowledged such that if
-  a character vector of variables names to be exported is specified,
-  then those variables and nothing else are exported to future.
-  If NULL, then automatic lookup of global variables is used.
-o BUG FIX: Nested future strategies were not respected by nested
-  %dopar% calls, because doFuture forgot to remind foreach that
-  doFuture should be used also deeper down.  Thank you Alex Vorobiev
-  for reporting on this.
+Version: 0.4.0 [2017-03-13]
+
+SIGNIFICANT CHANGES:
+
+ o SPEED / LOAD BALANCING: The doFuture %dopar% backend now processes all
+   elements in chunks such that each backend worker will process a subset
+   of data at once (and only once).  This significantly speeds up
+   processing time when iterating over a large number of elements that
+   each has short a processing time.
   
+GLOBALS:
 
+ o For consistency, globals and packages are now identified the same way
+   as they are when using regular futures.
+ 
+SOFTWARE QUALITY:
+
+ o Now the package tests future.batchtools with foreach by itself, in
+   combination with plyr (parallel = TRUE) as well as with
+   BiocParallel::bplapply() and friends.  Similar tests are already done
+   using future.BatchJobs.
+
+ o Added test for foreach::times() %dopar% { ... }.  Especially, it is
+   now tested that global variables are properly identified.  Note that
+   times() does not allow you to specify neither '.export' nor '.packages'
+   so it is not really designed for processing in external R process.
+   Having said this, times() does indeed work also in those cases when
+   used with doFuture because it internally handles this automatically.
+
+ o ROBUSTNESS: The package redundancy tests (not run by 'R CMD check'; needed
+   to be run manually for now) that run 89 plyr examples with the doFuture
+   foreach adaptor, now forces testing of '.parallel = TRUE' for all plyr
+   functions that support that argument.  Each example is run across various
+   future strategies, including sequential, multicore, multisession, and
+   cluster, as well as batchjobs_local and batchtools_local, if installed.
+   See doFuture 0.2.0 notes below for how to run these tests.
+   
+
+Version: 0.3.0 [2016-10-27]
+
+NEW FEATURES:
+
+ o Now argument '.export' of foreach() is acknowledged such that if
+   a character vector of variables names to be exported is specified,
+   then those variables and nothing else are exported to future.
+   If NULL, then automatic lookup of global variables is used.
+
+BUG FIXES:
+
+ o Nested future strategies were not respected by nested %dopar% calls,
+   because doFuture forgot to remind foreach that doFuture should be used
+   also deeper down.  Thank you Alex Vorobiev for reporting on this.
+   
+ 
 Version: 0.2.1 [2016-09-07]
-o BUG FIX: Internal R expression created to attach packages was
-  not fully correct (but it still worked).
 
+BUG FIXES:
 
+ o Internal R expression created to attach packages was not fully correct
+   (but it still worked).
+ 
+ 
 Version: 0.2.0 [2016-06-25]
-o ROBUSTNESS: Added package redundancy tests that runs all examples
-  of the 'foreach' and the 'plyr' packages using doFuture and all
-  known types of futures.  These tests are not package tests and
-  need to be run manually.  The test scripts are available in package
-  directory path <- system.file("tests2", package="doFuture") and can
-  be run as source(file.path(path, "plyr", "examples.R")).
-o ROBUSTNESS: Added package tests validating foreach() on regular as
-  well as future.BatchJobs futures.  Same for plyr and BiocParallel
-  apply functions.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Added package redundancy tests that runs all examples
+   of the 'foreach' and the 'plyr' packages using doFuture and all
+   known types of futures.  These tests are not package tests and
+   need to be run manually.  The test scripts are available in package
+   directory path <- system.file("tests2", package="doFuture") and can
+   be run as source(file.path(path, "plyr", "examples.R")).
+   
+ o ROBUSTNESS: Added package tests validating foreach() on regular as
+   well as future.BatchJobs futures.  Same for plyr and BiocParallel
+   apply functions.
+ 
+ 
 Version: 0.1.3 [2016-05-07]
-o Added package help page, i.e. help("doFuture").
-o REPRODUCIBILITY: Added package tests asserting random number
-  generator (RNG) reproducibility using the doRNG package.
 
+ o Added package help page, i.e. help("doFuture").
 
+RANDOM NUMBER GENERATION:
+
+ o Added package tests asserting random number generator (RNG)
+   reproducibility when using the doRNG package.
+ 
+ 
 Version: 0.1.2 [2016-05-05]
-o Now foreach::getDoParWorkers() gives useful information with
-  registerDoFuture() in most cases.  In cases where the number of
-  workers cannot be inferred easily from future::plan() it will
-  default to returning a large number (=99).
 
+NEW FEATURES:
 
+ o Now foreach::getDoParWorkers() gives useful information with
+   registerDoFuture() in most cases.  In cases where the number of
+   workers cannot be inferred easily from future::plan() it will
+   default to returning a large number (=99).
+ 
+ 
 Version: 0.1.1 [2016-05-05]
-o Now foreach::getDoParName() and foreach::getDoParVersion() gives
-  useful information with registerDoFuture().
+
+NEW FEATURES:
+
+ o Now foreach::getDoParName() and foreach::getDoParVersion() gives
+   useful information with registerDoFuture().
+
 
 Version: 0.1.0 [2016-05-04]
-o Created.
+
+ o Created.
