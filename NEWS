@@ -1,10 +1,15 @@
 Package: doFuture
 =================
 
-Version: 0.4.0-9000 [2017-03-13]
+Version: 0.4.0-9000 [2017-03-17]
 
  o ...
- 
+
+BUG FIXES:
+
+ o If a foreach() call would result in an error, the error thrown would
+   report on "object 'expr' not found" and not the actually error message.
+
 
 Version: 0.4.0 [2017-03-13]
 
@@ -22,7 +27,7 @@ GLOBALS:
    as they are when using regular futures.
  
 SOFTWARE QUALITY:
-
+	 
  o Now the package tests future.batchtools with foreach by itself, in
    combination with plyr (parallel = TRUE) as well as with
    BiocParallel::bplapply() and friends.  Similar tests are already done

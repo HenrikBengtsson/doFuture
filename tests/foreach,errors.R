@@ -12,15 +12,16 @@ for (strategy in strategies) {
   mu <- 1.0
   sigma <- 2.0
 
-  res <- try({
+  res <- tryCatch({
     foreach(i=1:10, .errorhandling="stop") %dopar% {
       set.seed(0xBEEF)
       if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
       rnorm(i, mean=mu, sd=sigma)
     }
-  })
-  str(res)
-  stopifnot(inherits(res, "try-error"))
+  }, error = identity)
+  print(res)
+  stopifnot(inherits(res, "error"),
+            grepl("Index error", conditionMessage(res)))
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)

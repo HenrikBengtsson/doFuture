@@ -139,7 +139,7 @@ doFuture <- function(obj, expr, envir, data) {
 
     mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
-  rm(list = c("chunks", "globals", "expr", "packages"))
+  rm(list = c("chunks", "globals", "packages"))
   mdebug("Launching %d futures (chunks) ... DONE", nchunks)
   stopifnot(length(fs) == nchunks)
 
@@ -186,8 +186,9 @@ doFuture <- function(obj, expr, envir, data) {
     errorIndex <- getErrorIndex(it)
     msg <- sprintf('task %d failed - "%s"', errorIndex,
                    conditionMessage(errorValue))
-    stop(simpleError(msg, call=expr))
+    stop(simpleError(msg, call = expr))
   }
+  rm(list = c("expr"))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
