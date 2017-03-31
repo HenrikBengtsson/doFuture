@@ -38,11 +38,11 @@ doFuture <- function(obj, expr, envir, data) {
   ## Any packages to be on the search path?
   pkgs <- obj$packages
   if (length(pkgs) > 0L) {
-    exprs <- lapply(pkgs, FUN=function(p) call("library", p))
+    exprs <- lapply(pkgs, FUN = function(p) call("library", p))
     exprs <- c(exprs, expr)
     expr <- Reduce(function(a, b) {
-      substitute({ a; b }, list(a=a, b=b))
-    }, x=exprs)
+      substitute({ a; b }, list(a = a, b = b))
+    }, x = exprs)
     exprs <- NULL
   }
 
@@ -239,7 +239,7 @@ doFuture <- function(obj, expr, envir, data) {
   ## NOTE: This is adopted from foreach:::doSEQ()
   if (debug) mdebug("- accumulating results")
   tryCatch({
-    accumulator(results, tags=seq_along(results))
+    accumulator(results, tags = seq_along(results))
   }, error = function(e) {
     cat("error calling combine function:\n")
     print(e)

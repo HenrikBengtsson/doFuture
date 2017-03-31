@@ -10,13 +10,13 @@ registerDoFuture()
 for (strategy1 in strategies) {
   for (strategy2 in strategies) {
     message(sprintf("- plan(list('%s', '%s')) ...", strategy1, strategy2))
-    plan(list(a=strategy1, b=strategy2))
+    plan(list(a = strategy1, b = strategy2))
     nested <- plan("list")
 
     as <- 1:2
     bs <- 3:1
-    x <- foreach(a=as) %:% foreach(b=bs) %dopar% {
-      list(a=a, b=b, plan_b=future::plan("list"), plan=future::plan())
+    x <- foreach(a = as) %:% foreach(b = bs) %dopar% {
+      list(a = a, b = b, plan_b = future::plan("list"), plan = future::plan())
     } 
 
     stopifnot(length(x) == length(as))

@@ -19,5 +19,5 @@ registerDoFuture <- function() {
     )
   }
 
-  setDoPar(doFuture, data=NULL, info=info)
+  setDoPar(doFuture, data = NULL, info = info)
 }

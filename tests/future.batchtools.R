@@ -1,6 +1,6 @@
 source("incl/start.R")
 
-if (require(future.batchtools, character.only=TRUE)) {
+if (require(future.batchtools, character.only = TRUE)) {
 
 message("*** doFuture + future.batchtools ...")
 
@@ -15,9 +15,9 @@ for (strategy in strategies) {
   message("- Explicitly exporting globals ...")
   mu <- 1.0
   sigma <- 2.0
-  res1 <- foreach(i=1:3, .export=c("mu", "sigma"), .packages="stats") %dopar% {
+  res1 <- foreach(i = 1:3, .export = c("mu", "sigma"), .packages = "stats") %dopar% {
     set.seed(0xBEEF)
-    rnorm(i, mean=mu, sd=sigma)
+    rnorm(i, mean = mu, sd = sigma)
   }
   print(res1)
 
@@ -31,16 +31,16 @@ for (strategy in strategies) {
   message("- Implicitly exporting globals (via future) ...")
   mu <- 1.0
   sigma <- 2.0
-  res2 <- foreach(i=1:3, .packages="stats") %dopar% {
+  res2 <- foreach(i = 1:3, .packages = "stats") %dopar% {
     set.seed(0xBEEF)
-    rnorm(i, mean=mu, sd=sigma)
+    rnorm(i, mean = mu, sd = sigma)
   }
   print(res2)
   stopifnot(all.equal(res2, res0))
 
   message("- Implicitly exporting globals (via future) ... DONE")
 
-  if (require(plyr, character.only=TRUE)) {
+  if (require(plyr, character.only = TRUE)) {
     message("*** dplyr w / doFuture + future.batchtools ...")
 
     print(sessionInfo())
@@ -55,28 +55,28 @@ for (strategy in strategies) {
     message("*** dplyr w / doFuture + future.batchtools ... DONE")
   } ## if (require(plyr))
 
-  if (require(BiocParallel, character.only=TRUE) && packageVersion("BiocParallel") >= "1.2.22") {
+  if (require(BiocParallel, character.only = TRUE) && packageVersion("BiocParallel") >= "1.2.22") {
     message("*** BiocParallel w / doFuture + future.batchtools ...")
 
     print(sessionInfo())
 
     y0 <- list()
     p <- SerialParam()
-    y0$a <- bplapply(1:5, sqrt, BPPARAM=p)
-    y0$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    y0$a <- bplapply(1:5, sqrt, BPPARAM = p)
+    y0$b <- bpvec(1:5, sqrt, BPPARAM = p)
     str(y0)
 
-    register(SerialParam(), default=TRUE)
+    register(SerialParam(), default = TRUE)
     p <- DoparParam()
     y1 <- list()
-    y1$a <- bplapply(1:5, sqrt, BPPARAM=p)
-    y1$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    y1$a <- bplapply(1:5, sqrt, BPPARAM = p)
+    y1$b <- bpvec(1:5, sqrt, BPPARAM = p)
     stopifnot(identical(y1, y0))
   
-    register(DoparParam(), default=TRUE)
+    register(DoparParam(), default = TRUE)
     y2 <- list()
-    y2$a <- bplapply(1:5, sqrt, BPPARAM=p)
-    y2$b <- bpvec(1:5, sqrt, BPPARAM=p)
+    y2$a <- bplapply(1:5, sqrt, BPPARAM = p)
+    y2$b <- bpvec(1:5, sqrt, BPPARAM = p)
     stopifnot(identical(y2, y0))
 
     message("*** BiocParallel w / doFuture + future.batchtools ... DONE")
