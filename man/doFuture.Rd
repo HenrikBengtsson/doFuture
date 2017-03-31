@@ -90,6 +90,26 @@ want to make sure that you always specify arguments \code{.export}
 and \code{.packages}.
 }
 
+\section{Load balancing ("chunking")}{
+
+Whether load balancing ("chunking") should take place or not can be
+controlled by \code{foreach()} option
+\code{.options.future = list(scheduling = <value>)}.
+The value \code{scheduling} specifies the average number of futures
+("chunks") per worker.
+If \code{0.0}, then a single future is used to process all iterations
+- none of the other workers are not used.
+If \code{1.0} or \code{TRUE}, then one future per worker is used.
+If \code{2.0}, then each worker will process two futures (if there are
+enough iterations).
+If \code{Inf} or \code{FALSE}, then one future per iteration is used.
+The default value is \code{scheduling = 1.0}, unless option
+\code{.options.multicore = list(preschedule = <logical>)} is set,
+which in case that becomes the default.  In other words, it is also
+possible to disable load balancing by using
+\code{.options.multicore = list(preschedule = FALSE)}.
+}
+
 \examples{
 \donttest{
 library("doFuture")

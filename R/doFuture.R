@@ -17,7 +17,7 @@ doFuture <- function(obj, expr, envir, data) {
   it <- iter(obj)
   argsList <- as.list(it)
   accumulator <- makeAccum(it)
-
+  
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
@@ -132,9 +132,57 @@ doFuture <- function(obj, expr, envir, data) {
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Options:
+  ## (a) .options.future = list(scheduling = <numeric>)
+  ##      cf. future_lapply(..., future.scheduling)
+  scheduling <- obj[["options"]][["future"]][["scheduling"]]
+
+  ## If not set, fall back to:
+  ## (b) .options.multicore = list(preschedule = <logical>)
+  ##      cf. mclapply(..., preschedule)
+  if (is.null(scheduling)) {
+    preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
+    if (!is.null(preschedule)) {
+      preschedule <- as.logical(preschedule)
+      stopifnot(length(preschedule) == 1L, !is.na(preschedule))
+      if (preschedule) {
+        scheduling <- 1.0
+      } else {
+        scheduling <- Inf
+      }
+    }
+  }
+
+  ## (c) Otherwise, the default is to preschedule ("chunk")
+  if (is.null(scheduling)) scheduling <- 1.0
+
+  stopifnot(length(scheduling) == 1, !is.na(scheduling),
+            is.numeric(scheduling) || is.logical(scheduling))
+
   nbr_of_elements <- length(argsList)
-  nbr_of_futures <- nbrOfWorkers()
-  if (nbr_of_futures > nbr_of_elements) nbr_of_futures <- nbr_of_elements
+  if (is.logical(scheduling)) {
+    if (scheduling) {
+      nbr_of_futures <- nbrOfWorkers()
+      if (nbr_of_futures > nbr_of_elements)
+        nbr_of_futures <- nbr_of_elements
+    } else {
+      nbr_of_futures <- nbr_of_elements
+    }
+  } else {
+    stopifnot(scheduling >= 0)
+    nbr_of_workers <- nbrOfWorkers()
+    if (nbr_of_workers > nbr_of_elements) {
+      nbr_of_workers <- nbr_of_elements
+    }
+    nbr_of_futures <- scheduling * nbr_of_workers
+    if (nbr_of_futures < 1) {
+      nbr_of_futures <- 1L
+    }
+    else if (nbr_of_futures > nbr_of_elements) {
+      nbr_of_futures <- nbr_of_elements
+    }
+  }
+
   chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
   mdebug("Number of chunks: %d", length(chunks))   
 
