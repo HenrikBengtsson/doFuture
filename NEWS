@@ -1,16 +1,16 @@
 Package: doFuture
 =================
 
-Version: 0.4.0-9000 [2017-03-30]
+Version: 0.4.0-9000 [2017-03-31]
 
 NEW FEATURES:
 
- o Added foreach() option to control whether scheduling ("chunking") should
-   take place or not, and if so, how granual it should be.  This is specified
+ o Added foreach() option to control whether scheduling ("chanting") should
+   take place or not, and if so, how granular it should be.  This is specified
    as foreach(..., .options.future = list(scheduling = <value>)).  With
    scheduling = 1.0 (or equivalently scheduling = TRUE), the the elements
    (iterations) will be split up in equally sized chunks such that each backend
-   worker will process exacly one chunk.  With scheduling = Inf (or
+   worker will process exactly one chunk.  With scheduling = Inf (or
    equivalently scheduling = FALSE), chunking is disabled, i.e. each worker
    process exactly one element at the time.  If schedule = 0.0, then a single
    workers processes all elements (and the other workers will not be used).
@@ -28,7 +28,7 @@ SOFTWARE QUALITY:
    test against all of the future strategies that comes with the future
    package, but it is possible to also test against future.BatchJobs,
    future.batchtools, and so on.  These tests are performed on all possible
-   future backends before each release (as well as via continous integration).
+   future backends before each release (as well as via continuous integration).
 
 BUG FIXES:
 
