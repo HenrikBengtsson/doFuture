@@ -67,6 +67,7 @@ R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
 _R_CHECK_CRAN_INCOMING_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_CRAN_INCOMING_', 'FALSE'))")
 _R_CHECK_XREFS_REPOSITORIES_ = $(shell if test "$(_R_CHECK_CRAN_INCOMING_)" = "TRUE"; then echo ""; else echo "invalidURL"; fi)
 _R_CHECK_FULL_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_FULL_', ''))")
+_R_CHECK_TESTSETS_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_TESTSETS_', 'foreach,plyr'))")
 R_CHECK_OPTS = --as-cran --timings $(shell if test "$(_R_CHECK_USE_VALGRIND_)" = "TRUE"; then echo "--use-valgrind"; fi)
 R_RD4PDF = $(shell $(R_SCRIPT) -e "if (getRversion() < 3) cat('times,hyper')")
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
@@ -130,6 +131,7 @@ debug:
 	@echo _R_CHECK_CRAN_INCOMING_=\'$(_R_CHECK_CRAN_INCOMING_)\'
 	@echo _R_CHECK_XREFS_REPOSITORIES_=\'$(_R_CHECK_XREFS_REPOSITORIES_)\'
 	@echo _R_CHECK_FULL_=\'$(_R_CHECK_FULL_)\'
+	@echo _R_CHECK_TESTSETS_=\'$(_R_CHECK_TESTSETS_)\'
 	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
 	@echo R_RD4PDF=\'$(R_RD4PDF)\'
 	@echo
@@ -254,6 +256,7 @@ $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	export _R_CHECK_FORCE_SUGGESTS_=0;\
 	export R_RD4PDF=$(R_RD4PDF);\
 	export _R_CHECK_FULL_=$(_R_CHECK_FULL_);\
+	export _R_CHECK_TESTSETS_=$(_R_CHECK_TESTSETS_);\
 	$(R) --no-init-file CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 

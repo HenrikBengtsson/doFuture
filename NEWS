@@ -19,6 +19,17 @@ NEW FEATURES:
    which is defined by doParallel, is used to mean scheduling = preschedule.
    If that is not set, then scheduling = 1.0 is used by default.
 
+SOFTWARE QUALITY:
+	 
+ o TESTS: Now the doFuture package tests can be configured to also run the
+   the help examples of the foreach and plyr packages with the doFuture
+   adaptor.  To further increase the coverage of these tests, the plyr example
+   code is tweaked on-the-fly to set .parallel = TRUE.  The default is to
+   test against all of the future strategies that comes with the future
+   package, but it is possible to also test against future.BatchJobs,
+   future.batchtools, and so on.  These tests are performed on all possible
+   future backends before each release (as well as via continous integration).
+
 BUG FIXES:
 
  o Using a nested foreach() call would incorrectly produce an error on

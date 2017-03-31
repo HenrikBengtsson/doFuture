@@ -15,15 +15,17 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 library("future")
 options(warnPartialMatchArgs = FALSE)
 oopts <- options(mc.cores = 2L, warn = 1L, digits = 3L)
-strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
-if (require("future.BatchJobs")) {
-  strategies <- c(strategies, "batchjobs_local")
+
+strategies <- getOption("doFuture.tests.strategies")
+strategies <- strsplit(strategies, split = "[, ]")[[1]]
+strategies <- strategies[nzchar(strategies)]
+## Default is to use what's provided by the future package
+if (length(strategies) == 0) {
+  strategies <- future:::supportedStrategies()
+  strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
 }
-if (require("future.batchtools")) {
-  strategies <- c(strategies, "batchtools_local")
-}
-strategies <- getOption("doFuture.tests.strategies", strategies)
+if (any(grepl("batchjobs_", strategies))) library("future.BatchJobs")
+if (any(grepl("batchtools_", strategies))) library("future.batchtools")
 
 library("doFuture")
 registerDoFuture()

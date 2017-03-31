@@ -38,6 +38,37 @@ matrix:
         - Rscript -e 'library(lintr); lint_package(linters = with_defaults(commented_code_linter = NULL, closed_curly_linter = closed_curly_linter(allow_single_line = TRUE), open_curly_linter = open_curly_linter(allow_single_line = TRUE)))'
       env: NB='w/ covr & lintr' ## Just a label
     - os: linux
+      r: release
+      env:
+        - NB='w/ foreach' ## Just a label
+        - _R_TESTSETS_=foreach
+    - os: linux
+      r: release
+      r_packages: plyr
+      env:
+        - NB='w/ plyr' ## Just a label
+        - _R_TESTSETS_=plyr
+    - os: linux
+      r: release
+      env:
+        - NB='w/ plyr & parallel' ## Just a label
+        - _R_TESTSETS_=plyr
+    - os: linux
+      r: release
+      r_packages: future.BatchJobs
+      env:
+        - NB='w/ plyr & future.BatchJobs' ## Just a label
+        - _R_TESTSETS_=plyr
+        -_R_CHECK_FUTURE_STRATEGIES_=future.BatchJobs
+    - os: linux
+      r: release
+      r_github_packages:
+        - HenrikBengtsson/future.batchtools
+      env:
+        - NB='w/ plyr & future.batchtools' ## Just a label
+        - _R_TESTSETS_=plyr
+        -_R_CHECK_FUTURE_STRATEGIES_=future.batchtools
+    - os: linux
       r: devel
     - os: osx
       r: oldrel
