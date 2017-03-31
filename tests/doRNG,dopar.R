@@ -44,16 +44,18 @@ if (require("doRNG")) {
     # (r2 used 2 nodes, while r3 used 3 nodes)
 
 
-    # argument `once = FALSE` reseeds doRNG's seed at the beginning of each loop
+    # argument `once = FALSE` reseeds doRNG's seed at the beginning
+    # of each loop
     registerDoRNG(1234, once = FALSE)
     r1 <- foreach(i = 1:4) %dopar% { runif(1) }
     r2 <- foreach(i = 1:4) %dopar% { runif(1) }
     stopifnot(identical(r1, r2))
 
-    # Once doRNG is registered the seed can also be passed as an option to %dopar%
-    r1.2 <- foreach(i = 1:4, .options.RNG = 456) %dopar% { runif(1) }
-    r2.2 <- foreach(i = 1:4, .options.RNG = 456) %dopar% { runif(1) }
-    stopifnot(identical(r1.2, r2.2), !identical(r1.2, r1))
+    # Once doRNG is registered the seed can also be passed as an
+    # option to %dopar%
+    r1_2 <- foreach(i = 1:4, .options.RNG = 456) %dopar% { runif(1) }
+    r2_2 <- foreach(i = 1:4, .options.RNG = 456) %dopar% { runif(1) }
+    stopifnot(identical(r1_2, r2_2), !identical(r1_2, r1))
 
     message(sprintf("- plan('%s') ... DONE", strategy))
   } ## for (strategy ...)

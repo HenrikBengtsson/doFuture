@@ -33,4 +33,3 @@ message("*** times() ... DONE")
 print(sessionInfo())
 
 source("incl/end.R")
-

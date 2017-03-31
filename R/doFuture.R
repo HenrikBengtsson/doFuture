@@ -2,26 +2,26 @@
 #' @importFrom iterators iter
 #' @importFrom future future resolve value
 #' @importFrom parallel splitIndices
-doFuture <- function(obj, expr, envir, data) {
+doFuture <- function(obj, expr, envir, data) {   #nolint
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
-  getGlobalsAndPackages <- importFuture("getGlobalsAndPackages")
+  getGlobalsAndPackages <- import_future("getGlobalsAndPackages")  #nolint
 
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
-  
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 1. Input from foreach
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Setup
   it <- iter(obj)
-  argsList <- as.list(it)
+  args_list <- as.list(it)
   accumulator <- makeAccum(it)
-  
+
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
-  
+
   ## Global variables?
   export <- unique(obj$export)
   if (is.null(export)) {
@@ -34,7 +34,7 @@ doFuture <- function(obj, expr, envir, data) {
     globals <- unique(c(export, "...future.x_ii"))
   }
   export <- NULL
-  
+
   ## Any packages to be on the search path?
   pkgs <- obj$packages
   if (length(pkgs) > 0L) {
@@ -46,7 +46,7 @@ doFuture <- function(obj, expr, envir, data) {
     exprs <- NULL
   }
 
-  
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 2. The future expression to use
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -60,28 +60,29 @@ doFuture <- function(obj, expr, envir, data) {
     mdebug("- dummy globals (as locals): [%d] %s",
            length(argnames), paste(sQuote(argnames), collapse = ", "))
   }
-  dummy_globals <- NULL
+  dummy_globals <- NULL  #nolint
   for (kk in seq_along(argnames)) {
-    name <- as.symbol(argnames[kk])
+    name <- as.symbol(argnames[kk])  #nolint
     if (kk == 1L) {
       dummy_globals <- bquote(.(name) <- NULL)
     } else {
       dummy_globals <- bquote({ .(dummy_globals); .(name) <- NULL })
     }
   }
-  
-  
+
+
   ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
     doFuture::registerDoFuture()
-    
+
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
-      ...future.x_jj <- ...future.x_ii[[jj]]
+      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
       .(dummy_globals)
-      ...future.env <- environment()
+      ...future.env <- environment()          #nolint
       local({
         for (name in names(...future.x_jj)) {
-          assign(name, ...future.x_jj[[name]], envir = ...future.env, inherits = FALSE)
+          assign(name, ...future.x_jj[[name]],
+                 envir = ...future.env, inherits = FALSE)
         }
       })
       tryCatch(.(expr), error = identity)
@@ -93,7 +94,7 @@ doFuture <- function(obj, expr, envir, data) {
     mprint(expr)
   }
 
-  
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,8 +109,8 @@ doFuture <- function(obj, expr, envir, data) {
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
   rm(list = c("gp", "globals_envir", "pkgs"))
-  
-  names_globals <- names(globals)  
+
+  names_globals <- names(globals)
   if (debug) {
     mdebug("  - globals: [%d] %s", length(globals),
            paste(sQuote(names_globals), collapse = ", "))
@@ -128,7 +129,7 @@ doFuture <- function(obj, expr, envir, data) {
   ## Also make sure we've got our in-house '...future.x_ii' covered.
   stopifnot("...future.x_ii" %in% names(globals))
 
-  
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,7 +160,7 @@ doFuture <- function(obj, expr, envir, data) {
   stopifnot(length(scheduling) == 1, !is.na(scheduling),
             is.numeric(scheduling) || is.logical(scheduling))
 
-  nbr_of_elements <- length(argsList)
+  nbr_of_elements <- length(args_list)
   if (is.logical(scheduling)) {
     if (scheduling) {
       nbr_of_futures <- nbrOfWorkers()
@@ -184,7 +185,7 @@ doFuture <- function(obj, expr, envir, data) {
   }
 
   chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
-  mdebug("Number of chunks: %d", length(chunks))   
+  mdebug("Number of chunks: %d", length(chunks))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -193,7 +194,7 @@ doFuture <- function(obj, expr, envir, data) {
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
   mdebug("Number of futures (= number of chunks): %d", nchunks)
-  
+
   mdebug("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
@@ -201,13 +202,13 @@ doFuture <- function(obj, expr, envir, data) {
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
-    globals_ii[["...future.x_ii"]] <- argsList[chunk]
+    globals_ii[["...future.x_ii"]] <- args_list[chunk]
     ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
     stopifnot(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
-    
+
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii"))
 
@@ -217,7 +218,7 @@ doFuture <- function(obj, expr, envir, data) {
   mdebug("Launching %d futures (chunks) ... DONE", nchunks)
   stopifnot(length(fs) == nchunks)
 
-  
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 6. Resolve futures, gather their values, and reduce
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -253,13 +254,15 @@ doFuture <- function(obj, expr, envir, data) {
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## throw an error or return the combined results
   ## NOTE: This is adopted from foreach:::doSEQ()
-  errorHandling <- obj$errorHandling
-  if (debug) mdebug("- processing errors (handler = %s)", sQuote(errorHandling))
-  errorValue <- getErrorValue(it)
-  if (identical(errorHandling, "stop") && !is.null(errorValue)) {
-    errorIndex <- getErrorIndex(it)
-    msg <- sprintf('task %d failed - "%s"', errorIndex,
-                   conditionMessage(errorValue))
+  error_handling <- obj$errorHandling
+  if (debug) {
+    mdebug("- processing errors (handler = %s)", sQuote(error_handling))
+  }
+  error_value <- getErrorValue(it)
+  if (identical(error_handling, "stop") && !is.null(error_value)) {
+    error_index <- getErrorIndex(it)
+    msg <- sprintf('task %d failed - "%s"', error_index,
+                   conditionMessage(error_value))
     stop(simpleError(msg, call = expr))
   }
   rm(list = c("expr"))
@@ -272,6 +275,6 @@ doFuture <- function(obj, expr, envir, data) {
   res <- getResult(it)
 
   if (debug) mdebug("doFuture() ... DONE")
-  
+
   res
 } ## doFuture()

@@ -83,4 +83,3 @@ message("*** doFuture() - invalid accumulator ... DONE")
 print(sessionInfo())
 
 source("incl/end.R")
-
