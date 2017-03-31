@@ -10,7 +10,7 @@
 #' @importFrom utils packageVersion
 #' @export
 #' @keywords utilities
-registerDoFuture <- function() {
+registerDoFuture <- function() {  #nolint
   info <- function(data, item) {
     switch(item,
       name = "doFuture",
@@ -19,5 +19,5 @@ registerDoFuture <- function() {
     )
   }
 
-  setDoPar(doFuture, data=NULL, info=info)
+  setDoPar(doFuture, data = NULL, info = info)
 }

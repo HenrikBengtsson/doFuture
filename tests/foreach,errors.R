@@ -13,10 +13,10 @@ for (strategy in strategies) {
   sigma <- 2.0
 
   res <- tryCatch({
-    foreach(i=1:10, .errorhandling="stop") %dopar% {
+    foreach(i = 1:10, .errorhandling = "stop") %dopar% {
       set.seed(0xBEEF)
       if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
-      rnorm(i, mean=mu, sd=sigma)
+      rnorm(i, mean = mu, sd = sigma)
     }
   }, error = identity)
   print(res)
@@ -37,10 +37,10 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
-  res <- foreach(i=1:10, .errorhandling="pass") %dopar% {
+  res <- foreach(i = 1:10, .errorhandling = "pass") %dopar% {
     set.seed(0xBEEF)
     if (i %% 2 == 0) stop(sprintf("Index error ('pass'), because i = %d", i))
-    rnorm(i, mean=mu, sd=sigma)
+    rnorm(i, mean = mu, sd = sigma)
   }
   str(res)
 
@@ -58,10 +58,10 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
-  res <- foreach(i=1:10, .errorhandling="remove") %dopar% {
+  res <- foreach(i = 1:10, .errorhandling = "remove") %dopar% {
     set.seed(0xBEEF)
     if (i %% 2 == 0) stop(sprintf("Index error ('remove'), because i = %d", i))
-    rnorm(i, mean=mu, sd=sigma)
+    rnorm(i, mean = mu, sd = sigma)
   }
   str(res)
 
@@ -74,7 +74,7 @@ message("*** doFuture() - invalid accumulator ...")
 
 ## This replicates how foreach:::doSEQ() handles it
 boom <- function(...) stop("boom!")
-res <- foreach(i = 1:3, .combine=boom) %dopar% { i }
+res <- foreach(i = 1:3, .combine = boom) %dopar% { i }
 print(res)
 stopifnot(is.null(res))
 
@@ -83,4 +83,3 @@ message("*** doFuture() - invalid accumulator ... DONE")
 print(sessionInfo())
 
 source("incl/end.R")
-

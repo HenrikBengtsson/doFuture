@@ -15,7 +15,7 @@ mprint <- function(...) {
   message(paste(capture.output(print(...)), collapse = "\n"))
 }
 
-importFuture <- function(name, mode = "function") {
+import_future <- function(name, mode = "function") {
   ns <- getNamespace("future")
   get(name, envir = ns, mode = "function")
 }

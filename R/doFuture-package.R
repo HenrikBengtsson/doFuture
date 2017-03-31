@@ -5,7 +5,7 @@
 #' (that is supported by Future API of the \pkg{future} package) can
 #' be used for asynchronous (parallel/distributed) or synchronous
 #' (sequential) processing.
-#' 
+#'
 #' In other words, \emph{if a computational backend is supported via
 #' the Future API, it'll be automatically available for all functions
 #' and packages making using the \pkg{foreach} framework.}
@@ -20,25 +20,30 @@
 #' \code{\link[future:plan]{future::plan}()}.  For example:
 #'
 #' \itemize{
-#'  \item {\code{plan(multiprocess)}: }{multiple R processes on the local machine.}
-#'  \item {\code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}: }{multiple R processes on external machines.}
+#'  \item {\code{plan(multiprocess)}: }{
+#'    multiple R processes on the local machine.}
+#'  \item {\code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}: }{
+#'    multiple R processes on external machines.}
 #' }
 #'
 #' See the \pkg{future} package for more examples.
-#' 
+#'
 #' @section Built-in backends:
 #' The built-in backends of \pkg{doFuture} are for instance multicore
 #' (forked processes), multisession (background R sessions), and
 #' ad-hoc cluster (background R sessions on local and / or remote machines).
-#' Additional futures are provided by other "future" packages (see below for some examples).
-#' 
+#' Additional futures are provided by other "future" packages
+#' (see below for some examples).
+#'
 #' @section Backends for high-performance compute clusters:
 #' The \pkg{future.BatchJobs} package provides support for high-performance
 #' compute (HPC) cluster schedulers such as SGE, Slurm, and TORQUE / PBS.
 #' For example,
 #' \itemize{
-#'  \item {\code{plan(batchjobs_slurm)}: }{Process via a Slurm scheduler job queue.}
-#'  \item {\code{plan(batchjobs_torque)}: }{Process via a TORQUE / PBS scheduler job queue.}
+#'  \item {\code{plan(batchjobs_slurm)}: }{
+#'    Process via a Slurm scheduler job queue.}
+#'  \item {\code{plan(batchjobs_torque)}: }{
+#'    Process via a TORQUE / PBS scheduler job queue.}
 #' }
 #' This builds on top of the queuing framework that the \pkg{BatchJobs}
 #' package provides. For more details on backend configuration, please see

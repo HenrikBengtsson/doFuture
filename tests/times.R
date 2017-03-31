@@ -15,7 +15,7 @@ for (strategy in strategies) {
   sigma <- 2.0
   res <- times(3L) %dopar% {
     set.seed(0xBEEF)
-    rnorm(2L, mean=mu, sd=sigma)
+    rnorm(2L, mean = mu, sd = sigma)
   }
   print(res)
 
@@ -33,4 +33,3 @@ message("*** times() ... DONE")
 print(sessionInfo())
 
 source("incl/end.R")
-
