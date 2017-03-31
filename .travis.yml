@@ -72,6 +72,7 @@ matrix:
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
+  - export _R_CHECK_TIMINGS_=0
 
 notifications:
   email:
