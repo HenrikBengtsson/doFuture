@@ -6,7 +6,7 @@ oopts <- options(warn = 1L,
                  doFuture.debug = TRUE)
 oplan <- future::plan()
 
-future::plan(future::eager)
+future::plan(future::sequential)
 doFuture::registerDoFuture()
 
 hpaste <- future:::hpaste
