@@ -7,12 +7,12 @@ Version: 0.4.0-9000 [2017-03-30]
 
 BUG FIXES:
 
- o If a foreach() call would result in an error, the error thrown would
-   report on "object 'expr' not found" and not the actually error message.
-
  o Using a nested foreach() call would incorrectly produce an error on
    not being able to locate the iterator variable of the inner-most
    foreach() as a global variable.
+
+ o If a foreach() call would result in an error, the error thrown would
+   report on "object 'expr' not found" and not the actually error message.
 
 
 Version: 0.4.0 [2017-03-13]
