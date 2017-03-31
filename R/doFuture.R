@@ -50,12 +50,34 @@ doFuture <- function(obj, expr, envir, data) {
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 2. The future expression to use
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## The iterator arguments in 'argnames' should be exported as globals, which
+  ## they also are as part of the 'globals = globals_ii' list that is passed
+  ## to each future() call.  However, getGlobalsAndPackages(..., globals = TRUE)
+  ## below requires that they are found.  If not, an error is produced.
+  ## As a workaround, we will inject them as dummy variables in the expression
+  ## inspected, making them look like local variables.
+  if (debug) {
+    mdebug("- dummy globals (as locals): [%d] %s",
+           length(argnames), paste(sQuote(argnames), collapse = ", "))
+  }
+  dummy_globals <- NULL
+  for (kk in seq_along(argnames)) {
+    name <- as.symbol(argnames[kk])
+    if (kk == 1L) {
+      dummy_globals <- bquote(.(name) <- NULL)
+    } else {
+      dummy_globals <- bquote({ .(dummy_globals); .(name) <- NULL })
+    }
+  }
+  
+  
   ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
     doFuture::registerDoFuture()
     
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
       ...future.x_jj <- ...future.x_ii[[jj]]
+      .(dummy_globals)
       ...future.env <- environment()
       local({
         for (name in names(...future.x_jj)) {
@@ -75,6 +97,9 @@ doFuture <- function(obj, expr, envir, data) {
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (debug) {
+    mdebug("- identifying globals and packages ...")
+  }
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
@@ -86,13 +111,14 @@ doFuture <- function(obj, expr, envir, data) {
   
   names_globals <- names(globals)  
   if (debug) {
-    mdebug("- globals: [%d] %s", length(globals),
+    mdebug("  - globals: [%d] %s", length(globals),
            paste(sQuote(names_globals), collapse = ", "))
     mstr(globals)
-    mdebug("- packages: [%d] %s", length(packages),
+    mdebug("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
-    mdebug("- R expression:")
+    mdebug("  - R expression:")
     mprint(expr)
+    mdebug("- identifying globals and packages ... DONE")
   }
 
   ## At this point a globals should be resolved and we should know
