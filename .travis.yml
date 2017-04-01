@@ -32,25 +32,47 @@ matrix:
       r: release
       r_github_packages:
         - jimhester/covr
+        - jimhester/lintr
       after_success:
-        - Rscript -e 'covr::codecov(quiet=FALSE)'
+        - Rscript -e 'covr::codecov(quiet = FALSE)'
+        - Rscript -e 'library(lintr); lint_package(linters = with_defaults(commented_code_linter = NULL, closed_curly_linter = closed_curly_linter(allow_single_line = TRUE), open_curly_linter = open_curly_linter(allow_single_line = TRUE)))'
+      env: NB='w/ covr & lintr' ## Just a label
+    - os: linux
+      r: release
       env:
-        - NB='w/ covr'  ## Just a label
+        - NB='w/ foreach' ## Just a label
+        - _R_TESTSETS_=foreach
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      env:
+        - NB='w/ plyr & parallel' ## Just a label
+        - _R_TESTSETS_=plyr
+    - os: linux
+      r: release
+      r_packages: future.BatchJobs
+      env:
+        - NB='w/ plyr & future.BatchJobs' ## Just a label
+        - _R_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+    - os: linux
+      r: release
+      r_github_packages:
+        - HenrikBengtsson/future.batchtools
+      env:
+        - NB='w/ plyr & future.batchtools' ## Just a label
+        - _R_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
     - os: linux
       r: devel
     - os: osx
       r: oldrel
-      r_github_packages:
-        - HenrikBengtsson/globals
-        - HenrikBengtsson/future
     - os: osx
       r: release
-      r_github_packages:
-        - HenrikBengtsson/globals
-        - HenrikBengtsson/future
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
+  - export _R_CHECK_TIMINGS_=0
 
 notifications:
   email:

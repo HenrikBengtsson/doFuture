@@ -56,6 +56,7 @@ R_NO_INIT := --no-init-file
 R_VERSION_STATUS := $(shell $(R_SCRIPT) -e "status <- tolower(R.version[['status']]); if (regexpr('unstable', status) != -1L) status <- 'devel'; cat(status)")
 R_VERSION_X_Y := $(shell $(R_SCRIPT) -e "cat(gsub('[.][0-9]+$$', '', getRversion()))")
 R_VERSION := $(shell $(R_SCRIPT) -e "cat(as.character(getRversion()))")
+R_VERSION_3_3_OR_NEWER := $(shell $(R_SCRIPT) -e "cat(getRversion() >= '3.3.0')")
 R_VERSION_FULL := $(R_VERSION)$(R_VERSION_STATUS)
 R_LIBS_USER_X := $(shell $(R_SCRIPT) -e "cat(.libPaths()[1])")
 R_INCLUDE := $(shell $(R_SCRIPT) -e "cat(R.home('include'))")
@@ -66,6 +67,7 @@ R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
 _R_CHECK_CRAN_INCOMING_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_CRAN_INCOMING_', 'FALSE'))")
 _R_CHECK_XREFS_REPOSITORIES_ = $(shell if test "$(_R_CHECK_CRAN_INCOMING_)" = "TRUE"; then echo ""; else echo "invalidURL"; fi)
 _R_CHECK_FULL_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_FULL_', ''))")
+_R_CHECK_TESTSETS_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_TESTSETS_', 'foreach,plyr'))")
 R_CHECK_OPTS = --as-cran --timings $(shell if test "$(_R_CHECK_USE_VALGRIND_)" = "TRUE"; then echo "--use-valgrind"; fi)
 R_RD4PDF = $(shell $(R_SCRIPT) -e "if (getRversion() < 3) cat('times,hyper')")
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
@@ -77,6 +79,16 @@ GIT_BRANCH := $(shell $(GIT) symbolic-ref --short HEAD)
 GIT_BRANCH := $(subst /,-,$(GIT_BRANCH))
 GIT_COMMIT := $(shell $(GIT) log -1 --format="%h")
 R_LIBS_BRANCH := $(CURDIR)/.R/$(GIT_BRANCH)
+
+
+# Asserts proper Windows toolchain in R (>= 3.3.0)
+ifeq ($(OS), Windows_NT)
+ifeq ($(R_VERSION_3_3_OR_NEWER), TRUE)
+ifndef BINPREF
+$(error R (>= 3.3.0) on Windows: BINPREF not set)
+endif
+endif
+endif
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,10 +131,12 @@ debug:
 	@echo _R_CHECK_CRAN_INCOMING_=\'$(_R_CHECK_CRAN_INCOMING_)\'
 	@echo _R_CHECK_XREFS_REPOSITORIES_=\'$(_R_CHECK_XREFS_REPOSITORIES_)\'
 	@echo _R_CHECK_FULL_=\'$(_R_CHECK_FULL_)\'
+	@echo _R_CHECK_TESTSETS_=\'$(_R_CHECK_TESTSETS_)\'
 	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
 	@echo R_RD4PDF=\'$(R_RD4PDF)\'
 	@echo
 	@echo R_CRAN_OUTDIR=\'$(R_CRAN_OUTDIR)\'
+	@echo R_VERSION_3_3_OR_NEWER=\'$(R_VERSION_3_3_OR_NEWER)\'
 	@echo
 
 
@@ -242,6 +256,7 @@ $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	export _R_CHECK_FORCE_SUGGESTS_=0;\
 	export R_RD4PDF=$(R_RD4PDF);\
 	export _R_CHECK_FULL_=$(_R_CHECK_FULL_);\
+	export _R_CHECK_TESTSETS_=$(_R_CHECK_TESTSETS_);\
 	$(R) --no-init-file CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
@@ -325,6 +340,12 @@ $(R_OUTDIR)/vigns: install
 
 vignettes: $(R_OUTDIR)/vigns
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Static code validation etc
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+lint:
+	$(R_SCRIPT) -e "library(lintr); lint_package(linters = with_defaults(commented_code_linter = NULL, closed_curly_linter = closed_curly_linter(allow_single_line = TRUE), open_curly_linter = open_curly_linter(allow_single_line = TRUE)))"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run package tests

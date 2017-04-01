@@ -64,7 +64,7 @@ plan(multiprocess)
 
 library("plyr")
 x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
-y <- llply(x, quantile, probs = 1:3/4, .parallel = TRUE)
+y <- llply(x, quantile, probs = (1:3) / 4, .parallel = TRUE)
 ## $a
 ##  25%  50%  75%
 ## 3.25 5.50 7.75
@@ -131,7 +131,7 @@ However, when using the `%dopar%` adaptor of doFuture, all of the [future] machi
 ```r
 > library("doFuture")
 > registerDoFuture()
-> plan(cluster, workers=2)
+> plan(cluster, workers = 2)
 > mu <- 1.0
 > sigma <- 2.0
 > foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
@@ -168,7 +168,7 @@ registerDoSEQ()
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-plan(eager)
+plan(sequential)
 </code></pre>
 </td>
 </tr>
@@ -215,7 +215,7 @@ registerDoParallel(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, workers=cl)
+plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
@@ -224,7 +224,7 @@ plan(cluster, workers=cl)
 <tr style="vertical-align: center;">
 <td>
 <pre><code class="r">library("doMPI")
-cl <- startMPIcluster(count=4)
+cl <- startMPIcluster(count = 4)
 registerDoMPI(cl)
 
 </code></pre>
@@ -232,8 +232,8 @@ registerDoMPI(cl)
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-cl <- makeCluster(4, type="MPI")
-plan(cluster, workers=cl)
+cl <- makeCluster(4, type = "MPI")
+plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
@@ -251,7 +251,7 @@ registerDoSNOW(cl)
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 cl <- makeCluster(4)
-plan(cluster, workers=cl)
+plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
