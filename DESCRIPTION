@@ -8,7 +8,7 @@ Depends:
     parallel,
     utils
 Suggests:
-    doRNG (>= 1.6),
+    doRNG (>= 1.6.6),
     markdown,
     R.rsp
 VignetteBuilder:
