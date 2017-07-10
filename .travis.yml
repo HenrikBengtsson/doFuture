@@ -17,12 +17,10 @@ latex: false
 r_packages:
   - plyr
   - future.BatchJobs
+  - future.batchtools
   
 bioc_packages:
   - BiocParallel
-
-r_github_packages:
-  - HenrikBengtsson/future.batchtools@develop
 
 matrix:
   include:
