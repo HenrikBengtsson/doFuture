@@ -12,7 +12,7 @@ SOFTWARE QUALITY:
 
  o TESTS: Adding tests for globals part of other packages for future.BatchJobs
    and future.batchtools futures because in previous versions of those, such
-   globals would not be found because the corrsponding package was never
+   globals would not be found because the corresponding package was never
    attached in the worker.
  
 
