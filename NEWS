@@ -1,13 +1,20 @@
 Package: doFuture
 =================
 
-Version: 0.5.0-9000 [2017-04-16]
+Version: 0.5.0-9000 [2017-07-19]
 
  o ...
 
  o Package now suggests doRNG (>= 1.6.6), which fixes several bugs in
    doRNG (>= 1.6) previously suggested.
    
+SOFTWARE QUALITY:
+
+ o TESTS: Adding tests for globals part of other packages for future.BatchJobs
+   and future.batchtools futures because in previous versions of those, such
+   globals would not be found because the corrsponding package was never
+   attached in the worker.
+ 
 
 Version: 0.5.0 [2017-03-31]
 
