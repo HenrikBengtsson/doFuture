@@ -1,11 +1,10 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value
+#' @importFrom future future resolve value getGlobalsAndPackages
 #' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
-  getGlobalsAndPackages <- import_future("getGlobalsAndPackages")  #nolint
 
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
