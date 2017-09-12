@@ -1,9 +1,9 @@
 Package: doFuture
 =================
 
-Version: 0.5.0-9000 [2017-09-09]
+Version: 0.5.1 [2017-09-11]
 
- o ...
+RANDOM NUMBER GENERATION:
 
  o Package now suggests doRNG (>= 1.6.6), which fixes several bugs in
    doRNG (>= 1.6) previously suggested.

@@ -44,7 +44,7 @@ for (strategy in strategies) {
   y_truth <- lapply("abc.txt", FUN = my_ext)
   y <- foreach(f = "abc.txt") %dopar% { file_ext(f) }
   stopifnot(identical(y, y_truth))
-  
+
   message("- Implicitly exporting globals (via future) ... DONE")
 
   if (require(plyr, character.only = TRUE)) {
