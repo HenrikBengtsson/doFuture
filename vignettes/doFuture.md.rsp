@@ -15,11 +15,6 @@
 %\VignetteEngine{R.rsp::rsp}
 %\VignetteTangle{FALSE}
 --------------------------------------------------------------------"%>
-<%
-library("R.utils")
-options("withCapture/newline" = FALSE)
-options(mc.cores = 2L)
-%>
 # A Foreach Parallel Adaptor using Futures
 
 ## Introduction
@@ -30,8 +25,8 @@ in many different ways depending on which strategy is used.
 There are various types of synchronous and asynchronous futures to
 choose from in the [future] package.
 Additional futures are implemented in other packages.
-For instance, the [future.BatchJobs] package provides futures for
-_any_ type of backend that the [BatchJobs] package supports.
+For instance, the [future.batchtools] package provides futures for
+_any_ type of backend that the [batchtools] package supports.
 For an introduction to futures in R, please consult the
 vignettes of the [future] package.
 
@@ -59,14 +54,14 @@ x <- foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
 
 ## Futures bring foreach to the HPC cluster
 To do the same on high-performance computing (HPC) cluster, the
-[future.BatchJobs] package can be used.  Assuming BatchJobs has
+[future.batchtools] package can be used.  Assuming batchtools has
 been configured correctly, then following foreach iterations will
 be submitted to the HPC job scheduler and distributed for
 evaluation on the compute nodes.
 ```r
 library("doFuture")
 registerDoFuture()
-library("future.BatchJobs")
+library("future.batchtools")
 plan(batchjobs_slurm)
 
 mu <- 1.0
@@ -284,7 +279,7 @@ Comment: There is currently no known future implementation and therefore no know
 
 
 
-[BatchJobs]: https://cran.r-project.org/package=BatchJobs
+[batchtools]: https://cran.r-project.org/package=batchtools
 [BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
 [doFuture]: https://cran.r-project.org/package=doFuture
 [doMC]: https://cran.r-project.org/package=doMC
@@ -294,7 +289,7 @@ Comment: There is currently no known future implementation and therefore no know
 [doSNOW]: https://cran.r-project.org/package=doSNOW
 [foreach]: https://cran.r-project.org/package=foreach
 [future]: https://cran.r-project.org/package=future
-[future.BatchJobs]: https://cran.r-project.org/package=future.BatchJobs
+[future.batchtools]: https://cran.r-project.org/package=future.batchtools
 [plyr]: https://cran.r-project.org/package=plyr
 ---
 Copyright Henrik Bengtsson, 2016-2017
