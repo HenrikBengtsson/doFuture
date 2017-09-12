@@ -29,7 +29,7 @@ The package has been verified using `R CMD check --as-cran` on:
   - R Under development (unstable) (2017-09-09 r73225)
 
 * Platform x86_64-pc-linux-gnu (64-bit):
-#  - R version 3.2.0 (2015-04-16)
+  - R version 3.2.0 (2015-04-16)
   - R version 3.3.0 (2016-05-03)
   - R version 3.4.1 (2017-06-30)
 
