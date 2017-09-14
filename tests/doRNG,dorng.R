@@ -34,13 +34,7 @@ if (require("doRNG")) {
     s1_2 <- foreach(i = 1:4) %dorng% { runif(1) }
     s2_2 <- foreach(i = 1:4) %dorng% { runif(1) }
     str(list(s1_2 = s1_2, s2_2 = s2_2))
-
-    ## There's a bug in doRNG (<= 1.6.0) causing the first iteration
-    ## of these tests to fail due to non-reproducibility of s1 and s1_2,
-    ## cf. https://github.com/renozao/doRNG/issues/1.  /HB 2016-05-07
-    if (packageVersion("doRNG") > "1.6.0") {
-      stopifnot(identical(s1, s1_2), identical(s2, s2_2))
-    }
+    stopifnot(identical(s1, s1_2), identical(s2, s2_2))
 
     message(sprintf("- plan('%s') ... DONE", strategy))
   } ## for (strategy ...)

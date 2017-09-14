@@ -9,13 +9,6 @@ if (require("doRNG")) {
   message("*** doFuture() w/ doRNG + %nopar% ...")
   print(sessionInfo())
 
-  ## There's a bug in doRNG (<= 1.6.0) causing the first iteration
-  ## of these tests to fail due to non-reproducibility of s1 and s1.2,
-  ## cf. https://github.com/renozao/doRNG/issues/1.  /HB 2016-05-07
-  if (packageVersion("doRNG") <= "1.6.0") {
-    strategies <- setdiff(strategies, c("eager", "lazy"))
-  }
-
   for (strategy in strategies) {
     message(sprintf("- plan('%s') ...", strategy))
     plan(strategy)

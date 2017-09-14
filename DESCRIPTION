@@ -1,14 +1,14 @@
 Package: doFuture
-Version: 0.5.0
+Version: 0.5.1
 Title: A Universal Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
-    future (>= 1.4.0),
+    future (>= 1.6.1),
     foreach (>= 1.4.3),
     iterators (>= 1.0.8),
     parallel,
     utils
 Suggests:
-    doRNG (>= 1.6),
+    doRNG (>= 1.6.6),
     markdown,
     R.rsp
 VignetteBuilder:

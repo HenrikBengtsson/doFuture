@@ -1,6 +1,21 @@
 Package: doFuture
 =================
 
+Version: 0.5.1 [2017-09-11]
+
+RANDOM NUMBER GENERATION:
+
+ o Package now suggests doRNG (>= 1.6.6), which fixes several bugs in
+   doRNG (>= 1.6) previously suggested.
+   
+SOFTWARE QUALITY:
+
+ o TESTS: Adding tests for globals part of other packages for future.BatchJobs
+   and future.batchtools futures because in previous versions of those, such
+   globals would not be found because the corresponding package was never
+   attached in the worker.
+ 
+
 Version: 0.5.0 [2017-03-31]
 
 NEW FEATURES:

@@ -39,6 +39,13 @@ for (strategy in strategies) {
   print(res2)
   stopifnot(all.equal(res2, res0))
 
+
+  library("tools")
+  my_ext <- function(x) file_ext(x)
+  y_truth <- lapply("abc.txt", FUN = my_ext)
+  y <- foreach(f = "abc.txt") %dopar% { file_ext(f) }
+  stopifnot(identical(y, y_truth))
+
   message("- Implicitly exporting globals (via future) ... DONE")
 
   if (require(plyr, character.only = TRUE)) {
