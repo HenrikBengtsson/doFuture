@@ -3,7 +3,11 @@ Package: doFuture
 
 Version: 0.5.1-9000 [2017-09-14]
 
- o ...
+NEW FEATURES:
+
+ o doFuture now respect option 'future.globals.resolve' instead of being
+   hardcoded to always resolve globals (future.globals.resolve = TRUE).
+   This makes doFuture consistent with other future frontends.
  
 
 Version: 0.5.1 [2017-09-11]

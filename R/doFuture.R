@@ -103,7 +103,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                              globals = globals, resolve = TRUE)
+                              globals = globals)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
@@ -124,7 +124,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## At this point a globals should be resolved and we should know
   ## their total size.
   ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+  
   ## Also make sure we've got our in-house '...future.x_ii' covered.
   stopifnot("...future.x_ii" %in% names(globals))
 
@@ -203,7 +204,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
     ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-    stopifnot(attr(globals_ii, "resolved"))
+##    stopifnot(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
