@@ -15,6 +15,7 @@ mdebug <- future:::mdebug
 ## To please R CMD check when using require().
 future.batchtools <- "future.batchtools"  #nolint
 future.BatchJobs <- "future.BatchJobs"    #nolint
+caret <- "caret"                          #nolint
 plyr <- "plyr"                            #nolint
 BiocParallel <- "BiocParallel"            #nolint
 
