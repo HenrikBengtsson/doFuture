@@ -4,7 +4,7 @@ if ("caret" %in% testsets) {
   library(caret, character.only = TRUE)
 
   ## Packages used by some of the caret examples
-  pkgs <- c("mlbench", "earth", "mda", "MLmetrics")
+  pkgs <- c("lattice", "mlbench", "earth", "mda", "MLmetrics")
   lapply(pkgs, FUN = loadNamespace)
 
   excl <- "featurePlot"

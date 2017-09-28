@@ -38,7 +38,12 @@ topics <- setdiff(topics, excl)
 
 for (strategy in strategies) {
   mprintf("- plan('%s') ...", strategy)
-  plan(strategy)
+
+  ## Workaround for https://github.com/HenrikBengtsson/future/issues/166
+  ns <- getNamespace("future")
+  strategy_fcn <- get(strategy, envir = ns, mode = "function")
+  plan(strategy_fcn)
+  
   registerDoFuture()
 
   for (ii in seq_along(topics)) {
