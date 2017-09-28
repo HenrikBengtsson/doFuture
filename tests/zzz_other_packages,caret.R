@@ -8,10 +8,13 @@ if ("caret" %in% testsets) {
   lapply(pkgs, FUN = loadNamespace)
 
   excl <- "featurePlot"
-  excl <- c(excl, "confusionMatrix.train") ## export bug in caret
   excl <- getOption("doFuture.tests.topics.ignore", excl)
   options(doFuture.tests.topics.ignore = excl)
 
+  ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
+  ## specifications, i.e. not all globals are exported.
+  options(doFuture.globals.export = "automatic")
+  
   options(doFuture.tests.strategies = Sys.getenv("_R_CHECK_FUTURE_STRATEGIES_"))
   path <- system.file("tests2", package = "doFuture")
   pathname <- file.path(path, "caret", "examples.R")

@@ -11,8 +11,15 @@ NEW FEATURES:
 
  o Added option 'doFuture.globals.export' making it possible ignore a faulty
    '.export' argument to foreach() and instead rely on the future framework
-   to identify globals.
+   to identify globals.  For example, all examples of caret 6.0-77 works with
+   doFuture() and any backend when setting this option to "automatic" whereas
+   they will only work on forked backends if using the default ".export".
  
+SOFTWARE QUALITY:
+
+ o TESTS: The doFuture package tests can now also run all of caret's examples
+   across all known future backends.
+
 
 Version: 0.5.1 [2017-09-11]
 
