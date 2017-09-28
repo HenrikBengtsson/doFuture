@@ -1,13 +1,17 @@
 Package: doFuture
 =================
 
-Version: 0.5.1-9000 [2017-09-14]
+Version: 0.5.1-9000 [2017-09-28]
 
 NEW FEATURES:
 
  o doFuture now respects option 'future.globals.resolve' instead of being
    hardcoded to always resolve globals (future.globals.resolve = TRUE).
    This makes doFuture consistent with other future frontends.
+
+ o Added option 'doFuture.globals.export' making it possible ignore a faulty
+   '.export' argument to foreach() and instead rely on the future framework
+   to identify globals.
  
 
 Version: 0.5.1 [2017-09-11]

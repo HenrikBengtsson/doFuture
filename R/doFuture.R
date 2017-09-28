@@ -22,17 +22,24 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   argnames <- argnames[nzchar(argnames)]
 
   ## Global variables?
-  export <- unique(obj$export)
-  if (is.null(export)) {
-    ## Automatic lookup of global variables by default
-    ## NOTE: To fully emulate foreach's behavior in most
-    ##       cases, we could disable this. /HB 2016-10-10
-    globals <- getOption("doFuture.globals.nullexport", TRUE)
+  export_method <- getOption("doFuture.globals.export", ".export")
+  if (export_method == ".export") {
+    export <- unique(obj$export)
+    if (is.null(export)) {
+      ## Automatic lookup of global variables by default
+      ## NOTE: To fully emulate foreach's behavior in most
+      ##       cases, we could disable this. /HB 2016-10-10
+      globals <- getOption("doFuture.globals.nullexport", TRUE)
+    } else {
+      ## Export also the other foreach arguments
+      globals <- unique(c(export, "...future.x_ii"))
+    }
+  } else if (export_method == "automatic") {
+    globals <- TRUE
   } else {
-    ## Export also the other foreach arguments
-    globals <- unique(c(export, "...future.x_ii"))
+    stop("Unknown value on option 'doFuture.globals.export': ",
+         sQuote(export_method))
   }
-  export <- NULL
 
   ## Any packages to be on the search path?
   pkgs <- obj$packages
