@@ -1,6 +1,6 @@
 #' Options used by the doFuture adaptor 
 #'
-#' Below are all \R options specific to the \pkg{doFuture} package.  For options controlling futures in general, see \link[future:future.options]{the options available in the \pkg{future} package}.  \cr
+#' Below are all \R options specific to the \pkg{doFuture} package.  For options controlling futures in general, see \link[future:future.options]{the options} for the \pkg{future} package.\cr
 #' \cr
 #' \emph{WARNING: Note that the names and the default values of these options may change in future versions of the package.  Please use with care until further notice.}
 #'

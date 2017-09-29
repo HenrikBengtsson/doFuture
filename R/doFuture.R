@@ -21,24 +21,30 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
 
+  nullexport <- getOption("doFuture.globals.nullexport")
+  if (!is.null(nullexport)) {
+    .Deprecated(msg = "Option 'doFuture.globals.nullexport' is deprecated.  Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.") # nolint
+    export <- if (nullexport) "automatic-unless-.export" else ".export"
+  } else {
+    export <- getOption("doFuture.foreach.export", "automatic-unless-.export")
+  }
+ 
   ## Global variables?
-  export_method <- getOption("doFuture.globals.export", ".export")
-  if (export_method == ".export") {
-    export <- unique(obj$export)
-    if (is.null(export)) {
-      ## Automatic lookup of global variables by default
-      ## NOTE: To fully emulate foreach's behavior in most
-      ##       cases, we could disable this. /HB 2016-10-10
-      globals <- getOption("doFuture.globals.nullexport", TRUE)
+  if (export == "automatic-unless-.export") {
+    export_names <- unique(obj$export)
+    if (is.null(export_names)) {
+      globals <- TRUE
     } else {
       ## Export also the other foreach arguments
-      globals <- unique(c(export, "...future.x_ii"))
+      globals <- unique(c(export_names, "...future.x_ii"))
+      export_names <- NULL
     }
-  } else if (export_method == "automatic") {
+  } else if (export == ".export") {
+    globals <- unique(c(unique(obj$export), "...future.x_ii"))
+  } else if (export == "automatic") {
     globals <- TRUE
   } else {
-    stop("Unknown value on option 'doFuture.globals.export': ",
-         sQuote(export_method))
+    stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
   }
 
   ## Any packages to be on the search path?

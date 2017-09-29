@@ -10,7 +10,8 @@ Depends:
 Suggests:
     doRNG (>= 1.6.6),
     markdown,
-    R.rsp
+    R.rsp,
+    caret, plyr
 VignetteBuilder:
     R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

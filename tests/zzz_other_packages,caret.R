@@ -13,7 +13,7 @@ if ("caret" %in% testsets) {
 
   ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
   ## specifications, i.e. not all globals are exported.
-  options(doFuture.globals.export = "automatic")
+  options(doFuture.foreach.export = "automatic")
   
   options(doFuture.tests.strategies = Sys.getenv("_R_CHECK_FUTURE_STRATEGIES_"))
   path <- system.file("tests2", package = "doFuture")
