@@ -14,7 +14,11 @@ NEW FEATURES:
    to identify globals.  For example, all examples of caret 6.0-77 works with
    doFuture() and any backend when setting this option to "automatic" whereas
    they will only work on forked backends if using the default ".export".
- 
+
+DOCUMENTATION:
+
+ o Added help("doFuture.options").
+
 SOFTWARE QUALITY:
 
  o TESTS: The doFuture package tests can now also run all of caret's examples
