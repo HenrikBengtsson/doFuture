@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.5.1-9000 [2017-09-28]
+Version: 0.5.1-9000 [2017-10-12]
 
 NEW FEATURES:
 
@@ -24,6 +24,8 @@ SOFTWARE QUALITY:
 
  o TESTS: The doFuture package tests can now also run all of caret's examples
    across all known future backends.
+
+ o TESTS: Testing global functions that call themselves recursively.
 
 
 Version: 0.5.1 [2017-09-11]
