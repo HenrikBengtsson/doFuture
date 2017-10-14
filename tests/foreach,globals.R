@@ -19,9 +19,6 @@ str(y_truth)
 
 res0 <- NULL
 
-## Requires bug fix in globals 0.10.2-9000, cf.
-## https://github.com/HenrikBengtsson/globals/issues/29
-if (packageVersion("globals") > "0.10.2") {
 for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
@@ -34,7 +31,6 @@ for (strategy in strategies) {
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
-} ## if (packageVersion("globals") > "0.10.2")
 
 message("*** doFuture - automatically finiding globals ... DONE")
 
