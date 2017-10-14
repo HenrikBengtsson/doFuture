@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.5.1-9000 [2017-10-12]
+Version: 0.5.1-9000 [2017-10-14]
 
 NEW FEATURES:
 
@@ -22,8 +22,10 @@ DOCUMENTATION:
 
 SOFTWARE QUALITY:
 
- o TESTS: The doFuture package tests can now also run all of caret's examples
-   across all known future backends.
+ o TESTS: The doFuture package gained more opt-in tests for third-party
+   packages' across all known future backends.  These tests are not performed
+   on the CRAN servers; instead they are performed on Travis CI.  Third-party
+   packages that are currently tested are: caret, foreach, NMF, and plyr.
 
  o TESTS: Testing global functions that call themselves recursively.
 

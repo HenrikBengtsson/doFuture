@@ -19,3 +19,4 @@ future.BatchJobs <- "future.BatchJobs"    #nolint
 caret <- "caret"                          #nolint
 plyr <- "plyr"                            #nolint
 BiocParallel <- "BiocParallel"            #nolint
+NMF <- "NMF"                              #nolint

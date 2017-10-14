@@ -53,6 +53,13 @@ matrix:
       r: release
       r_check_args:
       env:
+        - NB='w/ NMF' ## Just a label
+        - _R_TESTSETS_=NMF
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_check_args:
+      env:
         - NB='w/ plyr & parallel' ## Just a label
         - _R_TESTSETS_=plyr
     - os: linux
