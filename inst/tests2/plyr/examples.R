@@ -34,14 +34,6 @@ excl <- "raply"
 excl <- c(excl, "rdply")
 ## (3) Takes 45+ seconds each
 excl <- c(excl, "aaply", "quoted")
-## (4) TODO: troubleshoot why these give an error
-excl2 <- c(excl,
-          "ozone", ## Error in laply(models, coef) : .fun is not a function.
-          "dlply",
-          "llply",
-          "l_ply"
-          )
-
 options("doFuture.tests.topics.ignore" = excl)
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
@@ -55,4 +47,3 @@ for (strategy in test_strategies()) {
 mprintf("*** doFuture() - all %s examples ... DONE", pkg)
 
 tests2_step("stop")
-
