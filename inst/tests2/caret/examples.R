@@ -1,70 +1,23 @@
-find_rd_topics <- function(package) {
-  path <- find.package(package)
-  file <- file.path(path, "help", "aliases.rds")
-  topics <- readRDS(file)
-  unique(topics)
-}
+path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
+source(file.path(path, "utils.R"))
+pkg <- tests2_step("start", package = "caret")
 
-mprintf <- function(...) message(sprintf(...))
+## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
+## specifications, i.e. not all globals are exported.
+options(doFuture.foreach.export = "automatic")
 
-## Package for which examples should be run
-pkg <- "caret"
+## Packages used by some of the caret examples
+#pkgs <- c("lattice", "mlbench", "earth", "mda", "MLmetrics")
+#lapply(pkgs, FUN = loadNamespace)
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
-library("future")
-options(warnPartialMatchArgs = FALSE)
-oopts <- options(mc.cores = 2L, warn = 1L, digits = 3L)
-
-strategies <- getOption("doFuture.tests.strategies")
-strategies <- strsplit(strategies, split = "[, ]")[[1]]
-strategies <- strategies[nzchar(strategies)]
-## Default is to use what's provided by the future package
-if (length(strategies) == 0) {
-  strategies <- future:::supportedStrategies()
-  strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
-}
-if (any(grepl("batchjobs_", strategies))) library("future.BatchJobs")
-if (any(grepl("batchtools_", strategies))) library("future.batchtools")
-
-library("doFuture")
-registerDoFuture()
-library(pkg, character.only = TRUE)
-topics <- getOption("doFuture.tests.topics", find_rd_topics(pkg))
-
-## Some examples may give errors when used with futures
-excl <- getOption("doFuture.tests.topics.ignore", NULL)
-topics <- setdiff(topics, excl)
-
-for (strategy in strategies) {
+for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
-
-  ## Workaround for https://github.com/HenrikBengtsson/future/issues/166
-  ns <- getNamespace("future")
-  strategy_fcn <- get(strategy, envir = ns, mode = "function")
-  plan(strategy_fcn)
-  
-  registerDoFuture()
-
-  for (ii in seq_along(topics)) {
-    topic <- topics[ii]
-    mprintf("- #%d of %d example(%s, package = '%s') using plan(%s) ...", ii, length(topics), topic, pkg, strategy) #nolint
-    dt <- NULL
-    ovars <- ls(all.names = TRUE)
-    dt <- system.time({
-      example(topic, package = pkg, character.only = TRUE, ask = FALSE)
-    })
-    graphics.off()
-    rm(list = setdiff(ls(all.names = TRUE), c(ovars, "ovars")))
-    dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
-    dt <- paste(sprintf("%s: %g", names(dt), dt), collapse = ", ")
-    message("  Total processing time for example: ", dt)
-    mprintf("- #%d of %d example(%s, package = '%s') using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, strategy, dt) #nolint
-  } ## for (ii ...)
-
+  run_examples(pkg, strategy = strategy)
   mprintf("- plan('%s') ... DONE", strategy)
 } ## for (strategy ...)
 
 mprintf("*** doFuture() - all %s examples ... DONE", pkg)
 
-options(oopts)
+tests2_step("stop")

@@ -60,6 +60,20 @@ matrix:
       r: release
       r_check_args:
       env:
+        - NB='w/ TSP' ## Just a label
+        - _R_TESTSETS_=RSP
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_check_args:
+      env:
+        - NB='w/ glmnet' ## Just a label
+        - _R_TESTSETS_=glmnet
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_check_args:
+      env:
         - NB='w/ plyr & parallel' ## Just a label
         - _R_TESTSETS_=plyr
     - os: linux

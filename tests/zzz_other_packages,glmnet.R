@@ -1,8 +1,8 @@
 testsets <- strsplit(Sys.getenv("_R_CHECK_TESTSETS_"), split = "[, ]")[[1]]
-if ("NMF" %in% testsets) {
+if ("glmnet" %in% testsets) {
   source("incl/start.R")
   path <- system.file("tests2", package = "doFuture")
-  pathname <- file.path(path, "NMF", "manual.R")
+  pathname <- file.path(path, "glmnet", "examples.R")
   source(pathname, echo = TRUE)
   source("incl/end.R")
 }

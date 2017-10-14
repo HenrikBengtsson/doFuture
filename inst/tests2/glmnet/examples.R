@@ -1,6 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-pkg <- tests2_step("start", package = "foreach")
+pkg <- tests2_step("start", package = "glmnet")
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
