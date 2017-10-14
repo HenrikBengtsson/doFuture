@@ -25,7 +25,8 @@ SOFTWARE QUALITY:
  o TESTS: The doFuture package gained more opt-in tests for third-party
    packages' across all known future backends.  These tests are not performed
    on the CRAN servers; instead they are performed on Travis CI.  Third-party
-   packages that are currently tested are: caret, foreach, NMF, and plyr.
+   packages that are currently tested are: caret, foreach, glmnet, NMF, plyr,
+   and TSP.
 
  o TESTS: Testing global functions that call themselves recursively.
 
