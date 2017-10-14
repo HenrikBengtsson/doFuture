@@ -27,6 +27,8 @@ matrix:
   include:
     - os: linux
       r: oldrel
+      r_github_packages:
+        - HenrikBengtsson/globals
     - os: linux
       r: release
       r_github_packages:
@@ -95,8 +97,12 @@ matrix:
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
     - os: linux
       r: devel
+      r_github_packages:
+        - HenrikBengtsson/globals
     - os: osx
       r: oldrel
+      r_github_packages:
+        - HenrikBengtsson/globals
     - os: osx
       r: release
 
