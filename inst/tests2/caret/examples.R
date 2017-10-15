@@ -10,6 +10,9 @@ excl <- "featurePlot"
 excl <- getOption("doFuture.tests.topics.ignore", excl)
 options(doFuture.tests.topics.ignore = excl)
 
+subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_", 1))
+topics <- test_topics(pkg, subset = 1, max_subset = 2)
+
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
 options(doFuture.foreach.export = "automatic")

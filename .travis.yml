@@ -54,22 +54,48 @@ matrix:
       r: release
       r_check_args:
       env:
-        - NB='w/ caret & parallel' ## Just a label
+        - NB='w/ caret #1 & parallel' ## Just a label
         - _R_CHECK_TESTSETS_=caret
+        - _R_CHECK_SUBSET_=1
     - os: linux
       r: release
       r_check_args:
       env:
-        - NB='w/ caret & future.BatchJobs' ## Just a label
+        - NB='w/ caret #2 & parallel' ## Just a label
+        - _R_CHECK_TESTSETS_=caret
+        - _R_CHECK_SUBSET_=2
+    - os: linux
+      r: release
+      r_check_args:
+      env:
+        - NB='w/ caret #1 & future.BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - _R_CHECK_SUBSET_=1
     - os: linux
       r: release
       r_check_args:
       env:
-        - NB='w/ caret & future.batchtools' ## Just a label
+        - NB='w/ caret #2 & future.BatchJobs' ## Just a label
+        - _R_CHECK_TESTSETS_=caret
+        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - _R_CHECK_SUBSET_=2
+    - os: linux
+      r: release
+      r_check_args:
+      env:
+        - NB='w/ caret #1 & future.batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - _R_CHECK_SUBSET_=1
+    - os: linux
+      r: release
+      r_check_args:
+      env:
+        - NB='w/ caret #2 & future.batchtools' ## Just a label
+        - _R_CHECK_TESTSETS_=caret
+        - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - _R_CHECK_SUBSET_=2
     - os: linux
       r: release
       r_check_args:

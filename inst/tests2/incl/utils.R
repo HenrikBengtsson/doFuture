@@ -9,13 +9,18 @@ find_rd_topics <- function(package) {
 
 test_topics <- local({
   topics <- NULL
-  function(package) {
+  function(package, subset = NULL, max_subset = NULL) {
     if (is.null(topics)) {
       topics <- getOption("doFuture.tests.topics", find_rd_topics(package))
     
       ## Some examples may give errors when used with futures
       excl <- getOption("doFuture.tests.topics.ignore", NULL)
       topics <- setdiff(topics, excl)
+    }
+    if (!is.null(subset)) {
+      stopifnot(is.numeric(subset), is.numeric(max_subset))
+      n <- length(topics)
+      topics <- topics[split(1:n, sort(1:n %% 3))[[subset]]]
     }
     topics
   }
