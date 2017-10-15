@@ -20,7 +20,7 @@ test_topics <- local({
     if (!is.null(subset)) {
       stopifnot(is.numeric(subset), is.numeric(max_subset))
       n <- length(topics)
-      topics <- topics[split(1:n, sort(1:n %% 3))[[subset]]]
+      topics <- topics[split(1:n, sort(1:n %% max_subset))[[subset]]]
     }
     topics
   }
