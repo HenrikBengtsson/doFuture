@@ -101,7 +101,10 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   oenv <- Sys.getenv("R_TESTS")
   on.exit(Sys.setenv(R_TESTS = oenv))
   Sys.setenv(R_TESTS = "")
-    
+
+  ## Travis CI: Reuse already installed packages
+  .libPaths(c("/home/travis/R/Library", .libPaths()))
+ 
   for (pkg in unique(pkgs)) {
     path <- system.file(package = pkg, mustWork = FALSE)
     if (nzchar(path)) next
