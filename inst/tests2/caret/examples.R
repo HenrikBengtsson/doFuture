@@ -1,8 +1,9 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 pkg <- tests2_step("start", package = "caret",
-                   needs = c("class", "MASS", "Matrix", "nnet", "rpart",
-                             "survival"))
+                   needs = c("class", "ddalpha", "dimRed", "ggplot2", "ipred",
+                             "lattice", "MASS", "Matrix", "nlme", "nnet",
+                             "recipes", "rpart", "survival"))
 
 excl <- "featurePlot"
 excl <- getOption("doFuture.tests.topics.ignore", excl)

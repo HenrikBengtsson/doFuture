@@ -1,7 +1,7 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-pkg <- tests2_step("start", package = "TSP",
-                   needs = c("cluster", "foreign", "lattice"))
+pkg <- tests2_step("start", package = "TSP", needs = "Suggests")
+## needs = ("cluster", "foreign", "lattice", "maps"))
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 

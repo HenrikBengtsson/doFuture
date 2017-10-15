@@ -1,6 +1,7 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-pkg <- tests2_step("start", package = "NMF")
+pkg <- tests2_step("start", package = "NMF",
+                   needs = c("cluster", "MASS", "ggplot2"))
 
 mprintf("*** doFuture() - manual %s tests ...", pkg)
 
