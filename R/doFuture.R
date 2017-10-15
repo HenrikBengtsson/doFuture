@@ -131,9 +131,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
     ## Warn about automically found globals not in '.export'?
     if (export == ".export-and-automatic-with-warning") {
-      missing <- setdiff(names_globals, c(globals2, "...future.x_ii"))
+      missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
+                                          "future.call.arguments"))
       if (length(missing) > 0) {
-        warning(sprintf("Detected foreach(..., .export = c(%s)) which should probably also export %s", paste(sQuote(globals2), collapse = ", "), paste(sQuote(missing), collapse = ", ")))
+        warning(sprintf("Detected foreach(..., .export = c(%s)) which should probably also export %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
       }
     }
     
