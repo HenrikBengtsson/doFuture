@@ -1,5 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
+install_missing_packages("lattice")
 pkg <- tests2_step("start", package = "TSP",
                    needs = c("Suggests", "lattice"))
 ## needs = ("cluster", "foreign", "lattice", "maps"))

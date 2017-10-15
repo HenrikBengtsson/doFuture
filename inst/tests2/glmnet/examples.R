@@ -1,7 +1,7 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 pkg <- tests2_step("start", package = "glmnet",
-                   needs = c("Suggests", "lattice"))
+                   needs = c("Suggests", "lattice", "Matrix"))
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 

@@ -1,5 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
+install_missing_packages(c("lattice", "ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 pkg <- tests2_step("start", package = "caret",
                    needs = c("Suggests",
                              "class", "ddalpha", "dimRed", "ggplot2", "ipred",
