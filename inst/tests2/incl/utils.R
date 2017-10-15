@@ -108,6 +108,9 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   ## which only contains the package that doFuture
   ## depends on (which does not include any packages
   ## needed by the opt-in package tests).
+  ## Note, it is not enough to add the 'srcpath' to
+  ## .libPaths() because background R workers will not
+  ## inherit such settings.
   srcpath <- "/home/travis/R/Library"
   if (file_test("-d", srcpath)) {
     destpath <- .libPaths()[1]
