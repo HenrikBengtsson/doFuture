@@ -102,9 +102,27 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   on.exit(Sys.setenv(R_TESTS = oenv))
   Sys.setenv(R_TESTS = "")
 
-  ## Travis CI: Reuse already installed packages
-  .libPaths(c("/home/travis/R/Library", .libPaths()))
- 
+  ## Travis CI: Reuse already installed packages by
+  ## creating symbolic links to package directories
+  ## in the R CMD check library folder .libPaths()[1]
+  ## which only contains the package that doFuture
+  ## depends on (which does not include any packages
+  ## needed by the opt-in package tests).
+  srcpath <- "/home/travis/R/Library"
+  if (file_test("-d", srcpath)) {
+    destpath <- .libPaths()[1]
+    pkgs <- dir(path = srcpath)
+    for (pkg in pkgs) {
+      srcpkg <- file.path(srcpath, pkg)
+      if (file_test("-d", srcpkg)) {
+        destpkg <- file.path(destpath, pkg)
+        if (!file_test("-d", destpkg)) {
+          file.symlink(from = srcpkg, to = destpkg)
+        }
+      }
+    }
+  }
+
   for (pkg in unique(pkgs)) {
     path <- system.file(package = pkg, mustWork = FALSE)
     if (nzchar(path)) next
