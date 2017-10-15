@@ -127,8 +127,8 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   }
 
   mprintf("Library path: %s", paste(sQuote(.libPaths()), collapse = ", "))
-  mprintf("Installed packages:")
-  print(installed.packages())
+##  mprintf("Installed packages:")
+##  print(installed.packages())
   
   for (pkg in unique(pkgs)) {
     path <- system.file(package = pkg, mustWork = FALSE)

@@ -107,6 +107,9 @@ matrix:
         - future.BatchJobs
         - future.batchtools
         - NMF
+        - cluster
+        - pkgmaker
+        - rngtools
       r_check_args:
       env:
         - NB='w/ NMF' ## Just a label
@@ -118,6 +121,9 @@ matrix:
         - future.BatchJobs
         - future.batchtools
         - TSP
+        - maps
+        - sp
+        - maptools
       r_check_args:
       env:
         - NB='w/ TSP' ## Just a label
