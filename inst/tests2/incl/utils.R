@@ -98,9 +98,14 @@ test_strategies <- function() {
     strategies <- future:::supportedStrategies()
     strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
   }
-  if (any(grepl("batchjobs_", strategies))) library("future.BatchJobs")
-  if (any(grepl("batchtools_", strategies))) library("future.batchtools")
-
+  if (any(grepl("batchjobs_", strategies))) {
+    install_missing_packages("future.BatchJobs")
+    library("future.BatchJobs")
+  }
+  if (any(grepl("batchtools_", strategies))) {
+    install_missing_packages("future.batchtools")
+    library("future.batchtools")
+  }
   strategies
 }
 
@@ -115,13 +120,14 @@ tests2_step <- local({
                         digits = 3L, mc.cores = 2L)
       if (!is.null(package)) {
         mprintf("- Attaching package: %s", package)
-        
+
         ## WORKAROUND: The package tests depends on the following packages
         ## that need to be installed if missing.  This is done in order to
         ## avoid having to add them under 'Suggests:'.
+        install_missing_packages(package)
         pkgs <- package_dependencies(package, ...)
         mprintf("- Dependent packages: %s", paste(pkgs, collapse = ", "))
-        install_missing_packages(c(package, pkgs))
+        install_missing_packages(pkgs)
         
         library(package, character.only = TRUE)
       }
