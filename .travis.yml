@@ -5,7 +5,7 @@
 # * Travis CI: https://docs.travis-ci.com/user/languages/r
 # * covr: https://github.com/jimhester/covr
 #
-# Validate your .travis.yml file at http://lint.travis-ci.org/
+# Validate your .travis.yml file at https://lint.travis-ci.org/
 #----------------------------------------------------------------
 language: r
 sudo: false
@@ -84,7 +84,7 @@ matrix:
       r_packages:
         - future.BatchJobs
         - future.batchtools
-	- caret
+        - caret
       r_check_args:
       env:
         - NB='w/ caret & future.BatchJobs' ## Just a label
