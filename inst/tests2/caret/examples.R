@@ -1,6 +1,8 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-pkg <- tests2_step("start", package = "caret")
+pkg <- tests2_step("start", package = "caret",
+                   needs = c("class", "MASS", "Matrix", "nnet", "rpart",
+                             "survival"))
 
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
