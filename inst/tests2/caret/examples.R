@@ -11,7 +11,7 @@ excl <- getOption("doFuture.tests.topics.ignore", excl)
 options(doFuture.tests.topics.ignore = excl)
 
 subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_", 1))
-topics <- test_topics(pkg, subset = 1, max_subset = 2)
+topics <- test_topics(pkg, subset = subset, max_subset = 2)
 
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
@@ -21,7 +21,7 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
-  run_examples(pkg, strategy = strategy)
+  run_examples(pkg, topics = topics, strategy = strategy)
   mprintf("- plan('%s') ... DONE", strategy)
 } ## for (strategy ...)
 
