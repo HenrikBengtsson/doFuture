@@ -1,7 +1,9 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 install_missing_packages(c("cluster", "lattice", "MASS"))
-pkg <- tests2_step("start", package = "NMF", needs = c("Biobase"))
+source("https://bioconductor.org/biocLite.R")
+biocLite("Biobase")
+pkg <- tests2_step("start", package = "NMF")
 
 mprintf("*** doFuture() - manual %s tests ...", pkg)
 
