@@ -14,7 +14,11 @@ NEW FEATURES:
    identify globals.  For instance, all examples of caret 6.0-77 works with
    doFuture() and any backend when setting this option to "automatic" (or
    ".export-and-automatic") whereas they will only work on forked backends
-   if using ".export" or the default "automatic-unless-.export".
+   if using ".export" or the default "automatic-unless-.export".  If using
+   ".export-and-automatic-with-warning", a warning that lists globals
+   potentially missing from the '.export' argument is produced - this is
+   helpful for developers writing foreach() code.
+   
 
 DOCUMENTATION:
 

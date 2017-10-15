@@ -41,7 +41,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
   } else if (export == ".export") {
     globals <- unique(c(unique(obj$export), "...future.x_ii"))
-  } else if (export %in% c(".export-and-automatic", "automatic")) {
+  } else if (export %in% c("automatic", ".export-and-automatic",
+                           ".export-and-automatic-with-warning")) {
     globals <- TRUE
   } else {
     stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
@@ -124,12 +125,20 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   names_globals <- names(globals)
 
   ## Add automatically found globals to explicit '.export' globals?
-  if (export == ".export-and-automatic") {
+  if (export %in% c(".export-and-automatic",
+                    ".export-and-automatic-with-warning")) {
     globals2 <- unique(obj$export)
 
+    ## Warn about automically found globals not in '.export'?
+    if (export == ".export-and-automatic-with-warning") {
+      missing <- setdiff(names_globals, c(globals2, "...future.x_ii"))
+      if (length(missing) > 0) {
+        warning(sprintf("Detected foreach(..., .export = c(%s)) which should probably also export %s", paste(sQuote(globals2), collapse = ", "), paste(sQuote(missing), collapse = ", ")))
+      }
+    }
+    
     ## Drop duplicates
     globals2 <- setdiff(globals2, names_globals)
-
     if (length(globals2) > 0) {
       mdebug("  - appending %d '.export' globals (not already found): %s",
              length(globals2), paste(sQuote(globals2)), collapse = ", ")
