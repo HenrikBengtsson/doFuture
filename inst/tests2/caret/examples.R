@@ -1,7 +1,8 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 pkg <- tests2_step("start", package = "caret",
-                   needs = c("class", "ddalpha", "dimRed", "ggplot2", "ipred",
+                   needs = c("Suggests",
+                             "class", "ddalpha", "dimRed", "ggplot2", "ipred",
                              "lattice", "MASS", "Matrix", "nlme", "nnet",
                              "recipes", "rpart", "survival"))
 

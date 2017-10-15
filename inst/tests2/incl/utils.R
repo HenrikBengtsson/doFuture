@@ -61,7 +61,10 @@ run_examples <- function(package, topics = test_topics(package), strategy, ...) 
 package_dependencies <- function(package, needs = NULL) {
   desc <- packageDescription(package)
   what <- c("Depends", "Imports")
-  if (identical(needs, "Suggests")) what <- c(what, "Suggests")
+  if ("Suggests" %in% needs) {
+    what <- c(what, "Suggests")
+    needs <- setdiff(needs, "Suggests")
+  }
   pkgs <- unlist(strsplit(unlist(desc[what]), split = "[,\n]"),
                  use.names = FALSE)
   pkgs <- gsub(" ", "", pkgs)
@@ -70,7 +73,7 @@ package_dependencies <- function(package, needs = NULL) {
   excl <- c("R", "methods", "base", "compiler", "datasets", "graphics",
             "grDevices", "stats", "tools", "utils")
   pkgs <- pkgs[!pkgs %in% excl]
-  if (!identical(needs, "Suggests")) pkgs <- c(pkgs, needs)
+  pkgs <- c(pkgs, needs)
   unique(pkgs)
 }
 
