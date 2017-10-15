@@ -38,8 +38,6 @@ matrix:
       env: NB='w/ covr & lintr' ## Just a label
     - os: linux
       r: devel
-      r_github_packages:
-        - HenrikBengtsson/globals
     - os: osx
       r: oldrel
       r_github_packages:
@@ -55,10 +53,6 @@ matrix:
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - caret
-        - future.BatchJobs
-        - future.batchtools
       env:
         - NB='w/ caret' ## Just a label
         - _R_CHECK_TESTSETS_=caret
@@ -66,10 +60,6 @@ matrix:
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - NMF
-        - future.BatchJobs
-        - future.batchtools
       env:
         - NB='w/ NMF' ## Just a label
         - _R_CHECK_TESTSETS_=NMF
@@ -77,21 +67,13 @@ matrix:
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - TSP
-        - future.BatchJobs
-        - future.batchtools
       env:
         - NB='w/ TSP' ## Just a label
-        - _R_CHECK_TESTSETS_=RSP
+        - _R_CHECK_TESTSETS_=TSP
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - glmnet
-        - future.BatchJobs
-        - future.batchtools
       env:
         - NB='w/ glmnet' ## Just a label
         - _R_CHECK_TESTSETS_=glmnet
@@ -99,17 +81,12 @@ matrix:
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - plyr
       env:
         - NB='w/ plyr & parallel' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - plyr
-        - future.BatchJobs
       env:
         - NB='w/ plyr & future.BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
@@ -117,9 +94,6 @@ matrix:
     - os: linux
       r: release
       r_check_args:
-      r_packages:
-        - plyr
-        - future.batchtools
       r_github_packages:
         - HenrikBengtsson/future.batchtools
       env:

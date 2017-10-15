@@ -78,7 +78,7 @@ install_missing_packages <- function(pkgs, repos = "https://cloud.r-project.org"
   oenv <- Sys.getenv("R_TESTS")
   on.exit(Sys.setenv(R_TESTS = oenv))
   Sys.setenv(R_TESTS = "")
-  for (pkg in pkgs) {
+  for (pkg in unique(pkgs)) {
     path <- system.file(package = pkg, mustWork = FALSE)
     if (nzchar(path)) next
     mprintf("- Install package: %s", pkg)
@@ -121,7 +121,7 @@ tests2_step <- local({
         ## avoid having to add them under 'Suggests:'.
         pkgs <- package_dependencies(package, ...)
         mprintf("- Dependent packages: %s", paste(pkgs, collapse = ", "))
-        install_missing_packages(pkgs)
+        install_missing_packages(c(package, pkgs))
         
         library(package, character.only = TRUE)
       }

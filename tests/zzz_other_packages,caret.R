@@ -2,11 +2,6 @@ testsets <- strsplit(Sys.getenv("_R_CHECK_TESTSETS_"), split = "[, ]")[[1]]
 print(testsets)
 if ("caret" %in% testsets) {
   source("incl/start.R")
-
-  excl <- "featurePlot"
-  excl <- getOption("doFuture.tests.topics.ignore", excl)
-  options(doFuture.tests.topics.ignore = excl)
-
   path <- system.file("tests2", package = "doFuture")
   pathname <- file.path(path, "caret", "examples.R")
   source(pathname, echo = TRUE)

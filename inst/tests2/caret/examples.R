@@ -4,13 +4,13 @@ pkg <- tests2_step("start", package = "caret",
                    needs = c("class", "MASS", "Matrix", "nnet", "rpart",
                              "survival"))
 
+excl <- "featurePlot"
+excl <- getOption("doFuture.tests.topics.ignore", excl)
+options(doFuture.tests.topics.ignore = excl)
+
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
 options(doFuture.foreach.export = "automatic")
-
-## Packages used by some of the caret examples
-#pkgs <- c("lattice", "mlbench", "earth", "mda", "MLmetrics")
-#lapply(pkgs, FUN = loadNamespace)
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
