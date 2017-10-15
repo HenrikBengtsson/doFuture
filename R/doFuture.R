@@ -28,7 +28,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   } else {
     export <- getOption("doFuture.foreach.export", "automatic-unless-.export")
   }
- 
+
   ## Global variables?
   if (export == "automatic-unless-.export") {
     export_names <- unique(obj$export)
@@ -41,7 +41,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
   } else if (export == ".export") {
     globals <- unique(c(unique(obj$export), "...future.x_ii"))
-  } else if (export == "automatic") {
+  } else if (export %in% c(".export-and-automatic", "automatic")) {
     globals <- TRUE
   } else {
     stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
@@ -120,9 +120,31 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
-  rm(list = c("gp", "globals_envir", "pkgs"))
-
+  rm(list = c("gp", "pkgs"))
   names_globals <- names(globals)
+
+  ## Add automatically found globals to explicit '.export' globals?
+  if (export == ".export-and-automatic") {
+    globals2 <- unique(obj$export)
+
+    ## Drop duplicates
+    globals2 <- setdiff(globals2, names_globals)
+
+    if (length(globals2) > 0) {
+      mdebug("  - appending %d '.export' globals (not already found): %s",
+             length(globals2), paste(sQuote(globals2)), collapse = ", ")
+      gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                                  globals = globals2)
+      globals2 <- gp$globals
+      packages <- unique(c(gp$packages, packages))
+      globals <- c(globals, globals2)
+      rm(list = "gp")
+    }
+    rm(list = "globals2")
+  }
+  
+  rm(list = c("globals_envir"))
+
   if (debug) {
     mdebug("  - globals: [%d] %s", length(globals),
            paste(sQuote(names_globals), collapse = ", "))
