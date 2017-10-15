@@ -82,15 +82,31 @@ package_dependencies <- function(package, needs = NULL) {
   unique(pkgs)
 }
 
-install_missing_packages <- function(pkgs, repos = "https://cloud.r-project.org") {
+install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.r-project.org") {
+  if (bioc) {
+    install_pkg <- local({
+      .biocLite <- NULL
+      function(...) {
+        if (is.null(.biocLite)) {
+          source("https://bioconductor.org/biocLite.R")
+          .biocLite <<- biocLite
+        }
+        .biocLite(...)
+      }
+    })
+  } else {
+    install_pkg <- function(...) install.packages(..., repos = repos)
+  }
+
   oenv <- Sys.getenv("R_TESTS")
   on.exit(Sys.setenv(R_TESTS = oenv))
   Sys.setenv(R_TESTS = "")
+    
   for (pkg in unique(pkgs)) {
     path <- system.file(package = pkg, mustWork = FALSE)
     if (nzchar(path)) next
-    mprintf("- Install package: %s", pkg)
-    install.packages(pkg, repos = repos)
+    mprintf("- Installing package: %s", pkg)
+    install_pkg(pkg)
     system.file(package = pkg, mustWork = TRUE)
   }
 }
