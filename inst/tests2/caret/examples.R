@@ -1,11 +1,10 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("class", "lattice", "MASS", "ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
+install_missing_packages(c("class", "cluster", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival"))
+#install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 pkg <- tests2_step("start", package = "caret",
                    needs = c("Suggests",
-                             "class", "ddalpha", "dimRed", "ggplot2", "ipred",
-                             "lattice", "Matrix", "nlme", "nnet",
-                             "recipes", "rpart", "survival"))
+                             "ddalpha", "dimRed", "ggplot2", "ipred", "recipes"))
 
 excl <- "featurePlot"
 excl <- getOption("doFuture.tests.topics.ignore", excl)

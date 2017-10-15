@@ -1,6 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("cluster", "MASS", "ggplot2"))
+install_missing_packages(c("cluster", "lattice", "MASS"))
 pkg <- tests2_step("start", package = "NMF",
                    needs = c("Suggests"))
 #                   needs = c("cluster", "MASS", "ggplot2"))

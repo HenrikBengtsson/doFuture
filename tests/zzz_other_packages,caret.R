@@ -1,6 +1,6 @@
 testsets <- strsplit(Sys.getenv("_R_CHECK_TESTSETS_"), split = "[, ]")[[1]]
 print(testsets)
-if (FALSE && "caret" %in% testsets) {
+if ("caret" %in% testsets) {
   source("incl/start.R")
   path <- system.file("tests2", package = "doFuture")
   pathname <- file.path(path, "caret", "examples.R")
