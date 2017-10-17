@@ -160,7 +160,7 @@ List of 3
  $ : num [1:3] -0.104 1.237 2.474
 ```
 
-Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.
+Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will scan each `foreach() %dopar% { ... }` call for globals.  If it detects global candidates not listed in `.export`, it will produce an informative warning message suggesting that those should be added.
 
 
 
@@ -273,9 +273,38 @@ plan(cluster, workers = cl)
 </td>
 </tr>
 
+
+<tr style="vertical-align: center;">
+<td>
+N/A
+</td>
+<td>
+High-performance compute (HPC) schedulers, e.g.
+SGE, Slurm, and TORQUE / PBS.
+<pre><code class="r">library("doFuture")
+registerDoFuture()
+library(future.batchtools)
+plan(batchtools_sge)
+</code></pre>
+</td>
+</tr>
+
+
+
+<tr style="vertical-align: center;">
+<td>
+<pre><code class="r">library("doRedis")
+registerDoRedis("jobs")
+startLocalWorkers(n = 4, queue = "jobs")
+</code></pre>
+</td>
+<td>
+N/A.  There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis">doRedis</a> package.
+</td>
+</tr>
+
 <table>
 
-Comment: There is currently no known future implementation and therefore no known [doFuture] alternative to the [doRedis] packages.
 
 
 
