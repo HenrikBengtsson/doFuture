@@ -134,7 +134,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
                                           "future.call.arguments"))
       if (length(missing) > 0) {
-        warning(sprintf("Detected foreach(..., .export = c(%s)) which should probably also export %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
+        warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
       }
     }
     
