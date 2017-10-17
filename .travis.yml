@@ -29,8 +29,6 @@ matrix:
       r_packages:
         - future.BatchJobs
         - future.batchtools
-      r_github_packages:
-        - HenrikBengtsson/globals
     - os: linux
       r: release
       r_packages:
@@ -54,12 +52,14 @@ matrix:
         - future.BatchJobs
         - future.batchtools
       r_github_packages:
-        - HenrikBengtsson/globals
+        - HenrikBengtsson/future
     - os: osx
       r: release
       r_packages:
         - future.BatchJobs
         - future.batchtools
+      r_github_packages:
+        - HenrikBengtsson/future
     - os: linux
       r: release
       r_packages:

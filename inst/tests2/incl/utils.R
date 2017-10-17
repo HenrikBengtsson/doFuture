@@ -49,15 +49,11 @@ run_example <- function(topic, package, local = FALSE, envir = globalenv()) {
 run_examples <- function(package, topics = test_topics(package), strategy, ...) {
   if (length(topics) == 0) return
 
-  ## Workaround for https://github.com/HenrikBengtsson/future/issues/166
-  ns <- getNamespace("future")
-  strategy_fcn <- get(strategy, envir = ns, mode = "function")
-  
   for (ii in seq_along(topics)) {
     topic <- topics[ii]
     mprintf("- #%d of %d example('%s', package = '%s') using plan(%s) ...", ii, length(topics), topic, package, strategy) #nolint
     registerDoFuture()
-    plan(strategy_fcn)
+    plan(strategy)
     dt <- run_example(topic = topic, package = package, ...)
     mprintf("- #%d of %d example('%s', package = '%s') using plan(%s) ... DONE (%s)", ii, length(topics), topic, package, strategy, dt) #nolint
   } ## for (ii ...)
