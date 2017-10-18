@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.5.1-9000 [2017-10-15]
+Version: 0.5.1-9000 [2017-10-17]
 
 NEW FEATURES:
 
@@ -19,7 +19,6 @@ NEW FEATURES:
    potentially missing from the '.export' argument is produced - this is
    helpful for developers writing foreach() code.
    
-
 DOCUMENTATION:
 
  o Added help("doFuture.options").
