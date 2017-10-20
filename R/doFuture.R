@@ -21,18 +21,32 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
 
-  ## Global variables?
-  export <- unique(obj$export)
-  if (is.null(export)) {
-    ## Automatic lookup of global variables by default
-    ## NOTE: To fully emulate foreach's behavior in most
-    ##       cases, we could disable this. /HB 2016-10-10
-    globals <- getOption("doFuture.globals.nullexport", TRUE)
+  nullexport <- getOption("doFuture.globals.nullexport")
+  if (!is.null(nullexport)) {
+    .Deprecated(msg = "Option 'doFuture.globals.nullexport' is deprecated.  Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.") # nolint
+    export <- if (nullexport) "automatic-unless-.export" else ".export"
   } else {
-    ## Export also the other foreach arguments
-    globals <- unique(c(export, "...future.x_ii"))
+    export <- getOption("doFuture.foreach.export", "automatic-unless-.export")
   }
-  export <- NULL
+
+  ## Global variables?
+  if (export == "automatic-unless-.export") {
+    export_names <- unique(obj$export)
+    if (is.null(export_names)) {
+      globals <- TRUE
+    } else {
+      ## Export also the other foreach arguments
+      globals <- unique(c(export_names, "...future.x_ii"))
+      export_names <- NULL
+    }
+  } else if (export == ".export") {
+    globals <- unique(c(unique(obj$export), "...future.x_ii"))
+  } else if (export %in% c("automatic", ".export-and-automatic",
+                           ".export-and-automatic-with-warning")) {
+    globals <- TRUE
+  } else {
+    stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
+  }
 
   ## Any packages to be on the search path?
   pkgs <- obj$packages
@@ -103,13 +117,44 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                              globals = globals, resolve = TRUE)
+                              globals = globals)
   globals <- gp$globals
   packages <- unique(c(gp$packages, pkgs))
   expr <- gp$expr
-  rm(list = c("gp", "globals_envir", "pkgs"))
-
+  rm(list = c("gp", "pkgs"))
   names_globals <- names(globals)
+
+  ## Add automatically found globals to explicit '.export' globals?
+  if (export %in% c(".export-and-automatic",
+                    ".export-and-automatic-with-warning")) {
+    globals2 <- unique(obj$export)
+
+    ## Warn about automically found globals not in '.export'?
+    if (export == ".export-and-automatic-with-warning") {
+      missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
+                                          "future.call.arguments"))
+      if (length(missing) > 0) {
+        warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
+      }
+    }
+    
+    ## Drop duplicates
+    globals2 <- setdiff(globals2, names_globals)
+    if (length(globals2) > 0) {
+      mdebug("  - appending %d '.export' globals (not already found): %s",
+             length(globals2), paste(sQuote(globals2)), collapse = ", ")
+      gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                                  globals = globals2)
+      globals2 <- gp$globals
+      packages <- unique(c(gp$packages, packages))
+      globals <- c(globals, globals2)
+      rm(list = "gp")
+    }
+    rm(list = "globals2")
+  }
+  
+  rm(list = c("globals_envir"))
+
   if (debug) {
     mdebug("  - globals: [%d] %s", length(globals),
            paste(sQuote(names_globals), collapse = ", "))
@@ -124,7 +169,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## At this point a globals should be resolved and we should know
   ## their total size.
   ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+  
   ## Also make sure we've got our in-house '...future.x_ii' covered.
   stopifnot("...future.x_ii" %in% names(globals))
 
@@ -203,7 +249,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
     ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-    stopifnot(attr(globals_ii, "resolved"))
+##    stopifnot(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)

@@ -5,7 +5,7 @@
 # * Travis CI: https://docs.travis-ci.com/user/languages/r
 # * covr: https://github.com/jimhester/covr
 #
-# Validate your .travis.yml file at http://lint.travis-ci.org/
+# Validate your .travis.yml file at https://lint.travis-ci.org/
 #----------------------------------------------------------------
 language: r
 sudo: false
@@ -15,19 +15,25 @@ r_check_args: --as-cran
 latex: false
 
 r_packages:
-  - plyr
   - future.BatchJobs
   - future.batchtools
-  
+
 bioc_packages:
+  - Biobase
   - BiocParallel
 
 matrix:
   include:
     - os: linux
       r: oldrel
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
     - os: linux
       r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
       r_github_packages:
         - jimhester/covr
         - jimhester/lintr
@@ -36,37 +42,121 @@ matrix:
         - Rscript -e 'library(lintr); lint_package(linters = with_defaults(commented_code_linter = NULL, closed_curly_linter = closed_curly_linter(allow_single_line = TRUE), open_curly_linter = open_curly_linter(allow_single_line = TRUE)))'
       env: NB='w/ covr & lintr' ## Just a label
     - os: linux
+      r: devel
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+    - os: osx
+      r: oldrel
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+    - os: osx
       r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
       env:
         - NB='w/ foreach' ## Just a label
-        - _R_TESTSETS_=foreach
+        - _R_CHECK_TESTSETS_=foreach
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
     - os: linux
       r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - caret
+        - class
+        - lattice
+        - MASS
+        - Matrix
+        - nlme
+        - nnet
+        - rpart
+        - survival
+      r_check_args:
       env:
-        - NB='w/ plyr & parallel' ## Just a label
-        - _R_TESTSETS_=plyr
+        - NB='w/ caret' ## Just a label
+        - _R_CHECK_TESTSETS_=caret
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
     - os: linux
       r: release
-      r_packages: future.BatchJobs
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - NMF
+        - cluster
+      r_check_args:
+      env:
+        - NB='w/ NMF' ## Just a label
+        - _R_CHECK_TESTSETS_=NMF
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - TSP
+        - cluster
+        - foreign
+        - lattice
+        - MASS
+        - maps
+        - sp
+        - maptools
+      r_check_args:
+      env:
+        - NB='w/ TSP' ## Just a label
+        - _R_CHECK_TESTSETS_=TSP
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - glmnet
+      r_check_args:
+      env:
+        - NB='w/ glmnet' ## Just a label
+        - _R_CHECK_TESTSETS_=glmnet
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args:
+      env:
+        - NB='w/ plyr & parallel' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args:
       env:
         - NB='w/ plyr & future.BatchJobs' ## Just a label
-        - _R_TESTSETS_=plyr
+        - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
     - os: linux
       r: release
-      r_github_packages:
-        - HenrikBengtsson/future.batchtools
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args:
       env:
         - NB='w/ plyr & future.batchtools' ## Just a label
-        - _R_TESTSETS_=plyr
+        - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
-    - os: linux
-      r: devel
-    - os: osx
-      r: oldrel
-    - os: osx
-      r: release
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'

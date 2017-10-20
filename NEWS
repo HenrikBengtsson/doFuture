@@ -1,6 +1,39 @@
 Package: doFuture
 =================
 
+Version: 0.6.0 [2017-10-17]
+
+NEW FEATURES:
+
+ o doFuture now respects option 'future.globals.resolve' instead of being
+   hardcoded to always resolve globals (future.globals.resolve = TRUE).
+   This makes doFuture consistent with other future frontends.
+
+ o Added option 'doFuture.foreach.export' making it possible ignore a faulty
+   '.export' argument to foreach() and instead rely on the future framework to
+   identify globals.  For instance, all examples of caret 6.0-77 works with
+   doFuture() and any backend when setting this option to "automatic" (or
+   ".export-and-automatic") whereas they will only work on forked backends
+   if using ".export" or the default "automatic-unless-.export".  If using
+   ".export-and-automatic-with-warning", a warning that lists globals
+   potentially missing from the '.export' argument is produced - this is
+   helpful for developers writing foreach() code.
+   
+DOCUMENTATION:
+
+ o Added help("doFuture.options").
+
+SOFTWARE QUALITY:
+
+ o TESTS: The doFuture package gained more opt-in tests for third-party
+   packages across all known future backends.  These tests are not performed
+   on the CRAN servers; instead they are performed on Travis CI.  Third-party
+   packages that are currently tested are: caret, foreach, glmnet, NMF, plyr,
+   and TSP.
+
+ o TESTS: Testing global functions that call themselves recursively.
+
+
 Version: 0.5.1 [2017-09-11]
 
 RANDOM NUMBER GENERATION:

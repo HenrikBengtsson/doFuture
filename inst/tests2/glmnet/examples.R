@@ -1,6 +1,8 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-pkg <- tests2_step("start", package = "foreach")
+install_missing_packages(c("cluster", "lattice", "MASS", "Matrix"))
+pkg <- tests2_step("start", package = "glmnet",
+                   needs = c("Suggests"))
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
