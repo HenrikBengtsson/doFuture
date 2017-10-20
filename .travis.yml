@@ -120,6 +120,10 @@ matrix:
         - future.BatchJobs
         - future.batchtools
         - glmnet
+        - cluster
+        - lattice
+        - MASS
+        - Matrix
       r_check_args:
       env:
         - NB='w/ glmnet' ## Just a label
