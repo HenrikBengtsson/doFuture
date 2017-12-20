@@ -54,6 +54,7 @@ for (strategy in test_strategies()) {
     run.dontrun <- !is.element(topic, excl_dontrun)
     
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
+    options(future.debug = FALSE)
     registerDoFuture()
     plan(strategy)
     dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun, local = TRUE)
