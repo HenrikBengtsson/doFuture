@@ -76,6 +76,7 @@ matrix:
         - future.batchtools
         - caret
         - class
+        - foreign
         - lattice
         - MASS
         - Matrix
@@ -83,6 +84,7 @@ matrix:
         - nnet
         - rpart
         - survival
+        - pls
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ caret' ## Just a label
@@ -98,6 +100,10 @@ matrix:
         - future.batchtools
         - NMF
         - cluster
+        - lattice
+        - MASS
+        - BiocGeneric
+        - Biobase
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ NMF' ## Just a label
@@ -137,6 +143,8 @@ matrix:
         - lattice
         - MASS
         - Matrix
+        - survival
+        - lars
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ glmnet' ## Just a label
@@ -157,7 +165,7 @@ matrix:
         - _R_CHECK_TESTSETS_=plyr
       after_success:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -171,7 +179,7 @@ matrix:
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
       after_success:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -185,7 +193,7 @@ matrix:
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
       after_success:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
