@@ -12,8 +12,6 @@ options(doFuture.tests.topics.ignore = excl)
 
 subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_", 1))
 topics <- test_topics(pkg, subset = subset, max_subset = 4)
-topics <- test_topics(pkg, subset = subset, max_subset = 4)
-
 
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
@@ -23,7 +21,21 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
-  run_examples(pkg, topics = topics, strategy = strategy)
+
+  for (ii in seq_along(topics)) {
+    topic <- topics[ii]
+    run.dontrun <- !is.element(topic, c("dotplot.diff.resamples", "xyplot.resamples", "calibration", "gafs_initial", "safs_initial", "prcomp.resamples", "diff.resamples"))
+    if (strategy %in% "multisession") {
+      run.dontrun <- run.dontrun && !is.element(topic, c("avNNet", "gafs_initial"))
+      
+    }
+    mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
+    registerDoFuture()
+    plan(strategy)
+    dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun)
+    mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, run.dontrun, strategy, dt) #nolint
+  } ## for (ii ...)
+
   mprintf("- plan('%s') ... DONE", strategy)
 } ## for (strategy ...)
 
