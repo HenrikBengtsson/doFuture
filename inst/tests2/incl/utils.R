@@ -26,7 +26,7 @@ test_topics <- local({
   }
 })
 
-run_example <- function(topic, package, local = FALSE, run.dontrun = FALSE, envir = globalenv()) {
+run_example <- function(topic, package, local = FALSE, run.dontrun = TRUE, envir = globalenv()) {
   ovars <- ls(all.names = TRUE, envir = envir)
   on.exit({
     graphics.off()

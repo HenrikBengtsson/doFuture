@@ -1,12 +1,29 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 install_missing_packages(c("class", "cluster", "foreign", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival"))
+library("foreign") ## TROUBLESHOOTING Travis CI
 #install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 pkg <- tests2_step("start", package = "caret")
 #                   needs = c("Suggests",
 #                     "ddalpha", "dimRed", "ggplot2", "ipred", "recipes"))
 
-excl <- "featurePlot"
+excl <- c(
+  "featurePlot",
+  ## Non-functional example, because they depend on
+  ## an object that is not available/not loaded.
+  "dotplot.diff.resamples",
+  "xyplot.resamples",
+  "prcomp.resamples",
+  "diff.resamples"
+)
+
+excl_dontrun <- c(
+  ## Non-functional example(run.dontrun = TRUE)
+  ## (gives a parsing error)
+  "gafs_initial",
+  "safs_initial"
+)
+
 excl <- getOption("doFuture.tests.topics.ignore", excl)
 options(doFuture.tests.topics.ignore = excl)
 
@@ -24,15 +41,25 @@ for (strategy in test_strategies()) {
 
   for (ii in seq_along(topics)) {
     topic <- topics[ii]
-    run.dontrun <- !is.element(topic, c("dotplot.diff.resamples", "xyplot.resamples", "calibration", "gafs_initial", "safs_initial", "prcomp.resamples", "diff.resamples"))
+    ## BUG?: example("calibration", run.dontrun = TRUE) only works
+    ## for plan(transparent), but not even plan(sequential).  It gives:
+    ## Error in qda.default(x, grouping, ...) : 
+    ##     rank deficiency in group Inactive
+    ## but it only happens if other examples were ran prior to this example.
+    ## There seems to be some stray objects that affects this example.
+    ## Leaving it at this for now. /HB 2017-12-19
+    run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
+    
     if (strategy %in% "multisession") {
-      run.dontrun <- run.dontrun && !is.element(topic, c("avNNet", "gafs_initial"))
-      
+      ## BUG: Skip because of doFuture/globals bug
+      ## https://github.com/HenrikBengtsson/doFuture/issues/17
+      run.dontrun <- run.dontrun && !is.element(topic, "avNNet")
     }
+    
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
     registerDoFuture()
     plan(strategy)
-    dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun)
+    dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun, local = FALSE)
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, run.dontrun, strategy, dt) #nolint
   } ## for (ii ...)
 

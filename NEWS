@@ -1,9 +1,14 @@
 Package: doFuture
 =================
 
-Version: 0.6.0-9000 [2017-10-20]
+Version: 0.6.0-9000 [2017-12-20]
 
  o ...
+
+SOFTWARE QUALITY:
+
+ o TESTS: The opt-in tests for third-party packages now run their examples
+   with example(..., run.dontrun = TRUE) to cover even more use cases.
 
 
 Version: 0.6.0 [2017-10-17]
