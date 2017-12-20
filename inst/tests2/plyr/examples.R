@@ -1,7 +1,9 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 pkg <- tests2_step("start", package = "plyr")
-topics <- test_topics(pkg)
+
+subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_", 1))
+topics <- test_topics(pkg, subset = subset, max_subset = 3)
 
 ## Tweak all plyr functions with argument '.parallel'
 tweak_plyr <- function() {
