@@ -61,10 +61,13 @@ matrix:
       r_packages:
         - future.BatchJobs
         - future.batchtools
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ foreach' ## Just a label
         - _R_CHECK_TESTSETS_=foreach
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,foreach.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -79,12 +82,13 @@ matrix:
         - nnet
         - rpart
         - survival
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ caret' ## Just a label
         - _R_CHECK_TESTSETS_=caret
-        - _R_CHECK_SUBSET_=1
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -92,11 +96,13 @@ matrix:
         - future.batchtools
         - NMF
         - cluster
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ NMF' ## Just a label
         - _R_CHECK_TESTSETS_=NMF
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -110,11 +116,13 @@ matrix:
         - maps
         - sp
         - maptools
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ TSP' ## Just a label
         - _R_CHECK_TESTSETS_=TSP
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,TSP.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -125,46 +133,51 @@ matrix:
         - lattice
         - MASS
         - Matrix
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ glmnet' ## Just a label
         - _R_CHECK_TESTSETS_=glmnet
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,glmnet.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
         - future.BatchJobs
         - future.batchtools
         - plyr
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr 1/2 & parallel' ## Just a label
+        - NB='w/ plyr & parallel' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_SUBSET_=1
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
         - future.BatchJobs
         - future.batchtools
         - plyr
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr 1/2 & future.BatchJobs' ## Just a label
+        - NB='w/ plyr & future.BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_SUBSET_=1
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
         - future.BatchJobs
         - future.batchtools
         - plyr
-      r_check_args:
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr 1/2 & future.batchtools' ## Just a label
+        - NB='w/ plyr & future.batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_SUBSET_=1
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+      after_success:
+        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'

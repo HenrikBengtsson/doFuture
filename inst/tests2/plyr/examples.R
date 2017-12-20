@@ -3,7 +3,7 @@ source(file.path(path, "utils.R"))
 pkg <- tests2_step("start", package = "plyr")
 
 subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_"))
-topics <- test_topics(pkg, subset = subset, max_subset = 2)
+topics <- test_topics(pkg, subset = subset, max_subset = 3)
 
 ## Tweak all plyr functions with argument '.parallel'
 tweak_plyr <- function() {
