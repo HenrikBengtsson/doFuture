@@ -1,7 +1,7 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("class", "cluster", "foreign", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival"))
-library("foreign") ## TROUBLESHOOTING Travis CI
+install_missing_packages(c("class", "cluster", "foreign", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival",
+                           "pls"))
 #install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 pkg <- tests2_step("start", package = "caret")
 #                   needs = c("Suggests",
@@ -21,7 +21,16 @@ excl_dontrun <- c(
   ## Non-functional example(run.dontrun = TRUE)
   ## (gives a parsing error)
   "gafs_initial",
-  "safs_initial"
+  "safs_initial",
+  ## Other non-functional/broken example(run.dontrun = TRUE)
+  "sensitivity",
+  "plotClassProbs",
+  "plotObsVsPred",
+  "rfeControl",
+  "sbf",
+  ## Very very slow
+  "plsda",
+  "rfe"
 )
 
 excl <- getOption("doFuture.tests.topics.ignore", excl)
