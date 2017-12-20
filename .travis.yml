@@ -84,6 +84,7 @@ matrix:
         - nnet
         - rpart
         - survival
+        - e1071
         - pls
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
