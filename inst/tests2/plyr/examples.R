@@ -40,7 +40,7 @@ options("doFuture.tests.topics.ignore" = excl)
 ## See example(topic, package = "plyr") for why 'run.dontrun' must be FALSE
 excl_dontrun <- c("failwith", "here")
 ## Exclude because it requires Tk, which is not available on Travis CI
-excl_dontrun <- c(excl_dontrun, "create_progress_bar")
+excl_dontrun <- c(excl_dontrun, "create_progress_bar", "progress_tk")
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
