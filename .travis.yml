@@ -103,8 +103,6 @@ matrix:
         - cluster
         - lattice
         - MASS
-        - BiocGeneric
-        - Biobase
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ NMF' ## Just a label
