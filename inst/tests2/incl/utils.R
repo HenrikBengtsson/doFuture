@@ -26,7 +26,7 @@ test_topics <- local({
   }
 })
 
-run_example <- function(topic, package, local = FALSE, envir = globalenv()) {
+run_example <- function(topic, package, local = FALSE, run.dontrun = FALSE, envir = globalenv()) {
   ovars <- ls(all.names = TRUE, envir = envir)
   on.exit({
     graphics.off()
@@ -36,7 +36,8 @@ run_example <- function(topic, package, local = FALSE, envir = globalenv()) {
   
   dt <- system.time({
     utils::example(topic = topic, package = package, character.only = TRUE,
-                   echo = TRUE, ask = FALSE, local = local)
+                   echo = TRUE, ask = FALSE, local = local,
+                   run.dontrun = run.dontrun)
   })
   
   dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
