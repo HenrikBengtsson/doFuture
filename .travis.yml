@@ -86,6 +86,10 @@ matrix:
         - survival
         - mda
         - e1071
+        - earth
+        - klaR
+        - mlbench
+        - recipes
         - pls
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
@@ -161,8 +165,23 @@ matrix:
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr & parallel' ## Just a label
+        - NB='w/ plyr & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=multisession
+      after_success:
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & multisession' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=multisession
       after_success:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
