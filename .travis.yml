@@ -193,10 +193,11 @@ matrix:
         - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
+      r_packages:
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr & future.batchtools' ## Just a label
+        - NB='w/ plyr & future.callr' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
       script:
