@@ -75,6 +75,140 @@ matrix:
       r_packages:
         - future.BatchJobs
         - future.batchtools
+        - NMF
+        - cluster
+        - lattice
+        - MASS
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ NMF' ## Just a label
+        - _R_CHECK_TESTSETS_=NMF
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - TSP
+        - cluster
+        - foreign
+        - lattice
+        - MASS
+        - maps
+        - sp
+        - maptools
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ TSP' ## Just a label
+        - _R_CHECK_TESTSETS_=TSP
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,TSP.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - glmnet
+        - cluster
+        - lattice
+        - MASS
+        - Matrix
+        - survival
+        - lars
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ glmnet' ## Just a label
+        - _R_CHECK_TESTSETS_=glmnet
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,glmnet.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & sequential' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & multisession' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=multisession
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & future.BatchJobs' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & future.batchtools' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & future.batchtools' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+	- Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+      r_packages:
+        - future.BatchJobs
+        - future.batchtools
         - caret
         - class
         - foreign
@@ -274,140 +408,6 @@ matrix:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - NMF
-        - cluster
-        - lattice
-        - MASS
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ NMF' ## Just a label
-        - _R_CHECK_TESTSETS_=NMF
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - TSP
-        - cluster
-        - foreign
-        - lattice
-        - MASS
-        - maps
-        - sp
-        - maptools
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ TSP' ## Just a label
-        - _R_CHECK_TESTSETS_=TSP
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,TSP.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - glmnet
-        - cluster
-        - lattice
-        - MASS
-        - Matrix
-        - survival
-        - lars
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ glmnet' ## Just a label
-        - _R_CHECK_TESTSETS_=glmnet
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,glmnet.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & sequential' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & multisession' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=multisession
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & future.BatchJobs' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & future.batchtools' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & future.batchtools' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-	- Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
-        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
 
 
 before_install:
