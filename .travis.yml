@@ -66,7 +66,8 @@ matrix:
         - NB='w/ foreach' ## Just a label
         - _R_CHECK_TESTSETS_=foreach
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
-      after_success:
+      script:
+        - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'source("tests/zzz_opt-in,foreach.R", chdir = TRUE, echo = TRUE)'
     - os: linux
