@@ -395,6 +395,20 @@ matrix:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+    - os: linux
+      r: release
+        - plyr
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ plyr & future.batchtools' ## Just a label
+        - _R_CHECK_TESTSETS_=plyr
+        - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+	- Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
+        - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
