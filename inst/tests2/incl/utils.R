@@ -4,7 +4,7 @@ find_rd_topics <- function(package) {
   path <- find.package(package)
   file <- file.path(path, "help", "aliases.rds")
   topics <- readRDS(file)
-  unique(topics)
+  sort(unique(topics))
 }
 
 test_topics <- local({
