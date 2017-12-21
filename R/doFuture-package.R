@@ -98,6 +98,15 @@
 #' possible to disable load balancing by using
 #' \code{.options.multicore = list(preschedule = FALSE)}.
 #'
+#' @section Random Number Generation (RNG):
+#' The \pkg{doFuture} package does \emph{not} itself provide a framework
+#' for generating proper random numbers in parallel. This is a deliberate
+#' design choice based on how the foreach ecosystem is set up.  For valid
+#' parallel RNG, it is recommended to use the \pkg{doRNG} package, where
+#' the \code{\%dorng\%} operator is used in place of \code{\%dopar\%}.
+#' Note that \pkg{doRNG} is designed to work with any type of foreach
+#' adaptor including \pkg{doFuture}.
+#'
 #' @example incl/doFuture.R
 #'
 #' @docType package
