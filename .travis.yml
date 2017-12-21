@@ -110,6 +110,7 @@ matrix:
         - Cubist
         - pls
         - recipes
+        - mboost
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ caret' ## Just a label
