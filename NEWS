@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.6.0-9000 [2017-12-20]
+Version: 0.6.0-9000 [2017-12-21]
 
 DOCUMENTATION:
 
@@ -12,6 +12,8 @@ SOFTWARE QUALITY:
 
  o TESTS: The opt-in tests for third-party packages now run their examples
    with example(..., run.dontrun = TRUE) to cover even more use cases.
+
+ o TESTS: Added future.callr to the backend opt-in tested with plyr.
 
 
 Version: 0.6.0 [2017-10-17]
