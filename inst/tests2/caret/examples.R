@@ -59,7 +59,7 @@ for (strategy in test_strategies()) {
     ## Leaving it at this for now. /HB 2017-12-19
     run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
     
-    if (strategy %in% "multisession") {
+    if (!is.element(strategy, c("sequential", "multicore"))) {
       ## BUG: Skip because of doFuture/globals bug
       ## https://github.com/HenrikBengtsson/doFuture/issues/17
       run.dontrun <- run.dontrun && !is.element(topic, "avNNet")
