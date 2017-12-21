@@ -196,7 +196,7 @@ matrix:
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
-        - NB='w/ plyr & future.batchtools' ## Just a label
+        - NB='w/ plyr & future.callr' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
       script:
