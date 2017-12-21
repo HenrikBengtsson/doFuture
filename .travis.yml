@@ -84,13 +84,32 @@ matrix:
         - nnet
         - rpart
         - survival
-        - mda
+        - BradleyTerry2
         - e1071
         - earth
+        - fastICA
+        - gam
+        - ipred
+        - kernlab
         - klaR
+        - ellipse
+        - mda
+        - mgcv
         - mlbench
-        - recipes
+        - MLmetrics
+        - party
         - pls
+        - pROC
+        - proxy
+        - randomForest
+        - RANN
+        - spls
+        - subselect
+        - pamr
+        - superpc
+        - Cubist
+        - pls
+        - recipes
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ caret' ## Just a label
@@ -167,7 +186,7 @@ matrix:
       env:
         - NB='w/ plyr & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=multisession
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential
       after_success:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
