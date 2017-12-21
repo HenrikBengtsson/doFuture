@@ -202,7 +202,7 @@ matrix:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-	- Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
+        - Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
         - Rscript -e 'source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
