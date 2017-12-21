@@ -1,6 +1,6 @@
 #' Registers the future \%dopar\% backend
 #'
-#' Register the \code{\link{doFuture}} parallel adaptor to be used by
+#' Register the [doFuture] parallel adaptor to be used by
 #' the \pkg{foreach} package.
 #'
 #' @return Nothing

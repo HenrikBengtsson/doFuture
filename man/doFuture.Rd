@@ -21,17 +21,16 @@ Neither the developer nor the end user has to change any code.
 \section{Usage}{
 
 To use futures with the \pkg{foreach} package, load \pkg{doFuture},
-use \code{\link{registerDoFuture}()} to register it to be used as a
-\code{\%dopar\%} adaptor (need to ever use \code{\%do\%}).
+use \code{\link[=registerDoFuture]{registerDoFuture()}} to register it to be used as a
+\code{\%dopar\%} adaptor (no need to ever use \code{\%do\%}).
 After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
-\code{\link[future:plan]{future::plan}()}.  For example:
-
+\code{\link[future:plan]{future::plan()}}.  For example:
 \itemize{
- \item {\code{plan(multiprocess)}: }{
-   multiple R processes on the local machine.}
- \item {\code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}: }{
-   multiple R processes on external machines.}
+\item \code{plan(multiprocess)}:
+multiple R processes on the local machine.
+\item \code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}:
+multiple R processes on external machines.
 }
 
 See the \pkg{future} package for more examples.
@@ -52,11 +51,12 @@ The \pkg{future.BatchJobs} package provides support for high-performance
 compute (HPC) cluster schedulers such as SGE, Slurm, and TORQUE / PBS.
 For example,
 \itemize{
- \item {\code{plan(batchjobs_slurm)}: }{
-   Process via a Slurm scheduler job queue.}
- \item {\code{plan(batchjobs_torque)}: }{
-   Process via a TORQUE / PBS scheduler job queue.}
+\item \code{plan(batchjobs_slurm)}:
+Process via a Slurm scheduler job queue.
+\item \code{plan(batchjobs_torque)}:
+Process via a TORQUE / PBS scheduler job queue.
 }
+
 This builds on top of the queuing framework that the \pkg{BatchJobs}
 package provides. For more details on backend configuration, please see
 the \pkg{future.BatchJobs} and \pkg{BatchJobs} packages.
@@ -72,7 +72,7 @@ get errors on one or missing variables when moving from running a
 \code{res <- foreach() \%dopar\% { ... }} statement on the local machine
 to, say, another machine on the same network.  The solution to the
 problem is to explicitly export those variables by specifying them in
-the \code{.export} argument to \code{\link[foreach:foreach]{foreach}()},
+the \code{.export} argument to \code{\link[foreach:foreach]{foreach::foreach()}},
 e.g. \code{foreach(..., .export = c("mu", "sigma"))}.  Likewise, if the
 expression needs specific packages to be attached, they can be listed
 in argument \code{.packages} of \code{foreach()}.
@@ -87,7 +87,7 @@ by the below example, which does \emph{not} specify
 detects that function \code{my_stat()} is needed and makes sure it is
 exported.  If you would use, say, \code{cl <- parallel::makeCluster(2)}
 and \code{doParallel::registerDoParallel(cl)}, you would get a run-time
-error on 'Error in \{ : task 1 failed - "could not find function "my_stat"'.
+error on \code{Error in \{ : task 1 failed - \"could not find function "my_stat" ...}.
 
 Having said this, note that, in order for your "foreach" code to work
 everywhere and with other types of foreach adaptors as well, you may
@@ -103,7 +103,8 @@ controlled by \code{foreach()} option
 The value \code{scheduling} specifies the average number of futures
 ("chunks") per worker.
 If \code{0.0}, then a single future is used to process all iterations
-- none of the other workers are not used.
+\itemize{
+\item none of the other workers are not used.
 If \code{1.0} or \code{TRUE}, then one future per worker is used.
 If \code{2.0}, then each worker will process two futures (if there are
 enough iterations).
@@ -114,6 +115,7 @@ which in case that becomes the default.  In other words, it is also
 possible to disable load balancing by using
 \code{.options.multicore = list(preschedule = FALSE)}.
 }
+}
 
 \section{Random Number Generation (RNG)}{
 
@@ -121,7 +123,8 @@ The \pkg{doFuture} package does \emph{not} itself provide a framework
 for generating proper random numbers in parallel. This is a deliberate
 design choice based on how the foreach ecosystem is set up.  For valid
 parallel RNG, it is recommended to use the \pkg{doRNG} package, where
-the \code{\%dorng\%} operator is used in place of \code{\%dopar\%}.
+the \code{\link[doRNG:\%dorng\%]{\%dorng\%}} operator is used in place
+of \code{\link[foreach:\%dopar\%]{\%dopar\%}}.
 Note that \pkg{doRNG} is designed to work with any type of foreach
 adaptor including \pkg{doFuture}.
 }
