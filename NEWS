@@ -3,7 +3,10 @@ Package: doFuture
 
 Version: 0.6.0-9000 [2017-12-20]
 
- o ...
+DOCUMENTATION:
+
+ o Added section on Random Number Generation (RNG) to help("doFuture") and
+   updated example("doFuture") with a best-practices RNG example.
 
 SOFTWARE QUALITY:
 
