@@ -3,6 +3,48 @@ source("incl/start.R")
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
 
+message("*** doFuture - explicitly exported globals ...")
+
+message("- Globals manually specified as named list - also with '...' ...")
+
+x <- 1:3
+y_truth <- lapply(1:2, FUN = function(i) x[c(i, 2:3)])
+str(y_truth)
+  
+for (strategy in strategies) {
+  message(sprintf("- plan('%s') ...", strategy))
+  plan(strategy)
+
+  ## (a) automatic
+  sub <- function(x, ...) {
+    foreach(i = 1:2) %dopar% { x[c(i, ...)] }
+  }
+  y <- sub(x, 2:3)
+  str(y)
+  stopifnot(identical(y, y_truth))
+
+  ## (b) explicit
+  sub <- function(x, ...) {
+    foreach(i = 1:2, .export = c("x", "...")) %dopar% { x[c(i, ...)] }
+  }
+#  y <- sub(x, 2:3)
+  str(y)
+  stopifnot(identical(y, y_truth))
+  
+  ## (c) explicit, but forgotten '...'
+  sub <- function(x, ...) {
+    foreach(i = 1:2, .export = c("x")) %dopar% { x[c(i, ...)] }
+  }
+  y <- tryCatch(sub(x, 2:3), error = identity)
+  str(y)
+  stopifnot((strategy %in% c(c("cluster", "multisession")) && inherits(y, "simpleError")) || identical(y, y_truth))
+
+  message(sprintf("- plan('%s') ... DONE", strategy))
+} ## for (strategy ...)
+
+message("*** doFuture - explicitly exported globals ... DONE")
+
+
 message("*** doFuture - automatically finiding globals ...")
 
 ## Example adopted from StackOverflow comment
