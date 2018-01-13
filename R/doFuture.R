@@ -39,6 +39,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       globals <- unique(c(export_names, "...future.x_ii"))
       export_names <- NULL
     }
+  } else if (export == "foreach+.export") {
+    noexport <- union(obj$noexport, argnames)
+    globals <- findGlobals_foreach(expr, envir = envir, noexport = noexport)
+    globals <- unique(c(globals, "...future.x_ii"))
   } else if (export == ".export") {
     globals <- unique(c(unique(obj$export), "...future.x_ii"))
   } else if (export %in% c("automatic", ".export-and-automatic",

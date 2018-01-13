@@ -19,6 +19,10 @@
 #'    If `".export"`, then the globals specified by the `.export`
 #'    argument will be used "as is".
 #' 
+#'    If `"foreach+.export"`, then the globals identified by
+#'    [foreach::getexports] and those specified by the `.export` argument will
+#'    be used.  This is setting emulates how the doParallel package works.
+#' 
 #'    If `"automatic"`, the future framework will be used to automatically
 #'    identify globals.
 #' 

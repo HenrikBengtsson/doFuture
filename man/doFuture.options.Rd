@@ -24,6 +24,10 @@ should be automatically identified.
 If \code{".export"}, then the globals specified by the \code{.export}
 argument will be used "as is".
 
+If \code{"foreach+.export"}, then the globals identified by
+\link[foreach:getexports]{foreach::getexports} and those specified by the \code{.export} argument will
+be used.  This is setting emulates how the doParallel package works.
+
 If \code{"automatic"}, the future framework will be used to automatically
 identify globals.
 

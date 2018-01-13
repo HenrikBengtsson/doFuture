@@ -3,6 +3,11 @@ Package: doFuture
 
 Version: 0.6.0-9000 [2018-01-13]
 
+NEW FEATURES:
+
+ o Added options(doFuture.foreach.export = "foreach+.export") which identifies
+   global variables the same way as the doParallel package.
+
 DOCUMENTATION:
 
  o Added section on Random Number Generation (RNG) to help("doFuture") and

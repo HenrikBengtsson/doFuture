@@ -58,17 +58,22 @@ for (strategy in test_strategies()) {
     ## There seems to be some stray objects that affects this example.
     ## Leaving it at this for now. /HB 2017-12-19
     run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
-    
+
+    oopts_ii <- NULL
     if (!is.element(strategy, c("sequential", "multicore"))) {
       ## BUG: Skip because of doFuture/globals bug
       ## https://github.com/HenrikBengtsson/doFuture/issues/17
-      run.dontrun <- run.dontrun && !is.element(topic, "avNNet")
+      if (topic == "avNNet") {
+        oopts_ii <- options(doFuture.foreach.export = "foreach+.export")
+      }
     }
     
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
     registerDoFuture()
     plan(strategy)
     dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun, local = FALSE)
+
+    options(oopts_ii)
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, run.dontrun, strategy, dt) #nolint
   } ## for (ii ...)
 
