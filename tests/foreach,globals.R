@@ -23,15 +23,23 @@ for (strategy in strategies) {
   str(y)
   stopifnot(identical(y, y_truth))
 
-  ## (b) explicit
+  ## (b) explicit and with '...'
   sub <- function(x, ...) {
     foreach(i = 1:2, .export = c("x", "...")) %dopar% { x[c(i, ...)] }
   }
-#  y <- sub(x, 2:3)
+  y <- sub(x, 2:3)
+  str(y)
+  stopifnot(identical(y, y_truth))
+
+  ## (c) with '...', but not last
+  sub <- function(x, ...) {
+    foreach(i = 1:2, .export = c("...", "x")) %dopar% { x[c(i, ...)] }
+  }
+  y <- sub(x, 2:3)
   str(y)
   stopifnot(identical(y, y_truth))
   
-  ## (c) explicit, but forgotten '...'
+  ## (d) explicit, but forgotten '...'
   sub <- function(x, ...) {
     foreach(i = 1:2, .export = c("x")) %dopar% { x[c(i, ...)] }
   }

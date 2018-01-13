@@ -116,6 +116,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   }
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
+  ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
+  if (packageVersion("globals") <= "0.11.0") {
+    idx <- which(globals == "...")
+    if (length(idx) > 0) globals <- c(globals[-idx], "...")
+  }
   gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                               globals = globals)
   globals <- gp$globals
