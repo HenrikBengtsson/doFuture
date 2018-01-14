@@ -11,7 +11,7 @@
 #'
 #' @section Options for controlling futures:
 #' \describe{
-#'  \item{\option{doFuture.foreach.export}:}{
+#'  \item{\option{doFuture.globalsAs}:}{
 #'    Specifies to what extent the `.export` argument of
 #'    [foreach::foreach()] should be respected or if globals
 #'    should be automatically identified.
@@ -43,7 +43,14 @@
 #'
 #' @section Options for debugging:
 #' \describe{
-#'  \item{\option{doFuture.debug}:}{If `TRUE`, extensive debug messages are generated. (Default: `FALSE`)}
+#'  \item{\option{doFuture.debug}:}{If `TRUE`, extensive debug messages are
+#'        generated. (Default: `FALSE`)}
+#' }
+#'
+#' @section Deprecated options:
+#' \describe{
+#'  \item{\option{doFuture.foreach.export}:}{This option has been renamed and
+#'        is deprecated. Use \option{doFuture.globalsAs} instead.}
 #' }
 #'
 #' @keywords internal

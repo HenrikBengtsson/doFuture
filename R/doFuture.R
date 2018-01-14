@@ -5,7 +5,7 @@
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stopifnot(inherits(obj, "foreach"))
   stopifnot(inherits(envir, "environment"))
-
+  
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
 
@@ -16,40 +16,39 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   it <- iter(obj)
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
-
+  globalsAs <- data$globalsAs
+  
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
 
-  nullexport <- getOption("doFuture.globals.nullexport")
-  if (!is.null(nullexport)) {
-    .Deprecated(msg = "Option 'doFuture.globals.nullexport' is deprecated.  Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.") # nolint
-    export <- if (nullexport) "automatic-unless-.export" else ".export"
-  } else {
-    export <- getOption("doFuture.foreach.export", "automatic-unless-.export")
+  ## Global variables?
+  stopifnot(!is.null(globalsAs), length(globalsAs) == 1L)
+
+  ## Automatic or manual?
+  if (grepl("-unless-manual$", globalsAs)) {
+    if (is.null(obj$export)) {
+      globalsAs <- gsub("-unless-manual$", "", globalsAs)
+    } else {
+      globalsAs <- "manual"
+    }
   }
 
-  ## Global variables?
-  if (export == "automatic-unless-.export") {
-    export_names <- unique(obj$export)
-    if (is.null(export_names)) {
-      globals <- TRUE
-    } else {
-      ## Export also the other foreach arguments
-      globals <- unique(c(export_names, "...future.x_ii"))
-      export_names <- NULL
-    }
-  } else if (export == "foreach+.export") {
+  ## Warn if manual does not match automatic?
+  withWarning <- grepl("-with-warning$", globalsAs)
+  if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
+  
+  if (globalsAs == "manual") {
+    globals <- unique(c(unique(obj$export), "...future.x_ii"))
+  } else if (globalsAs == "foreach") {
     noexport <- union(obj$noexport, argnames)
     globals <- findGlobals_foreach(expr, envir = envir, noexport = noexport)
     globals <- unique(c(globals, "...future.x_ii"))
-  } else if (export == ".export") {
-    globals <- unique(c(unique(obj$export), "...future.x_ii"))
-  } else if (export %in% c("automatic", ".export-and-automatic",
-                           ".export-and-automatic-with-warning")) {
+  } else if (globalsAs == "future") {
     globals <- TRUE
   } else {
-    stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
+    stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
+         sQuote(globalsAs))
   }
 
   ## Any packages to be on the search path?
@@ -133,20 +132,21 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   rm(list = c("gp", "pkgs"))
   names_globals <- names(globals)
 
-  ## Add automatically found globals to explicit '.export' globals?
-  if (export %in% c(".export-and-automatic",
-                    ".export-and-automatic-with-warning")) {
-    globals2 <- unique(obj$export)
 
-    ## Warn about automically found globals not in '.export'?
-    if (export == ".export-and-automatic-with-warning") {
-      missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
-                                          "future.call.arguments"))
-      if (length(missing) > 0) {
-        warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
-      }
+  ## Warn about globals found automatically, but not listed in '.export'?
+  if (withWarning) {
+    globals2 <- unique(obj$export)
+    missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
+                                        "future.call.arguments"))
+    if (length(missing) > 0) {
+      warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (as identified by globalsAs = %s of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), sQuote(globalsAs), paste(dQuote(missing), collapse = ", ")))
     }
-    
+    globals2 <- NULL
+  }
+  
+  ## Add automatically found globals to explicit '.export' globals?
+  if (globalsAs != "manual") {
+    globals2 <- unique(obj$export)
     ## Drop duplicates
     globals2 <- setdiff(globals2, names_globals)
     if (length(globals2) > 0) {

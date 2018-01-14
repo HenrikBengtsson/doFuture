@@ -2,6 +2,8 @@ source("incl/start.R")
 
 message("*** options  ...")
 
+if (FALSE) { #####
+  
 plan(multisession, workers = 2L)
 
 a <- 3.14
@@ -142,6 +144,8 @@ res <- tryCatch({
 }, error = identity)
 print(res)
 stopifnot(inherits(res, "error"))
+
+} ##### if (FALSE) {
 
 message("*** options ... DONE")
 

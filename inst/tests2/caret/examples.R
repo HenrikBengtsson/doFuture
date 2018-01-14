@@ -41,7 +41,7 @@ topics <- test_topics(pkg, subset = subset, max_subset = 4)
 
 ## WORKAROUND: Several of caret's foreach() calls use faulty '.export'
 ## specifications, i.e. not all globals are exported.
-options(doFuture.foreach.export = "automatic")
+options(doFuture.globalsAs = "future")
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
@@ -64,7 +64,7 @@ for (strategy in test_strategies()) {
       ## BUG: Skip because of doFuture/globals bug
       ## https://github.com/HenrikBengtsson/doFuture/issues/17
       if (topic == "avNNet") {
-        oopts_ii <- options(doFuture.foreach.export = "foreach+.export")
+        oopts_ii <- options(doFuture.globalsAs = "foreach")
       }
     }
     

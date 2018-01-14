@@ -16,7 +16,7 @@ Please use with care until further notice.}
 \section{Options for controlling futures}{
 
 \describe{
-\item{\option{doFuture.foreach.export}:}{
+\item{\option{doFuture.globalsAs}:}{
 Specifies to what extent the \code{.export} argument of
 \code{\link[foreach:foreach]{foreach::foreach()}} should be respected or if globals
 should be automatically identified.
@@ -52,7 +52,16 @@ lacks some of the globals that the automatic identification locates
 \section{Options for debugging}{
 
 \describe{
-\item{\option{doFuture.debug}:}{If \code{TRUE}, extensive debug messages are generated. (Default: \code{FALSE})}
+\item{\option{doFuture.debug}:}{If \code{TRUE}, extensive debug messages are
+generated. (Default: \code{FALSE})}
+}
+}
+
+\section{Deprecated options}{
+
+\describe{
+\item{\option{doFuture.foreach.export}:}{This option has been renamed and
+is deprecated. Use \option{doFuture.globalsAs} instead.}
 }
 }
 

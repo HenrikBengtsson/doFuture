@@ -5,8 +5,12 @@ Version: 0.6.0-9000 [2018-01-13]
 
 NEW FEATURES:
 
- o Added options(doFuture.foreach.export = "foreach+.export") which identifies
-   global variables the same way as the doParallel package.
+ o registerDoFuture() gained argument 'globalsAs'. It can be used to control
+   how globals are identified by the doFuture adaptor. The default method is
+   given by option 'doFuture.globalsAs'.
+
+ o registerDoFuture(globalsAs = "foreach") identifies globals using the
+   foreach::getexports() method, which is what doParallel also uses.
 
 DOCUMENTATION:
 

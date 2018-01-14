@@ -4,7 +4,11 @@
 \alias{registerDoFuture}
 \title{Registers the future \%dopar\% backend}
 \usage{
-registerDoFuture()
+registerDoFuture(globalsAs = getOption("doFuture.globalsAs",
+  "future-unless-manual"))
+}
+\arguments{
+\item{globalsAs}{A character string specifying how globals are identified.}
 }
 \value{
 Nothing
@@ -13,4 +17,46 @@ Nothing
 Register the \link{doFuture} parallel adaptor to be used by
 the \pkg{foreach} package.
 }
+\section{Global variables}{
+
+Argument \code{globalsAs} controls how the doFuture backend/adaptor should
+identify globals part of the foreach expression.  Below are is a set of
+predefined method that can be used:
+
+\describe{
+\item{\code{"manual"}}{Globals are given by the \link[foreach:foreach]{foreach::foreach} argument
+\code{.export} and \code{.noexport} "as is".
+}
+
+\item{\code{"foreach"}}{Globals are identified by \link[foreach:getexports]{foreach::getexports} while
+respecting \link[foreach:foreach]{foreach::foreach} arguments \code{.export} and \code{.noexport}.
+}
+
+\item{\code{"future"}}{Globals are identified by the future framework, or more
+specifically by \link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages} while respecting
+\link[foreach:foreach]{foreach::foreach} arguments \code{.export} and \code{.noexport}.
+}
+
+\item{\code{"future-unless-manual"}}{Use the \code{"future"} approach unless
+argument \code{.export} is specified or is \code{NULL}.
+}
+
+\item{\code{"future-with-warning"}}{Use the \code{"future"} approach, but produce a
+warning if argument \code{.export} lacks some of the globals that
+\link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages} identifies.  This provides useful
+feedback to developers using \code{foreach()}.
+}
+}
+
+The following aliases \emph{deprecated}:
+\describe{
+\item{\code{".export"}}{Renamed to \code{"manual"}.}
+\item{\code{".export-and-automatic"}}{Renamed to \code{"future"}.}
+\item{\code{"automatic-unless-.export"}}{Renamed to \code{"future-unless-manual"}.}
+
+\item{\code{".export-and-automatic-with-warning"}}{Renamed to
+\code{"future-with-warning"}.}
+}
+}
+
 \keyword{utilities}
