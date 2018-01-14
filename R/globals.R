@@ -33,14 +33,14 @@ findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
 getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
   stopifnot(is.language(expr) || is.expression(expr))
   stopifnot(is.environment(envir))
-  stopifnot(is.character(globalsAs), length(globalsAs) == 1L)
+  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) > 0)
   stopifnot(is.logical(debug))
   export <- unique(export)
   noexport <- unique(noexport)
   packages <- unique(packages)
 
   ## Set 'globalsAs' according to 'doFuture.*' options?
-  if (globalsAs == "*") {
+  if (identical(globalsAs, "*")) {
     ## Using defunct option?
     if (!is.null(getOption("doFuture.globals.nullexport"))) {
       .Defunct(msg = "Option 'doFuture.globals.nullexport' is deprecated. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
@@ -73,20 +73,23 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
-  stopifnot(is.character(globalsAs), length(globalsAs) == 1, !is.na(globalsAs))
+  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) > 0)
+
   
   ## Automatic or manual?
-  if (grepl("-unless-manual$", globalsAs)) {
+  idxs <- grep("-unless-manual$", globalsAs)
+  if (length(idxs) > 0) {
     if (is.null(export)) {
-      globalsAs <- gsub("-unless-manual$", "", globalsAs)
+      globalsAs[idxs] <- gsub("-unless-manual$", "", globalsAs[idxs])
     } else {
-      globalsAs <- "manual"
+      globalsAs[idxs] <- "manual"
     }
   }
 
-  ## Warn if manual does not match automatic?
-  withWarning <- grepl("-with-warning$", globalsAs)
+  ## Warn if manual does not match automatic findings?
+  withWarning <- any(grepl("-with-warning$", globalsAs))
   if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
+
   
   if (globalsAs == "manual") {
     globals <- unique(c(export, "...future.x_ii"))
@@ -109,7 +112,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     }, x = exprs)
     rm(list = "exprs")
   }
-
+  
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
