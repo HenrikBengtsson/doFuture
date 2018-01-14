@@ -69,7 +69,8 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
 
   ## Not option set?
   if (is.null(globalsAs)) {
-    globalsAs <- getOption("doFuture.globalsAs.default", "future-unless-manual")
+    globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "future-unless-manual")
+    globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
   stopifnot(is.character(globalsAs), length(globalsAs) == 1, !is.na(globalsAs))
