@@ -8,7 +8,7 @@
 #' 
 #' @return Nothing
 #'
-#' @section Global variables:
+#' @section Globals and Packages:
 #' Argument `globalsAs` controls how the doFuture adaptor should identify
 #' globals part of the foreach expression.  By specifying the argument when
 #' registering the adaptor, that method of global identification will be
@@ -33,6 +33,8 @@
 #'  \item{`"future"`}{Globals are identified by the future framework,
 #'    or more specifically by [future::getGlobalsAndPackages()],
 #'    while respecting arguments `.export` and `.noexport`.
+#'    _Contrary to `"foreach"`, this method will also detect additional
+#'    packages that need to be exported._
 #'  }
 #'
 #'  \item{`"future-unless-manual"`}{(default) Use the `"future"` approach

@@ -17,7 +17,7 @@ Nothing
 Register the \link{doFuture} parallel adaptor to be used by
 the \pkg{foreach} package.
 }
-\section{Global variables}{
+\section{Globals and Packages}{
 
 Argument \code{globalsAs} controls how the doFuture adaptor should identify
 globals part of the foreach expression.  By specifying the argument when
@@ -43,6 +43,8 @@ while respecting arguments \code{.export} and \code{.noexport}.
 \item{\code{"future"}}{Globals are identified by the future framework,
 or more specifically by \code{\link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages()}},
 while respecting arguments \code{.export} and \code{.noexport}.
+\emph{Contrary to \code{"foreach"}, this method will also detect additional
+packages that need to be exported.}
 }
 
 \item{\code{"future-unless-manual"}}{(default) Use the \code{"future"} approach
