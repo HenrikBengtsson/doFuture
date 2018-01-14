@@ -1,6 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value getGlobalsAndPackages
+#' @importFrom future future resolve value
 #' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stopifnot(inherits(obj, "foreach"))
@@ -17,50 +17,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
   globalsAs <- data$globalsAs
+  stopifnot(!is.null(globalsAs), length(globalsAs) == 1L)
   
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
-
-  ## Global variables?
-  stopifnot(!is.null(globalsAs), length(globalsAs) == 1L)
-
-  ## Automatic or manual?
-  if (grepl("-unless-manual$", globalsAs)) {
-    if (is.null(obj$export)) {
-      globalsAs <- gsub("-unless-manual$", "", globalsAs)
-    } else {
-      globalsAs <- "manual"
-    }
-  }
-
-  ## Warn if manual does not match automatic?
-  withWarning <- grepl("-with-warning$", globalsAs)
-  if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
-  
-  if (globalsAs == "manual") {
-    globals <- unique(c(unique(obj$export), "...future.x_ii"))
-  } else if (globalsAs == "foreach") {
-    noexport <- union(obj$noexport, argnames)
-    globals <- findGlobals_foreach(expr, envir = envir, noexport = noexport)
-    globals <- unique(c(globals, "...future.x_ii"))
-  } else if (globalsAs == "future") {
-    globals <- TRUE
-  } else {
-    stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
-         sQuote(globalsAs))
-  }
-
-  ## Any packages to be on the search path?
-  pkgs <- obj$packages
-  if (length(pkgs) > 0L) {
-    exprs <- lapply(pkgs, FUN = function(p) call("library", p))
-    exprs <- c(exprs, expr)
-    expr <- Reduce(function(a, b) {
-      substitute({ a; b }, list(a = a, b = b))
-    }, x = exprs)
-    exprs <- NULL
-  }
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,7 +37,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     mdebug("- dummy globals (as locals): [%d] %s",
            length(argnames), paste(sQuote(argnames), collapse = ", "))
   }
-  dummy_globals <- NULL  #nolint
+  dummy_globals <- NULL
   for (kk in seq_along(argnames)) {
     name <- as.symbol(argnames[kk])  #nolint
     if (kk == 1L) {
@@ -86,10 +47,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
   }
 
-
-  ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
-    doFuture::registerDoFuture()
+    ## Tell foreach to keep using futures also in nested calls
+    doFuture::registerDoFuture(globalsAs = .(globalsAs))
 
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
       ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
@@ -105,6 +65,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     })
   })
 
+  rm(list = "dummy_globals") ## Not needed anymore
+
   if (debug) {
     mdebug("- R expression:")
     mprint(expr)
@@ -114,74 +76,31 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (debug) {
-    mdebug("- identifying globals and packages ...")
-  }
-  globals_envir <- new.env(parent = envir)
-  assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
-  ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
-  if (packageVersion("globals") <= "0.11.0") {
-    idx <- which(globals == "...")
-    if (length(idx) > 0) globals <- c(globals[-idx], "...")
-  }
-  gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                              globals = globals)
-  globals <- gp$globals
-  packages <- unique(c(gp$packages, pkgs))
+  mdebug("- identifying globals and packages ...")
+  
+  gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
+                                       export = obj$export,
+                                       noexport = c(obj$noexport, argnames),
+                                       packages = obj$packages,
+                                       globalsAs = globalsAs,
+                                       debug = debug)
+
   expr <- gp$expr
-  rm(list = c("gp", "pkgs"))
-  names_globals <- names(globals)
-
-
-  ## Warn about globals found automatically, but not listed in '.export'?
-  if (withWarning) {
-    globals2 <- unique(obj$export)
-    missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
-                                        "future.call.arguments"))
-    if (length(missing) > 0) {
-      warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (as identified by globalsAs = %s of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), sQuote(globalsAs), paste(dQuote(missing), collapse = ", ")))
-    }
-    globals2 <- NULL
-  }
+  globals <- gp$globals
+  packages <- gp$packages
+  rm(list = "gp")
   
-  ## Add automatically found globals to explicit '.export' globals?
-  if (globalsAs != "manual") {
-    globals2 <- unique(obj$export)
-    ## Drop duplicates
-    globals2 <- setdiff(globals2, names_globals)
-    if (length(globals2) > 0) {
-      mdebug("  - appending %d '.export' globals (not already found): %s",
-             length(globals2), paste(sQuote(globals2)), collapse = ", ")
-      gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                                  globals = globals2)
-      globals2 <- gp$globals
-      packages <- unique(c(gp$packages, packages))
-      globals <- c(globals, globals2)
-      rm(list = "gp")
-    }
-    rm(list = "globals2")
-  }
-  
-  rm(list = c("globals_envir"))
-
   if (debug) {
+    mdebug("  - R expression:")
+    mprint(expr)
     mdebug("  - globals: [%d] %s", length(globals),
-           paste(sQuote(names_globals), collapse = ", "))
+           paste(sQuote(names(globals)), collapse = ", "))
     mstr(globals)
     mdebug("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
-    mdebug("  - R expression:")
-    mprint(expr)
-    mdebug("- identifying globals and packages ... DONE")
   }
-
-  ## At this point a globals should be resolved and we should know
-  ## their total size.
-  ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
   
-  ## Also make sure we've got our in-house '...future.x_ii' covered.
-  stopifnot("...future.x_ii" %in% names(globals))
+  mdebug("- identifying globals and packages ... DONE")
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
