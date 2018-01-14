@@ -38,6 +38,39 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   export <- unique(export)
   noexport <- unique(noexport)
   packages <- unique(packages)
+
+  ## Set 'globalsAs' according to 'doFuture.*' options?
+  if (globalsAs == "*") {
+    ## Using defunct option?
+    if (!is.null(getOption("doFuture.globals.nullexport"))) {
+      .Defunct(msg = "Option 'doFuture.globals.nullexport' is deprecated. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
+    }
+
+    globalsAs <- getOption("doFuture.globalsAs")
+    
+    ## Backward compatibility with doFuture (<= 0.6.0) - with warning
+    t <- getOption("doFuture.foreach.export")
+    if (!is.null(t) && is.null(globalsAs)) {
+      if (t %in% c("automatic", "automatic-unless-.export")) {
+        .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.globalsAs = 'future'.", dQuote(t)))
+      }
+    
+      if (t == ".export-and-automatic") {
+        globalsAs <- "future"
+      } else if (t == ".export-and-automatic-with-warning") {
+        globalsAs <- "future-with-warning"
+      }
+
+      .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is deprecated and has been replaced by doFuture.globalsAs = %s", dQuote(t), sQuote(globalsAs)))
+    }
+  }
+
+  ## Not option set?
+  if (is.null(globalsAs)) {
+    globalsAs <- getOption("doFuture.globalsAs.default", "future-unless-manual")
+  }
+
+  stopifnot(is.character(globalsAs), length(globalsAs) == 1, !is.na(globalsAs))
   
   ## Automatic or manual?
   if (grepl("-unless-manual$", globalsAs)) {

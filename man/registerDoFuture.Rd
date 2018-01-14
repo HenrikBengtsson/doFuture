@@ -4,11 +4,11 @@
 \alias{registerDoFuture}
 \title{Registers the future \%dopar\% backend}
 \usage{
-registerDoFuture(globalsAs = getOption("doFuture.globalsAs",
-  "future-unless-manual"))
+registerDoFuture(globalsAs = "*")
 }
 \arguments{
-\item{globalsAs}{A character string specifying how globals are identified.}
+\item{globalsAs}{A character string specifying the method on how globals
+are identified in all \code{\link[foreach:foreach]{foreach::foreach()}} calls including nested ones.}
 }
 \value{
 Nothing
@@ -19,44 +19,58 @@ the \pkg{foreach} package.
 }
 \section{Global variables}{
 
-Argument \code{globalsAs} controls how the doFuture backend/adaptor should
-identify globals part of the foreach expression.  Below are is a set of
-predefined method that can be used:
+Argument \code{globalsAs} controls how the doFuture adaptor should identify
+globals part of the foreach expression.  By specifying the argument when
+registering the adaptor, that method of global identification will be
+used until the adaptor is re-registered.
+An alternative is to use \code{globalsAs = "*"} (default), which will cause
+the global-identification method to be decided by option
+\option{doFuture.globalsAs} at each call to \code{\link[foreach:foreach]{foreach::foreach()}}.
+
+Below is the set of method that can be used for argument \code{globalsAs}
+and option \option{doFuture.globalsAs}:
 
 \describe{
-\item{\code{"manual"}}{Globals are given by the \link[foreach:foreach]{foreach::foreach} argument
-\code{.export} and \code{.noexport} "as is".
+\item{\code{"manual"}}{No automatic identification of globals is done.
+Only the \code{\link[foreach:foreach]{foreach::foreach()}} arguments .export\code{and}.noexport` are
+used to control what globals are exported.
 }
 
-\item{\code{"foreach"}}{Globals are identified by \link[foreach:getexports]{foreach::getexports} while
-respecting \link[foreach:foreach]{foreach::foreach} arguments \code{.export} and \code{.noexport}.
+\item{\code{"foreach"}}{Globals are identified by \code{\link[foreach:getexports]{foreach::getexports()}}
+while respecting arguments \code{.export} and \code{.noexport}.
 }
 
-\item{\code{"future"}}{Globals are identified by the future framework, or more
-specifically by \link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages} while respecting
-\link[foreach:foreach]{foreach::foreach} arguments \code{.export} and \code{.noexport}.
+\item{\code{"future"}}{Globals are identified by the future framework,
+or more specifically by \code{\link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages()}},
+while respecting arguments \code{.export} and \code{.noexport}.
 }
 
-\item{\code{"future-unless-manual"}}{Use the \code{"future"} approach unless
-argument \code{.export} is specified or is \code{NULL}.
+\item{\code{"future-unless-manual"}}{(default) Use the \code{"future"} approach
+unless argument \code{.export} is specified (or is \code{NULL}).
 }
 
-\item{\code{"future-with-warning"}}{Use the \code{"future"} approach, but produce a
-warning if argument \code{.export} lacks some of the globals that
-\link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages} identifies.  This provides useful
-feedback to developers using \code{foreach()}.
-}
-}
-
-The following aliases \emph{deprecated}:
-\describe{
-\item{\code{".export"}}{Renamed to \code{"manual"}.}
-\item{\code{".export-and-automatic"}}{Renamed to \code{"future"}.}
-\item{\code{"automatic-unless-.export"}}{Renamed to \code{"future-unless-manual"}.}
-
-\item{\code{".export-and-automatic-with-warning"}}{Renamed to
-\code{"future-with-warning"}.}
+\item{\code{"foreach-with-warning"}, \code{"future-with-warning"}}{
+Use the \code{"foreach"} or the \code{"future"} approach to identify globals,
+but produce a warning if argument \code{.export} lacks some of those
+automatically identified globals.
+This can provide helpful feedback to developers using \code{foreach()}.
 }
 }
 
+The following aliases are \emph{deprecated}:
+\code{".export"} (renamed to \code{"manual"}),
+\code{".export-and-automatic"} (renamed to \code{"future"}),
+\code{"automatic-unless-.export"} (renamed to \code{"future-unless-manual"}), and
+\code{".export-and-automatic-with-warning"} (renamed to \code{"future-with-warning"})
+}
+
+\examples{
+## Rely on the future framework to identify globals
+registerDoFuture(globalsAs = "future")
+
+## Like doParallel, rely on the foreach framework to identify globals
+registerDoFuture(globalsAs = "foreach")
+
+
+}
 \keyword{utilities}

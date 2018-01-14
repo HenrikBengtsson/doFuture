@@ -3,49 +3,63 @@
 #' Register the [doFuture] parallel adaptor to be used by
 #' the \pkg{foreach} package.
 #'
-#' @param globalsAs A character string specifying how globals are identified.
+#' @param globalsAs A character string specifying the method on how globals
+#' are identified in all [foreach::foreach()] calls including nested ones.
 #' 
 #' @return Nothing
 #'
 #' @section Global variables:
-#' Argument `globalsAs` controls how the doFuture backend/adaptor should
-#' identify globals part of the foreach expression.  Below are is a set of
-#' predefined method that can be used:
+#' Argument `globalsAs` controls how the doFuture adaptor should identify
+#' globals part of the foreach expression.  By specifying the argument when
+#' registering the adaptor, that method of global identification will be
+#' used until the adaptor is re-registered.
+#' An alternative is to use `globalsAs = "*"` (default), which will cause
+#' the global-identification method to be decided by option
+#' \option{doFuture.globalsAs} at each call to [foreach::foreach()].
+#' 
+#' Below is the set of method that can be used for argument `globalsAs`
+#' and option \option{doFuture.globalsAs}:
 #' 
 #' \describe{
-#'  \item{`"manual"`}{Globals are given by the [foreach::foreach] argument
-#'    `.export` and `.noexport` "as is".
+#'  \item{`"manual"`}{No automatic identification of globals is done.
+#'    Only the [foreach::foreach()] arguments .export` and `.noexport` are
+#'    used to control what globals are exported.
 #'  }
 #'
-#'  \item{`"foreach"`}{Globals are identified by [foreach::getexports] while
-#'    respecting [foreach::foreach] arguments `.export` and `.noexport`.
+#'  \item{`"foreach"`}{Globals are identified by [foreach::getexports()]
+#'    while respecting arguments `.export` and `.noexport`.
 #'  }
 #'
-#'  \item{`"future"`}{Globals are identified by the future framework, or more
-#'    specifically by [future::getGlobalsAndPackages] while respecting
-#'    [foreach::foreach] arguments `.export` and `.noexport`.
+#'  \item{`"future"`}{Globals are identified by the future framework,
+#'    or more specifically by [future::getGlobalsAndPackages()],
+#'    while respecting arguments `.export` and `.noexport`.
 #'  }
 #'
-#'  \item{`"future-unless-manual"`}{Use the `"future"` approach unless
-#'    argument `.export` is specified or is `NULL`.
+#'  \item{`"future-unless-manual"`}{(default) Use the `"future"` approach
+#'    unless argument `.export` is specified (or is `NULL`).
 #'  }
 #' 
-#'  \item{`"future-with-warning"`}{Use the `"future"` approach, but produce a
-#'    warning if argument `.export` lacks some of the globals that
-#'    [future::getGlobalsAndPackages] identifies.  This provides useful
-#'    feedback to developers using `foreach()`.
+#'  \item{`"foreach-with-warning"`, `"future-with-warning"`}{
+#'    Use the `"foreach"` or the `"future"` approach to identify globals,
+#'    but produce a warning if argument `.export` lacks some of those
+#'    automatically identified globals.
+#'    This can provide helpful feedback to developers using `foreach()`.
 #'  }
 #' }
 #'
-#' The following aliases \emph{deprecated}:
-#' \describe{
-#'  \item{`".export"`}{Renamed to `"manual"`.}
-#'  \item{`".export-and-automatic"`}{Renamed to `"future"`.}
-#'  \item{`"automatic-unless-.export"`}{Renamed to `"future-unless-manual"`.}
+#' The following aliases are \emph{deprecated}:
+#' `".export"` (renamed to `"manual"`),
+#' `".export-and-automatic"` (renamed to `"future"`),
+#' `"automatic-unless-.export"` (renamed to `"future-unless-manual"`), and
+#' `".export-and-automatic-with-warning"` (renamed to `"future-with-warning"`)
 #'
-#'  \item{`".export-and-automatic-with-warning"`}{Renamed to
-#'        `"future-with-warning"`.}
-#' }
+#' 
+#' @examples
+#' ## Rely on the future framework to identify globals
+#' registerDoFuture(globalsAs = "future")
+#' 
+#' ## Like doParallel, rely on the foreach framework to identify globals
+#' registerDoFuture(globalsAs = "foreach")
 #' 
 #' 
 #' @importFrom future nbrOfWorkers
@@ -53,30 +67,7 @@
 #' @importFrom utils packageVersion
 #' @export
 #' @keywords utilities
-registerDoFuture <- function(globalsAs = getOption("doFuture.globalsAs", "future-unless-manual")) {  #nolint
-  ## BACKWARD COMPATIBILITY
-  if (!is.null(getOption("doFuture.globals.nullexport"))) {
-    .Defunct(msg = "Option 'doFuture.globals.nullexport' is deprecated. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
-  }
-  
-  t <- getOption("doFuture.foreach.export")
-  if (!is.null(t) && is.null(getOption("doFuture.globalsAs"))) {
-    if (t %in% c("automatic", "automatic-unless-.export")) {
-      .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.globalsAs = 'future'.", dQuote(t)))
-    }
-    
-    if (t == ".export-and-automatic") {
-      globalsAs <- "future"
-    } else if (t == ".export-and-automatic-with-warning") {
-      globalsAs <- "future-with-warning"
-    }
-
-    .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is deprecated and has been replaced by doFuture.globalsAs = %s", dQuote(t), sQuote(globalsAs)))
-  }
-  stopifnot(is.character(globalsAs), length(globalsAs) == 1, !is.na(globalsAs))
-  
-  nullexport <- getOption("doFuture.globals.nullexport")
-  
+registerDoFuture <- function(globalsAs = "*") {  #nolint
   info <- function(data, item) {
     switch(item,
       name = "doFuture",
@@ -84,6 +75,5 @@ registerDoFuture <- function(globalsAs = getOption("doFuture.globalsAs", "future
       workers = nbrOfWorkers(),
     )
   }
-
   setDoPar(doFuture, data = list(globalsAs = globalsAs), info = info)
 }
