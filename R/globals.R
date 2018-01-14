@@ -46,19 +46,18 @@ getGlobalsAndPackages_fix <- local({
 })
 
 
-#' @importFrom globals cleanup
 #' @importFrom future getGlobalsAndPackages
 getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
   stopifnot(is.language(expr) || is.expression(expr))
   stopifnot(is.environment(envir))
-  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) > 0)
+  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
   stopifnot(is.logical(debug))
   export <- unique(export)
   noexport <- unique(noexport)
   packages <- unique(packages)
 
   ## Set 'globalsAs' according to 'doFuture.*' options?
-  if (identical(globalsAs, "*")) {
+  if (globalsAs == "*") {
     ## Using defunct option?
     if (!is.null(getOption("doFuture.globals.nullexport"))) {
       .Defunct(msg = "Option 'doFuture.globals.nullexport' is deprecated. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
@@ -91,70 +90,67 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
-  ## Drop duplicates
-  globalsAs <- unique(globalsAs)
-  
-  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) > 0)
+  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
   
   ## Automatic or manual?
-  idxs <- grep("-unless-manual$", globalsAs)
-  if (length(idxs) > 0) {
+  if (grepl("-unless-manual$", globalsAs)) {
     if (is.null(export)) {
-      globalsAs[idxs] <- gsub("-unless-manual$", "", globalsAs[idxs])
+      globalsAs <- gsub("-unless-manual$", "", globalsAs)
     } else {
-      globalsAs[idxs] <- "manual"
+      globalsAs <- "manual"
     }
   }
 
   ## Warn if manual does not match automatic findings?
-  withWarning <- any(grepl("-with-warning$", globalsAs))
+  withWarning <- grepl("-with-warning$", globalsAs)
   if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
 
   ## Environment from where to search for globals
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
 
-  ## Make sure expression is only "tweaked" once
-  exprUpdated <- FALSE
-  localsAdded <- FALSE
-
   globals <- list()
-
-  gp <- NULL
-  for (method in globalsAs) {
-    if (method == "manual") {
-      globals_by_name <- export
-      if (!localsAdded) {
-        globals_by_name <- c(globals_by_name, "...future.x_ii")
-        localsAdded <- TRUE
-      }
-      gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
-                                      globals = globals_by_name)
-    } else if (globalsAs == "foreach") {
-      globals_by_name <- findGlobals_foreach(expr, envir = envir,
-                                             noexport = noexport)
-      if (!localsAdded) {
-        globals_by_name <- c(globals_by_name, "...future.x_ii")
-        localsAdded <- TRUE
-      }
-      gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
-                                      globals = globals_by_name)
-    } else if (globalsAs == "future") {
-      gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
-      localsAdded <- TRUE
-    } else {
-      stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
-           sQuote(globalsAs))
-    }
-
-    globals <- cleanup(c(gp$globals, globals))
+  if (globalsAs == "manual") {
+    globals_by_name <- c(export, "...future.x_ii")
+    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
+                                    globals = globals_by_name)
+    globals <- gp$globals
+    expr <- gp$expr
+    rm(list = c("gp"))
+  } else if (globalsAs == "foreach") {
+    globals_by_name <- findGlobals_foreach(expr, envir = envir,
+                                           noexport = noexport)
+    globals_by_name <- c(globals_by_name, "...future.x_ii")
+    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
+                                    globals = globals_by_name)
+    globals <- gp$globals
+    expr <- gp$expr
+    rm(list = c("gp"))
+  } else if (globalsAs == "future") {
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
+    globals <- gp$globals
     packages <- unique(c(gp$packages, packages))
-    if (!exprUpdated) {
-      expr <- gp$expr
-      exprUpdated <- TRUE
-    }
+    expr <- gp$expr
+    rm(list = c("gp"))
+  } else if (globalsAs == "foreach+future") {
+    globals_by_name <- findGlobals_foreach(expr, envir = envir,
+                                           noexport = noexport)
+    globals_by_name <- c(globals_by_name, "...future.x_ii")
+    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
+                                    globals = globals_by_name)
+    globals <- gp$globals
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
+    globals <- unique(c(gp$globals, globals))
+    packages <- unique(c(gp$packages, packages))
+    expr <- gp$expr
+    rm(list = c("gp"))
+  } else {
+    stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
+         sQuote(globalsAs))
   }
-  rm(list = c("gp"))
+
+  mstr(globals)
+  stopifnot("...future.x_ii" %in% names(globals))
   
   names_globals <- names(globals)
 
@@ -170,14 +166,14 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   }
   
   ## Add automatically found globals to explicit '.export' globals?
-  if (any(globalsAs != "manual")) {
+  if (globalsAs != "manual") {
     globals2 <- setdiff(export, names_globals)
     if (length(globals2) > 0) {
       mdebug("  - appending %d '.export' globals (not already found through automatic lookup): %s",
              length(globals2), paste(sQuote(globals2)), collapse = ", ")
       gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                                   globals = globals2)
-      globals <- cleanup(c(gp$globals, globals))
+      globals <- unique(c(gp$globals, globals))
       rm(list = "gp")
     }
     rm(list = "globals2")
@@ -189,7 +185,9 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
 ##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
   
   ## Also make sure we've got our in-house '...future.x_ii' covered.
-  stopifnot("...future.x_ii" %in% names(globals))
+  stopifnot("...future.x_ii" %in% names(globals),
+            !any(duplicated(names(globals))),
+            !any(duplicated(packages)))
 
   rm(list = c("globals_envir", "names_globals")) ## Not needed anymore
 

@@ -7,10 +7,19 @@ NEW FEATURES:
 
  o registerDoFuture() gained argument 'globalsAs'. It can be used to control
    how globals are identified by the doFuture adaptor. The default method is
-   given by option 'doFuture.globalsAs'.
+   given by option 'doFuture.globalsAs'.  Examples:
 
- o registerDoFuture(globalsAs = "foreach") identifies globals using the
-   foreach::getexports() method, which is what doParallel also uses.
+   - globalsAs = "foreach" identifies globals using the foreach::getexports()
+     method, which is what doParallel also uses.
+
+   - globalsAs = "future" identifies globals (and packages) using the future
+     framework.
+
+   - globalsAs = "foreach+future" combines the above two methods.
+
+   - globalsAs = "manual" does not automatic identification of globals and
+     instead solely trust what the developer has specified in arguments
+     '.export' and '.noexport' in each foreach() call.
 
 DOCUMENTATION:
 

@@ -37,17 +37,23 @@
 #'    packages that need to be exported._
 #'  }
 #'
-#'  \item{`"future-unless-manual"`}{(default) Use the `"future"` approach
-#'    unless argument `.export` is specified (or is `NULL`).
-#'  }
-#' 
-#'  \item{`"foreach-with-warning"`, `"future-with-warning"`}{
-#'    Use the `"foreach"` or the `"future"` approach to identify globals,
-#'    but produce a warning if argument `.export` lacks some of those
-#'    automatically identified globals.
-#'    This can provide helpful feedback to developers using `foreach()`.
+#'  \item{`"foreach+future"`}{Globals are identified by the `"foreach"` and
+#'    `"future"` methods combined.
 #'  }
 #' }
+#'
+#' By appending suffix `"-unless-manual"` to any of the above automated
+#' methods, the automated methods are used unless unless argument `.export`
+#' is specified (or is `NULL`).
+#' This is a to developers for testing that `.export` statements are
+#' correct.
+#' 
+#' By appending suffix `"-with-warning"` to any of the above automated
+#' methods, an informative warning will be produced if argument `.export`
+#' is used but it lacks some of the globals that are found through the
+#' automated methods.
+#' This is useful to developers for identifying missing `.export` elements.
+#' Note that some of the automatically found globals may be false positives.
 #'
 #' The following aliases are \emph{deprecated}:
 #' `".export"` (renamed to `"manual"`),
