@@ -28,6 +28,23 @@ findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
 }
 
 
+getGlobalsAndPackages_fix <- local({
+  if (packageVersion("globals") <= "0.11.0") {
+    function(expr, envir, globals, ...) {
+      ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
+      if (packageVersion("globals") <= "0.11.0") {
+        idx <- which(globals == "...")
+        if (length(idx) > 0) globals <- c(globals[-idx], "...")
+      }
+      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
+    }
+  } else {
+    function(expr, envir, globals, ...) {
+      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
+    }
+  }
+})
+
 
 #' @importFrom future getGlobalsAndPackages
 getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
@@ -67,14 +84,16 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     }
   }
 
-  ## Not option set?
+  ## No option set?
   if (is.null(globalsAs)) {
     globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "future-unless-manual")
     globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
+  ## Drop duplicates
+  globalsAs <- unique(globalsAs)
+  
   stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) > 0)
-
   
   ## Automatic or manual?
   idxs <- grep("-unless-manual$", globalsAs)
@@ -90,33 +109,39 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   withWarning <- any(grepl("-with-warning$", globalsAs))
   if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
 
-  
+  ## Environment from where to search for globals
+  globals_envir <- new.env(parent = envir)
+  assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
+
   if (globalsAs == "manual") {
     globals <- unique(c(export, "...future.x_ii"))
+    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
+                                    globals = globals)
+    globals <- gp$globals
+    expr <- gp$expr
+    rm(list = c("gp"))
   } else if (globalsAs == "foreach") {
     globals <- findGlobals_foreach(expr, envir = envir, noexport = noexport)
-    globals <- unique(c(globals, "...future.x_ii"))
+    globals <- unique(c(export, "...future.x_ii"))
+    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
+                                    globals = globals)
+    globals <- gp$globals
+    expr <- gp$expr
+    rm(list = c("gp"))
   } else if (globalsAs == "future") {
-    globals <- TRUE
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
+    globals <- gp$globals
+    packages <- unique(c(gp$packages, packages))
+    expr <- gp$expr
+    rm(list = c("gp"))
   } else {
     stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
          sQuote(globalsAs))
   }
 
-  globals_envir <- new.env(parent = envir)
-  assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
-  ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
-  if (packageVersion("globals") <= "0.11.0") {
-    idx <- which(globals == "...")
-    if (length(idx) > 0) globals <- c(globals[-idx], "...")
-  }
-
-  gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals)
-  
-  globals <- gp$globals
-  packages <- unique(c(gp$packages, packages))
-  expr <- gp$expr
-  rm(list = c("gp"))
+  ## From here on, 'globals' is a named list with values
+  stopifnot(is.list(globals))
+            
   names_globals <- names(globals)
 
   ## Warn about globals found automatically, but not listed in '.export'?
