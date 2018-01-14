@@ -59,6 +59,8 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
         globalsAs <- "future"
       } else if (t == ".export-and-automatic-with-warning") {
         globalsAs <- "future-with-warning"
+      } else {
+        .Defunct(msg = sprintf("Option 'doFuture.foreach.export' is defunct and replaced by option 'doFuture.globalsAs'. Also, value '%s' is unknown.", dQuote(t)))
       }
 
       .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is deprecated and has been replaced by doFuture.globalsAs = %s", dQuote(t), sQuote(globalsAs)))
