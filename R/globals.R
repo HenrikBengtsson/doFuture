@@ -103,16 +103,6 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
          sQuote(globalsAs))
   }
 
-  ## Any packages to be on the search path?
-  if (length(packages) > 0L) {
-    exprs <- lapply(packages, FUN = function(p) call("library", p))
-    exprs <- c(exprs, expr)
-    expr <- Reduce(function(a, b) {
-      substitute({ a; b }, list(a = a, b = b))
-    }, x = exprs)
-    rm(list = "exprs")
-  }
-  
   globals_envir <- new.env(parent = envir)
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
   ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
