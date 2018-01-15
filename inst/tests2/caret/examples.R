@@ -65,8 +65,11 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 ## To cover also that latter example, use:
 ##
 ##   registerDoFuture(globalsAs = "foreach+future")
-options(doFuture.globalsAs = "future")
-options(doFuture.globalsAs = "foreach+future")
+##
+## or
+##
+##   options(doFuture.globalsAs = "future")
+##   options(doFuture.globalsAs = "foreach+future") ## default
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
@@ -82,7 +85,7 @@ for (strategy in test_strategies()) {
     ## Leaving it at this for now. /HB 2017-12-19
     run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
 
-    if (getOption("doFuture.globalsAs") == "future") {
+    if (getOption("doFuture.globalsAs", "foreach+future") == "future") {
       ## example("avNNet", run.dontrun = TRUE) only works with a more
       ## liberal identification method for globals than 'future'.
       ## See https://github.com/HenrikBengtsson/doFuture/issues/17

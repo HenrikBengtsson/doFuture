@@ -37,8 +37,8 @@
 #'    packages that need to be exported._
 #'  }
 #'
-#'  \item{`"foreach+future"`}{Globals are identified by the `"foreach"` and
-#'    `"future"` methods combined.
+#'  \item{`"foreach+future"`}{(default)  Globals are identified by the
+#'   `"foreach"` and `"future"` methods combined.
 #'  }
 #' }
 #'
