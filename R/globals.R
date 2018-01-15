@@ -61,7 +61,7 @@ globalsAs <- function(globalsAs = "*") {
 
   ## No option set?
   if (is.null(globalsAs)) {
-    globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "foreach+future-unless-manual")
+    globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "foreach+future")
     globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
