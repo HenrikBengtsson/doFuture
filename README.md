@@ -329,9 +329,9 @@ install.packages('doFuture')
 
 ### Pre-release version
 
-To install the pre-release version that is available in Git branch `feature/new-globalsAs` on GitHub, use:
+To install the pre-release version that is available in Git branch `develop` on GitHub, use:
 ```r
-source('http://callr.org/install#HenrikBengtsson/doFuture@feature/new-globalsAs')
+remotes::install_github('HenrikBengtsson/doFuture@develop')
 ```
 This will install the package from source.  
 
