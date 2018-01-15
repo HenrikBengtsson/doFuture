@@ -96,7 +96,7 @@ x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
 ```
 
 
-## doFuture takes care of global variables for foreach
+## doFuture takes care of exports and packages automatically
 
 The foreach package has some support for automated handling of globals, but it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `a` and `b` are properly exported when we do
 ```r
@@ -131,7 +131,7 @@ However, when using the `%dopar%` adaptor of doFuture, all of the [future] machi
 ```r
 > library("doFuture")
 > registerDoFuture()
-> plan(cluster, workers = 2)
+> plan(multisession, workers = 2)
 > mu <- 1.0
 > sigma <- 2.0
 > foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
@@ -143,7 +143,24 @@ List of 3
  $ : num [1:3] -0.104 1.237 2.474
 ```
 
-Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will scan each `foreach() %dopar% { ... }` call for globals.  If it detects global candidates not listed in `.export`, it will produce an informative warning message suggesting that those should be added.
+Another advantage with doFuture is that, contrary to doParallel, packages that need to be attached are also automatically taken care of, e.g.
+```r
+> registerDoFuture()
+> library("tools")
+> ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
+> unlist(ext)
+[1] "txt" "log"
+```
+whereas
+```r
+> registerDoParallel(parallel::makeCluster(2))
+> library("tools")
+> ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
+Error in file_ext(file) : 
+  task 1 failed - "could not find function "file_ext""
+```
+
+Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.globalsAs = "foreach+future-with-warning")`, doFuture will scan each `foreach() %dopar% { ... }` call for globals.  If it detects global candidates not listed in `.export`, it will produce an informative warning message suggesting that those should be added.
 
 
 
@@ -312,9 +329,9 @@ install.packages('doFuture')
 
 ### Pre-release version
 
-To install the pre-release version that is available in Git branch `develop` on GitHub, use:
+To install the pre-release version that is available in Git branch `feature/new-globalsAs` on GitHub, use:
 ```r
-source('http://callr.org/install#HenrikBengtsson/doFuture@develop')
+source('http://callr.org/install#HenrikBengtsson/doFuture@feature/new-globalsAs')
 ```
 This will install the package from source.  
 

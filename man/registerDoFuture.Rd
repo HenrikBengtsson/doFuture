@@ -47,8 +47,8 @@ while respecting arguments \code{.export} and \code{.noexport}.
 packages that need to be exported.}
 }
 
-\item{\code{"foreach+future"}}{Globals are identified by the \code{"foreach"} and
-\code{"future"} methods combined.
+\item{\code{"foreach+future"}}{(default)  Globals are identified by the
+\code{"foreach"} and \code{"future"} methods combined.
 }
 }
 
@@ -64,6 +64,9 @@ is used but it lacks some of the globals that are found through the
 automated methods.
 This is useful to developers for identifying missing \code{.export} elements.
 Note that some of the automatically found globals may be false positives.
+
+_The default \option{doFuture.globalsAs} option and therefore the default
+method is \code{"foreach+future-unless-manual"}.
 
 The following aliases are \emph{deprecated}:
 \code{".export"} (renamed to \code{"manual"}),
