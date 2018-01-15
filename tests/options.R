@@ -2,6 +2,10 @@ source("incl/start.R")
 
 message("*** options  ...")
 
+globalsAs <- doFuture:::globalsAs
+
+message("globalsAs: ", globalsAs())
+
 plan(multisession, workers = 2L)
 
 a <- 3.14
@@ -10,6 +14,7 @@ y_truth <- foreach(1:2, .export = c("a", "b")) %do% { b * a }
 str(y_truth)
 
 options(doFuture.globalsAs = "manual")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -33,6 +38,7 @@ stopifnot(inherits(res5, "error"))
 
 
 options(doFuture.globalsAs = "future")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -51,6 +57,7 @@ stopifnot(identical(y5, y_truth))
 
 
 options(doFuture.globalsAs = "future-with-warning")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -95,8 +102,9 @@ res5 <- tryCatch({
 str(res5)
 stopifnot(inherits(res5, "warning"))
 
-options(doFuture.globalsAs = "future-unless-manual")
 
+options(doFuture.globalsAs = "future-unless-manual")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -119,6 +127,8 @@ stopifnot(inherits(res5, "error"))
 message("- exceptions")
 
 options(doFuture.globalsAs = "unknown")
+message("globalsAs: ", globalsAs())
+
 res <- tryCatch({
   y <- foreach(1:2) %dopar% TRUE
 }, error = identity)

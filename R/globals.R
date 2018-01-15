@@ -28,33 +28,8 @@ findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
 }
 
 
-getGlobalsAndPackages_fix <- local({
-  if (packageVersion("globals") <= "0.11.0") {
-    function(expr, envir, globals, ...) {
-      ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
-      if (packageVersion("globals") <= "0.11.0") {
-        idx <- which(globals == "...")
-        if (length(idx) > 0) globals <- c(globals[-idx], "...")
-      }
-      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
-    }
-  } else {
-    function(expr, envir, globals, ...) {
-      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
-    }
-  }
-})
-
-
-#' @importFrom future getGlobalsAndPackages
-getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
-  stopifnot(is.language(expr) || is.expression(expr))
-  stopifnot(is.environment(envir))
+globalsAs <- function(globalsAs = "*") {
   stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
-  stopifnot(is.logical(debug))
-  export <- unique(export)
-  noexport <- unique(noexport)
-  packages <- unique(packages)
 
   ## Set 'globalsAs' according to 'doFuture.*' options?
   if (globalsAs == "*") {
@@ -91,7 +66,39 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   }
 
   stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
-  
+
+  globalsAs
+}
+
+
+getGlobalsAndPackages_fix <- local({
+  if (packageVersion("globals") <= "0.11.0") {
+    function(expr, envir, globals, ...) {
+      ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
+      if (packageVersion("globals") <= "0.11.0") {
+        idx <- which(globals == "...")
+        if (length(idx) > 0) globals <- c(globals[-idx], "...")
+      }
+      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
+    }
+  } else {
+    function(expr, envir, globals, ...) {
+      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
+    }
+  }
+})
+
+
+#' @importFrom future getGlobalsAndPackages
+getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
+  stopifnot(is.language(expr) || is.expression(expr))
+  stopifnot(is.environment(envir))
+  stopifnot(is.logical(debug))
+  export <- unique(export)
+  noexport <- unique(noexport)
+  packages <- unique(packages)
+  globalsAs <- globalsAs(globalsAs)
+
   ## Automatic or manual?
   if (grepl("-unless-manual$", globalsAs)) {
     if (is.null(export)) {
