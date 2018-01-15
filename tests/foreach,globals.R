@@ -84,6 +84,28 @@ for (strategy in strategies) {
 
 message("*** doFuture - automatically finiding globals ... DONE")
 
+
+message("*** doFuture - automatically finiding ambiguous global/local variables ...")
+
+message("globalsAs: ", doFuture:::globalsAs())
+
+for (strategy in strategies) {
+  message(sprintf("- plan('%s') ...", strategy))
+  plan(strategy)
+
+  x <- 1
+  foreach(i = 1L) %dopar% {
+    random <- FALSE
+    ## If 'random' was truly random, we would not know until *evaluating*
+    ## this statement whether 'x' is a local or a global variable
+    if (random) x <- 0
+    x + 1
+  }
+  message(sprintf("- plan('%s') ... DONE", strategy))
+} ## for (strategy ...)
+
+message("*** doFuture - automatically finiding ambiguous global/local variables ... DONE")
+
 print(sessionInfo())
 
 source("incl/end.R")
