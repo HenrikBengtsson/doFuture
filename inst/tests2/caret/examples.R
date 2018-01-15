@@ -41,6 +41,33 @@ topics <- test_topics(pkg, subset = subset, max_subset = 4)
 
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
+## Several examples of 'caret' only works with doSEQ and forked doParallel,
+## but not cluster doParallel.  Try for instance,
+##
+##   library("doParallel")
+##   registerDoParallel(cl <- makeCluster(2L))
+##   example("train", package = "caret", run.dontrun = TRUE)
+##   [...]
+##   Error in e$fun(obj, substitute(ex), parent.frame(), e$data) : 
+##     unable to find variable "optimism_boot"
+##
+## or equivalently:
+##
+##   library("doFuture")
+##   registerDoFuture(globalsAs = "foreach")
+##   plan(multisession, workers = 2L)
+##   example("train", package = "caret", run.dontrun = TRUE)
+##
+## All examples but 'avNNet' work with:
+##
+##   registerDoFuture(globalsAs = "foreach")
+##
+## To cover also that latter example, use:
+##
+##   registerDoFuture(globalsAs = "foreach+future")
+options(doFuture.globalsAs = "future")
+options(doFuture.globalsAs = "foreach+future")
+
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
 
@@ -54,6 +81,13 @@ for (strategy in test_strategies()) {
     ## There seems to be some stray objects that affects this example.
     ## Leaving it at this for now. /HB 2017-12-19
     run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
+
+    if (getOption("doFuture.globalsAs") = "future") {
+      ## example("avNNet", run.dontrun = TRUE) only works with a more
+      ## liberal identification method for globals than 'future'.
+      ## See https://github.com/HenrikBengtsson/doFuture/issues/17
+      run.dontrun <- (topic == "avNNet")
+    }
     
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
     registerDoFuture()
