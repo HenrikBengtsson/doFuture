@@ -1,7 +1,18 @@
 Package: doFuture
 =================
 
-Version: 0.6.0-9000 [2018-01-13]
+Version: 0.6.0-9000 [2018-01-14]
+
+SIGNIFICANT CHANGES:
+
+ o Globals are now identified using a combination of the future (as before)
+   and the foreach (new) frameworks.  The advantage of using the latter as
+   well is to cover a rare corner case where the future framework currently
+   fails to identify a variable as global because it may also be a local
+   depending on an if-else statement.  The advantages of using the future
+   framework is that it capable of identifying globals in cases where the
+   foreach framework fails and that it identifies required packages as well,
+   which the foreach framework does not do.
 
 NEW FEATURES:
 

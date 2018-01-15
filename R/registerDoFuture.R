@@ -55,6 +55,9 @@
 #' This is useful to developers for identifying missing `.export` elements.
 #' Note that some of the automatically found globals may be false positives.
 #'
+#' _The default \option{doFuture.globalsAs} option and therefore the default
+#' method is `"foreach+future-unless-manual"`.
+#' 
 #' The following aliases are \emph{deprecated}:
 #' `".export"` (renamed to `"manual"`),
 #' `".export-and-automatic"` (renamed to `"future"`),
