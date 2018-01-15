@@ -65,8 +65,11 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 ## To cover also that latter example, use:
 ##
 ##   registerDoFuture(globalsAs = "foreach+future")
-options(doFuture.globalsAs = "future")
-options(doFuture.globalsAs = "foreach+future")
+##
+## or
+##
+##   options(doFuture.globalsAs = "future")
+##   options(doFuture.globalsAs = "foreach+future") ## default
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
