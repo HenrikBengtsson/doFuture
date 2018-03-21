@@ -9,7 +9,7 @@ findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
 
   exportenv <- tryCatch({
     qargs <- quote(list(...))
-    args <- eval(qargs, envir = envir)
+    args <- eval(qargs, envir = envir, enclos = baseenv())
     environment(do.call(makeDotsEnv, args = args))
   }, error = function(e) {
     new.env(parent = emptyenv())
