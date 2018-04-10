@@ -3,8 +3,8 @@
 #' @importFrom future future resolve value
 #' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {   #nolint
-  stopifnot(inherits(obj, "foreach"))
-  stopifnot(inherits(envir, "environment"))
+  stop_if_not(inherits(obj, "foreach"))
+  stop_if_not(inherits(envir, "environment"))
   
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
@@ -17,7 +17,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
   globalsAs <- data$globalsAs
-  stopifnot(!is.null(globalsAs), length(globalsAs) == 1L)
+  stop_if_not(!is.null(globalsAs), length(globalsAs) == 1L)
   
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
@@ -118,7 +118,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
-      stopifnot(length(preschedule) == 1L, !is.na(preschedule))
+      stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
       if (preschedule) {
         scheduling <- 1.0
       } else {
@@ -130,7 +130,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## (c) Otherwise, the default is to preschedule ("chunk")
   if (is.null(scheduling)) scheduling <- 1.0
 
-  stopifnot(length(scheduling) == 1, !is.na(scheduling),
+  stop_if_not(length(scheduling) == 1, !is.na(scheduling),
             is.numeric(scheduling) || is.logical(scheduling))
 
   nbr_of_elements <- length(args_list)
@@ -143,7 +143,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       nbr_of_futures <- nbr_of_elements
     }
   } else {
-    stopifnot(scheduling >= 0)
+    stop_if_not(scheduling >= 0)
     nbr_of_workers <- nbrOfWorkers()
     if (nbr_of_workers > nbr_of_elements) {
       nbr_of_workers <- nbr_of_elements
@@ -177,7 +177,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
     ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-##    stopifnot(attr(globals_ii, "resolved"))
+##    stop_if_not(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
@@ -189,7 +189,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   } ## for (ii ...)
   rm(list = c("chunks", "globals", "packages"))
   mdebug("Launching %d futures (chunks) ... DONE", nchunks)
-  stopifnot(length(fs) == nchunks)
+  stop_if_not(length(fs) == nchunks)
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,11 +203,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- collecting values of future")
   results <- lapply(fs, FUN = value, signal = FALSE)
   rm(list = "fs")
-  stopifnot(length(results) == nchunks)
+  stop_if_not(length(results) == nchunks)
 
   ## Reduce chunks
   results <- Reduce(c, results)
-  stopifnot(length(results) == nbr_of_elements)
+  stop_if_not(length(results) == nbr_of_elements)
 
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
@@ -219,7 +219,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     print(e)
     NULL
   })
-  stopifnot(length(results) == nbr_of_elements)
+  stop_if_not(length(results) == nbr_of_elements)
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

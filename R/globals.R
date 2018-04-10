@@ -29,7 +29,7 @@ findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
 
 
 globalsAs <- function(globalsAs = "*") {
-  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
+  stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
 
   ## Set 'globalsAs' according to 'doFuture.*' options?
   if (globalsAs == "*") {
@@ -65,7 +65,7 @@ globalsAs <- function(globalsAs = "*") {
     globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
   }
 
-  stopifnot(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
+  stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
 
   globalsAs
 }
@@ -91,9 +91,9 @@ getGlobalsAndPackages_fix <- local({
 
 #' @importFrom future getGlobalsAndPackages
 getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
-  stopifnot(is.language(expr) || is.expression(expr))
-  stopifnot(is.environment(envir))
-  stopifnot(is.logical(debug))
+  stop_if_not(is.language(expr) || is.expression(expr))
+  stop_if_not(is.environment(envir))
+  stop_if_not(is.logical(debug))
   export <- unique(export)
   noexport <- unique(noexport)
   packages <- unique(packages)
@@ -157,7 +157,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   }
 
   mstr(globals)
-  stopifnot("...future.x_ii" %in% names(globals))
+  stop_if_not("...future.x_ii" %in% names(globals))
   
   names_globals <- names(globals)
 
@@ -189,10 +189,10 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   ## At this point a globals should be resolved and we should know
   ## their total size.
   ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
+##  stop_if_not(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
   
   ## Also make sure we've got our in-house '...future.x_ii' covered.
-  stopifnot("...future.x_ii" %in% names(globals),
+  stop_if_not("...future.x_ii" %in% names(globals),
             !any(duplicated(names(globals))),
             !any(duplicated(packages)))
 
