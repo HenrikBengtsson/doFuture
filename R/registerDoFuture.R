@@ -37,15 +37,16 @@
 #'    packages that need to be exported._
 #'  }
 #'
-#'  \item{`"foreach+future"`}{(default)  Globals are identified by the
-#'   `"foreach"` and `"future"` methods combined.
+#'  \item{`"foreach+future"`}{Globals are identified by the `"foreach"`
+#'    and `"future"` methods combined.
 #'  }
 #' }
 #'
 #' By appending suffix `"-unless-manual"` to any of the above automated
 #' methods, the automated methods are used unless unless argument `.export`
 #' is specified (or is `NULL`).
-#' This is a to developers for testing that `.export` statements are
+#'
+#' This is useful for developers for testing that `.export` statements are
 #' correct.
 #' 
 #' By appending suffix `"-with-warning"` to any of the above automated
@@ -56,7 +57,7 @@
 #' Note that some of the automatically found globals may be false positives.
 #'
 #' _The default \option{doFuture.globalsAs} option and therefore the default
-#' method is `"foreach+future-unless-manual"`.
+#' method is `"future-unless-manual"`._
 #' 
 #' The following aliases are \emph{deprecated}:
 #' `".export"` (renamed to `"manual"`),

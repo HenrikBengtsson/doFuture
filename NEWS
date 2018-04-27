@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.6.0-9000 [2018-01-14]
+Version: 0.6.0-9000 [2018-04-27]
 
 SIGNIFICANT CHANGES:
 
@@ -17,8 +17,7 @@ SIGNIFICANT CHANGES:
 NEW FEATURES:
 
  o registerDoFuture() gained argument 'globalsAs'. It can be used to control
-   how globals are identified by the doFuture adaptor. The default method is
-   given by option 'doFuture.globalsAs'.  Examples:
+   how globals are identified by the doFuture adaptor:
 
    - globalsAs = "foreach" identifies globals using the foreach::getexports()
      method, which is what doParallel also uses.
@@ -32,6 +31,12 @@ NEW FEATURES:
      instead solely trust what the developer has specified in arguments
      '.export' and '.noexport' in each foreach() call.
 
+   - globalsAs = "future-unless-manual" identifies globals using the "future"
+     approach unless globals are specified via foreach() argument '.export'.
+     This is how globals have been identified in the past by the doFuture
+     adapter and remains the default for now.  The default method can be
+     controlled via option 'doFuture.globalsAs'.
+   
 DOCUMENTATION:
 
  o Added section on Random Number Generation (RNG) to help("doFuture") and
@@ -49,6 +54,11 @@ BUG FIXES:
  o foreach(..., .export) with '.export' containing "..." would produce an
    error when using globals (<= 0.11.0).
 
+DEPRECATED:
+
+ o Options 'doFuture.foreach.export' is deprecated and replaced by option
+   'doFuture.globalsAs'.
+   
 
 Version: 0.6.0 [2017-10-17]
 
