@@ -53,8 +53,8 @@ and \code{"future"} methods combined.
 }
 
 By appending suffix \code{"-unless-manual"} to any of the above automated
-methods, the automated methods are used unless unless argument \code{.export}
-is specified (or is \code{NULL}).
+methods, the automated methods are used unless argument \code{.export} is
+specified (or is \code{NULL}).
 
 This is useful for developers for testing that \code{.export} statements are
 correct.

@@ -43,8 +43,8 @@
 #' }
 #'
 #' By appending suffix `"-unless-manual"` to any of the above automated
-#' methods, the automated methods are used unless unless argument `.export`
-#' is specified (or is `NULL`).
+#' methods, the automated methods are used unless argument `.export` is
+#' specified (or is `NULL`).
 #'
 #' This is useful for developers for testing that `.export` statements are
 #' correct.
