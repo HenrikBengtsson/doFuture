@@ -76,7 +76,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  mdebug("- identifying globals and packages ...")
+  if (debug) mdebug("- identifying globals and packages ...")
   
   gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
                                        export = obj$export,
@@ -98,9 +98,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     mstr(globals)
     mdebug("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
-  }
   
-  mdebug("- identifying globals and packages ... DONE")
+    mdebug("- identifying globals and packages ... DONE")
+  }
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,7 +158,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   }
 
   chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
-  mdebug("Number of chunks: %d", length(chunks))
+  if (debug) mdebug("Number of chunks: %d", length(chunks))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,12 +166,12 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
-  mdebug("Number of futures (= number of chunks): %d", nchunks)
+  if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
 
-  mdebug("Launching %d futures (chunks) ...", nchunks)
+  if (debug) mdebug("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
-    mdebug("Chunk #%d of %d ...", ii, length(chunks))
+    if (debug) mdebug("Chunk #%d of %d ...", ii, length(chunks))
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
@@ -185,10 +185,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii"))
 
-    mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
+    if (debug) mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
   rm(list = c("chunks", "globals", "packages"))
-  mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  if (debug) mdebug("Launching %d futures (chunks) ... DONE", nchunks)
   stop_if_not(length(fs) == nchunks)
 
 
@@ -206,9 +206,19 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(length(results) == nchunks)
 
   ## Reduce chunks
-  results <- Reduce(c, results)
-  stop_if_not(length(results) == nbr_of_elements)
+  results2 <- Reduce(c, results)
+    if (debug) mdebug(msg)
 
+  
+  if (length(results2) != nbr_of_elements) {
+    msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d)", nchunks, length(results2), nbr_of_elements)
+    if (debug) mdebug(msg)
+    ex <- FutureError(msg)
+    stop(ex)
+  }
+  results <- results2
+  rm(list = "results2")
+  
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
   if (debug) mdebug("- accumulating results")
@@ -219,9 +229,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     print(e)
     NULL
   })
-  stop_if_not(length(results) == nbr_of_elements)
+  rm(list = "results")
 
-
+  
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 7. Error handling
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,6 +257,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
 
+  if (length(res) != nbr_of_elements) {
+    msg <- sprintf("Unexpected error in doFuture(): The number of elements after accumulation (= %d) does not match the number of input elements in 'X' (= %d)", length(res), nbr_of_elements)
+    if (debug) mdebug(msg)
+    ex <- FutureError(msg)
+    stop(ex)
+  }
+  
   if (debug) mdebug("doFuture() ... DONE")
 
   res
