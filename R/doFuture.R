@@ -1,6 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value
+#' @importFrom future future resolve value FutureError
 #' @importFrom parallel splitIndices
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
@@ -207,9 +207,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   ## Reduce chunks
   results2 <- Reduce(c, results)
-    if (debug) mdebug(msg)
-
-  
+    
   if (length(results2) != nbr_of_elements) {
     msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d)", nchunks, length(results2), nbr_of_elements)
     if (debug) mdebug(msg)
@@ -256,13 +254,6 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
-
-  if (length(res) != nbr_of_elements) {
-    msg <- sprintf("Unexpected error in doFuture(): The number of elements after accumulation (= %d) does not match the number of input elements in 'X' (= %d)", length(res), nbr_of_elements)
-    if (debug) mdebug(msg)
-    ex <- FutureError(msg)
-    stop(ex)
-  }
   
   if (debug) mdebug("doFuture() ... DONE")
 

@@ -3,7 +3,7 @@ Version: 0.6.0-9000
 Title: A Universal Foreach Parallel Adaptor using the Future API of the 'future' Package
 Depends:
     globals,
-    future (>= 1.6.2),
+    future (>= 1.7.0),
     foreach (>= 1.4.4),
     iterators (>= 1.0.9),
     parallel,
