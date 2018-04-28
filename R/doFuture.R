@@ -206,7 +206,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(length(results) == nchunks)
 
   ## Reduce chunks
-  results2 <- Reduce(c, results)
+  results2 <- do.call(c, args = results)
     
   if (length(results2) != nbr_of_elements) {
     chunk_sizes <- sapply(results, FUN = length)
