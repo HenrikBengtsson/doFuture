@@ -38,28 +38,28 @@ See the \pkg{future} package for more examples.
 
 \section{Built-in backends}{
 
-The built-in backends of \pkg{doFuture} are for instance multicore
-(forked processes), multisession (background R sessions), and
-ad-hoc cluster (background R sessions on local and / or remote machines).
+The built-in backends of \pkg{doFuture} are for instance 'multicore'
+(forked processes), 'multisession' (background R sessions), and
+ad-hoc 'cluster' (background R sessions on local and / or remote machines).
 Additional futures are provided by other "future" packages
 (see below for some examples).
 }
 
 \section{Backends for high-performance compute clusters}{
 
-The \pkg{future.BatchJobs} package provides support for high-performance
+The \pkg{future.batchtools} package provides support for high-performance
 compute (HPC) cluster schedulers such as SGE, Slurm, and TORQUE / PBS.
 For example,
 \itemize{
-\item \code{plan(batchjobs_slurm)}:
+\item \code{plan(batchtools_slurm)}:
 Process via a Slurm scheduler job queue.
-\item \code{plan(batchjobs_torque)}:
+\item \code{plan(batchtools_torque)}:
 Process via a TORQUE / PBS scheduler job queue.
 }
 
-This builds on top of the queuing framework that the \pkg{BatchJobs}
+This builds on top of the queuing framework that the \pkg{batchtools}
 package provides. For more details on backend configuration, please see
-the \pkg{future.BatchJobs} and \pkg{BatchJobs} packages.
+the \pkg{future.Batchtools} and \pkg{batchtools} packages.
 }
 
 \section{Global variables and packages}{
