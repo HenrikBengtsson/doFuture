@@ -223,6 +223,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       mdebug("Results after merge chunks:")
       mstr(results2)
     }
+    msg <- sprintf("%s. Example of the first few values: %s", msg,
+                   paste(capture.output(str(head(results2, 3L))),
+                         collapse = "\\n"))
     ex <- FutureError(msg)
     stop(ex)
   }

@@ -83,6 +83,7 @@ for (type in types) {
     }, error = identity)
     print(res)
     stopifnot(inherits(res, "FutureError"))
+      y <- foreach(ii = 1:3) %dopar% ii
   }
   
   parallel::stopCluster(cl)
