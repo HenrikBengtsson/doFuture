@@ -55,8 +55,8 @@ for (type in types) {
     ## Here we will get:
     ##   <UnexpectedFutureResultError: Unexpected result (of class
     ##   'snow-try-error' != 'FutureResult') retrieved for ClusterFuture
-    ##   future (label = '<none>', expression = '{ ... }'): Package 'future'
-    ##   is not installed on worker (r_version: ...)>
+    ##   future (label = '<none>', expression = '{ ... }'):
+    ##   Package 'future' is not installed on worker (r_version: ...)>
     ## Note: This error is produced by the future backend when it recieves
     ##       the unexpected results.
     res <- tryCatch({
@@ -71,19 +71,17 @@ for (type in types) {
     plan(cluster, workers = cl, .init = FALSE)
     
     ## Here we will get:
-    ##   <FutureError: Unexpected error in doFuture(): After gathering and
-    ##   merging the results from 1 chunks in to a list, the total number
-    ##   of elements (= 2) does not match the number of input elements in
-    ##   'X' (= 3). There were in total 1 chunks and 1 elements (1 chunks
-    ##   with 2 elements)>
-    ## Note: This error is produced in doFuture(), because it currently does
-    ##       not know how to deal with such errors.
+    ##   <UnexpectedFutureResultError: Unexpected result (of class
+    ##   'snow-try-error' != 'FutureResult') retrieved for ClusterFuture
+    ##   future (label = '<none>', expression = '{ ... }'):
+    ##   there is no package called 'doFuture'>
+    ## Note: This error is produced by the future backend when it recieves
+    ##       the unexpected results.
     res <- tryCatch({
       y <- foreach(ii = 1:3) %dopar% ii
     }, error = identity)
     print(res)
     stopifnot(inherits(res, "FutureError"))
-      y <- foreach(ii = 1:3) %dopar% ii
   }
   
   parallel::stopCluster(cl)

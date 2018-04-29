@@ -2,6 +2,7 @@
 #' @importFrom iterators iter
 #' @importFrom future future resolve value FutureError
 #' @importFrom parallel splitIndices
+#' @importFrom utils head
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
@@ -89,6 +90,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   globals <- gp$globals
   packages <- gp$packages
   rm(list = "gp")
+  
+  ## Have the future backend/framework handle also the required 'doFuture'
+  ## package.  That way we will get a more informative error message in
+  ## case it is missing.
+  packages <- c("doFuture", packages)
   
   if (debug) {
     mdebug("  - R expression:")
