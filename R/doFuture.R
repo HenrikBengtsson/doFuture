@@ -50,7 +50,12 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   expr <- bquote({
     ## Tell foreach to keep using futures also in nested calls
-    doFuture::registerDoFuture(globalsAs = .(globalsAs))
+    ## BACKWARD COMPATILITY: Pass 'globalsAs' only if supported on worker
+    if ("globalsAs" %in% names(formals(doFuture::registerDoFuture))) {
+      doFuture::registerDoFuture(globalsAs = .(globalsAs))
+    } else {
+      doFuture::registerDoFuture()
+    }
 
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
       ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
