@@ -14,15 +14,15 @@ are identified in all \code{\link[foreach:foreach]{foreach::foreach()}} calls in
 Nothing
 }
 \description{
-Register the \link{doFuture} parallel adaptor to be used by
+Register the \link{doFuture} parallel adapter to be used by
 the \pkg{foreach} package.
 }
 \section{Globals and Packages}{
 
-Argument \code{globalsAs} controls how the doFuture adaptor should identify
+Argument \code{globalsAs} controls how the doFuture adapter should identify
 globals part of the foreach expression.  By specifying the argument when
-registering the adaptor, that method of global identification will be
-used until the adaptor is re-registered.
+registering the adapter, that method of global identification will be
+used until the adapter is re-registered.
 An alternative is to use \code{globalsAs = "*"} (default), which will cause
 the global-identification method to be decided by option
 \option{doFuture.globalsAs} at each call to \code{\link[foreach:foreach]{foreach::foreach()}}.

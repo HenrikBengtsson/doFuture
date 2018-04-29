@@ -1,6 +1,6 @@
 #' Registers the future \%dopar\% backend
 #'
-#' Register the [doFuture] parallel adaptor to be used by
+#' Register the [doFuture] parallel adapter to be used by
 #' the \pkg{foreach} package.
 #'
 #' @param globalsAs A character string specifying the method on how globals
@@ -9,10 +9,10 @@
 #' @return Nothing
 #'
 #' @section Globals and Packages:
-#' Argument `globalsAs` controls how the doFuture adaptor should identify
+#' Argument `globalsAs` controls how the doFuture adapter should identify
 #' globals part of the foreach expression.  By specifying the argument when
-#' registering the adaptor, that method of global identification will be
-#' used until the adaptor is re-registered.
+#' registering the adapter, that method of global identification will be
+#' used until the adapter is re-registered.
 #' An alternative is to use `globalsAs = "*"` (default), which will cause
 #' the global-identification method to be decided by option
 #' \option{doFuture.globalsAs} at each call to [foreach::foreach()].

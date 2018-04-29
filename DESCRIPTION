@@ -1,6 +1,6 @@
 Package: doFuture
 Version: 0.6.0-9001
-Title: A Universal Foreach Parallel Adaptor using the Future API of the 'future' Package
+Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     globals,
     future (>= 1.7.0),
@@ -16,7 +16,7 @@ VignetteBuilder:
     R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: Provides a '%dopar%' adaptor such that any type of futures can
+Description: Provides a '%dopar%' adapter such that any type of futures can
     be used as backends for the 'foreach' framework.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE

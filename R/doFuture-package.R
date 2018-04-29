@@ -1,6 +1,6 @@
-#' doFuture: Foreach Parallel Adaptor using Futures
+#' doFuture: Foreach Parallel Adapter using Futures
 #'
-#' The \pkg{doFuture} package provides a \code{\%dopar\%} adaptor for
+#' The \pkg{doFuture} package provides a \code{\%dopar\%} adapter for
 #' the \pkg{foreach} package such that _any_ type of future
 #' (that is supported by Future API of the \pkg{future} package) can
 #' be used for asynchronous (parallel/distributed) or synchronous
@@ -14,7 +14,7 @@
 #' @section Usage:
 #' To use futures with the \pkg{foreach} package, load \pkg{doFuture},
 #' use [registerDoFuture()] to register it to be used as a
-#' \code{\%dopar\%} adaptor (no need to ever use \code{\%do\%}).
+#' \code{\%dopar\%} adapter (no need to ever use \code{\%do\%}).
 #' After this, how and where the computations are performed is controlled
 #' solely by the future strategy set, which in controlled by
 #' [future::plan()].  For example:
@@ -74,7 +74,7 @@
 #' error on \code{Error in \{ : task 1 failed - \"could not find function "my_stat" ...}.
 #'
 #' Having said this, note that, in order for your "foreach" code to work
-#' everywhere and with other types of foreach adaptors as well, you may
+#' everywhere and with other types of foreach adapters as well, you may
 #' want to make sure that you always specify arguments `.export`
 #' and `.packages`.
 #'
@@ -104,7 +104,7 @@
 #' the \code{\link[doRNG:\%dorng\%]{\%dorng\%}} operator is used in place
 #' of \code{\link[foreach:\%dopar\%]{\%dopar\%}}.
 #' Note that \pkg{doRNG} is designed to work with any type of foreach
-#' adaptor including \pkg{doFuture}.
+#' adapter including \pkg{doFuture}.
 #'
 #' @example incl/doFuture.R
 #'

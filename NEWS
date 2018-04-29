@@ -3,21 +3,10 @@ Package: doFuture
 
 Version: 0.6.0-9000 [2018-04-27]
 
-SIGNIFICANT CHANGES:
-
- o Globals are now identified using a combination of the future (as before)
-   and the foreach (new) frameworks.  The advantage of using the latter as
-   well is to cover a rare corner case where the future framework currently
-   fails to identify a variable as global because it may also be a local
-   depending on an if-else statement.  The advantages of using the future
-   framework is that it capable of identifying globals in cases where the
-   foreach framework fails and that it identifies required packages as well,
-   which the foreach framework does not do.
-
 NEW FEATURES:
 
  o registerDoFuture() gained argument 'globalsAs'. It can be used to control
-   how globals are identified by the doFuture adaptor:
+   how globals are identified by the doFuture adapter:
 
    - globalsAs = "foreach" identifies globals using the foreach::getexports()
      method, which is what doParallel also uses.
@@ -134,7 +123,7 @@ SOFTWARE QUALITY:
 	 
  o TESTS: Now the doFuture package tests can be configured to also run the
    the help examples of the foreach and plyr packages with the doFuture
-   adaptor.  To further increase the coverage of these tests, the plyr example
+   adapter.  To further increase the coverage of these tests, the plyr example
    code is tweaked on-the-fly to set .parallel = TRUE.  The default is to
    test against all of the future strategies that comes with the future
    package, but it is possible to also test against future.BatchJobs,
@@ -182,7 +171,7 @@ SOFTWARE QUALITY:
 
  o ROBUSTNESS: The package redundancy tests (not run by 'R CMD check'; needed
    to be run manually for now) that run 89 plyr examples with the doFuture
-   foreach adaptor, now forces testing of '.parallel = TRUE' for all plyr
+   foreach adapter, now forces testing of '.parallel = TRUE' for all plyr
    functions that support that argument.  Each example is run across various
    future strategies, including sequential, multicore, multisession, and
    cluster, as well as batchjobs_local and batchtools_local, if installed.

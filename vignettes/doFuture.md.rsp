@@ -30,7 +30,7 @@ _any_ type of backend that the [batchtools] package supports.
 For an introduction to futures in R, please consult the
 vignettes of the [future] package.
 
-The [doFuture] package provides a `%dopar%` adaptor for the [foreach]
+The [doFuture] package provides a `%dopar%` adapter for the [foreach]
 package that works with _any_ type of future.
 The doFuture package is cross platform just as the future package.
 
@@ -97,7 +97,7 @@ y <- llply(x, quantile, probs = (1:3) / 4, .parallel = TRUE)
 
 
 ## Futures and BiocParallel
-The [BiocParallel] package supports any `%dopar%` adaptor as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
+The [BiocParallel] package supports any `%dopar%` adapter as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
 ```r
 library("doFuture")
 registerDoFuture()
@@ -144,7 +144,7 @@ The solution is to explicitly export global variables, e.g.
 > x <- foo()
 ```
 
-However, when using the `%dopar%` adaptor of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+However, when using the `%dopar%` adapter of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
 ```r
 > library("doFuture")
 > registerDoFuture()
