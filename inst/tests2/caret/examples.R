@@ -2,6 +2,7 @@ path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 install_missing_packages(c("class", "cluster", "foreign", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival",
                            "mda", "e1071", "pls"))
+install_missing_packages(c("earth", "mboost", "MLmetrics"))
 #install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 pkg <- tests2_step("start", package = "caret")
 #                   needs = c("Suggests",
