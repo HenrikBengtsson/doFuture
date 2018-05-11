@@ -2,7 +2,7 @@
 % Please edit documentation in R/options.R
 \name{doFuture.options}
 \alias{doFuture.options}
-\title{Options used by the doFuture adaptor}
+\title{Options used by the doFuture adapter}
 \description{
 Below are all \R options specific to the \pkg{doFuture} package.
 For options controlling futures in general, see

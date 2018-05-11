@@ -1,6 +1,6 @@
 #' Registers the future \%dopar\% backend
 #'
-#' Register the [doFuture] parallel adaptor to be used by
+#' Register the [doFuture] parallel adapter to be used by
 #' the \pkg{foreach} package.
 #'
 #' @param globalsAs A character string specifying the method on how globals
@@ -9,10 +9,10 @@
 #' @return Nothing
 #'
 #' @section Globals and Packages:
-#' Argument `globalsAs` controls how the doFuture adaptor should identify
+#' Argument `globalsAs` controls how the doFuture adapter should identify
 #' globals part of the foreach expression.  By specifying the argument when
-#' registering the adaptor, that method of global identification will be
-#' used until the adaptor is re-registered.
+#' registering the adapter, that method of global identification will be
+#' used until the adapter is re-registered.
 #' An alternative is to use `globalsAs = "*"` (default), which will cause
 #' the global-identification method to be decided by option
 #' \option{doFuture.globalsAs} at each call to [foreach::foreach()].
@@ -37,15 +37,16 @@
 #'    packages that need to be exported._
 #'  }
 #'
-#'  \item{`"foreach+future"`}{(default)  Globals are identified by the
-#'   `"foreach"` and `"future"` methods combined.
+#'  \item{`"foreach+future"`}{Globals are identified by the `"foreach"`
+#'    and `"future"` methods combined.
 #'  }
 #' }
 #'
 #' By appending suffix `"-unless-manual"` to any of the above automated
-#' methods, the automated methods are used unless unless argument `.export`
-#' is specified (or is `NULL`).
-#' This is a to developers for testing that `.export` statements are
+#' methods, the automated methods are used unless argument `.export` is
+#' specified (or is `NULL`).
+#'
+#' This is useful for developers for testing that `.export` statements are
 #' correct.
 #' 
 #' By appending suffix `"-with-warning"` to any of the above automated
@@ -56,7 +57,7 @@
 #' Note that some of the automatically found globals may be false positives.
 #'
 #' _The default \option{doFuture.globalsAs} option and therefore the default
-#' method is `"foreach+future-unless-manual"`.
+#' method is `"future-unless-manual"`._
 #' 
 #' The following aliases are \emph{deprecated}:
 #' `".export"` (renamed to `"manual"`),

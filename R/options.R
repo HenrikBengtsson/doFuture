@@ -1,4 +1,4 @@
-#' Options used by the doFuture adaptor 
+#' Options used by the doFuture adapter 
 #'
 #' Below are all \R options specific to the \pkg{doFuture} package.
 #' For options controlling futures in general, see

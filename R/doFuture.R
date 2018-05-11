@@ -1,10 +1,11 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value
+#' @importFrom future future resolve value FutureError
 #' @importFrom parallel splitIndices
+#' @importFrom utils head
 doFuture <- function(obj, expr, envir, data) {   #nolint
-  stopifnot(inherits(obj, "foreach"))
-  stopifnot(inherits(envir, "environment"))
+  stop_if_not(inherits(obj, "foreach"))
+  stop_if_not(inherits(envir, "environment"))
   
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
@@ -17,7 +18,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
   globalsAs <- data$globalsAs
-  stopifnot(!is.null(globalsAs), length(globalsAs) == 1L)
+  stop_if_not(!is.null(globalsAs), length(globalsAs) == 1L)
   
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
@@ -49,7 +50,12 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   expr <- bquote({
     ## Tell foreach to keep using futures also in nested calls
-    doFuture::registerDoFuture(globalsAs = .(globalsAs))
+    ## BACKWARD COMPATILITY: Pass 'globalsAs' only if supported on worker
+    if ("globalsAs" %in% names(formals(doFuture::registerDoFuture))) {
+      doFuture::registerDoFuture(globalsAs = .(globalsAs))
+    } else {
+      doFuture::registerDoFuture()
+    }
 
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
       ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
@@ -76,7 +82,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  mdebug("- identifying globals and packages ...")
+  if (debug) mdebug("- identifying globals and packages ...")
   
   gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
                                        export = obj$export,
@@ -90,6 +96,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   packages <- gp$packages
   rm(list = "gp")
   
+  ## Have the future backend/framework handle also the required 'doFuture'
+  ## package.  That way we will get a more informative error message in
+  ## case it is missing.
+  packages <- c("doFuture", packages)
+  
   if (debug) {
     mdebug("  - R expression:")
     mprint(expr)
@@ -98,9 +109,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     mstr(globals)
     mdebug("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
-  }
   
-  mdebug("- identifying globals and packages ... DONE")
+    mdebug("- identifying globals and packages ... DONE")
+  }
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,7 +129,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
-      stopifnot(length(preschedule) == 1L, !is.na(preschedule))
+      stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
       if (preschedule) {
         scheduling <- 1.0
       } else {
@@ -130,7 +141,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## (c) Otherwise, the default is to preschedule ("chunk")
   if (is.null(scheduling)) scheduling <- 1.0
 
-  stopifnot(length(scheduling) == 1, !is.na(scheduling),
+  stop_if_not(length(scheduling) == 1, !is.na(scheduling),
             is.numeric(scheduling) || is.logical(scheduling))
 
   nbr_of_elements <- length(args_list)
@@ -143,7 +154,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       nbr_of_futures <- nbr_of_elements
     }
   } else {
-    stopifnot(scheduling >= 0)
+    stop_if_not(scheduling >= 0)
     nbr_of_workers <- nbrOfWorkers()
     if (nbr_of_workers > nbr_of_elements) {
       nbr_of_workers <- nbr_of_elements
@@ -158,7 +169,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   }
 
   chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
-  mdebug("Number of chunks: %d", length(chunks))
+  if (debug) mdebug("Number of chunks: %d", length(chunks))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,18 +177,18 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
-  mdebug("Number of futures (= number of chunks): %d", nchunks)
+  if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
 
-  mdebug("Launching %d futures (chunks) ...", nchunks)
+  if (debug) mdebug("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
-    mdebug("Chunk #%d of %d ...", ii, length(chunks))
+    if (debug) mdebug("Chunk #%d of %d ...", ii, length(chunks))
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
     ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-##    stopifnot(attr(globals_ii, "resolved"))
+##    stop_if_not(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
@@ -185,11 +196,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii"))
 
-    mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
+    if (debug) mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
   rm(list = c("chunks", "globals", "packages"))
-  mdebug("Launching %d futures (chunks) ... DONE", nchunks)
-  stopifnot(length(fs) == nchunks)
+  if (debug) mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  stop_if_not(length(fs) == nchunks)
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,12 +214,35 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- collecting values of future")
   results <- lapply(fs, FUN = value, signal = FALSE)
   rm(list = "fs")
-  stopifnot(length(results) == nchunks)
+  stop_if_not(length(results) == nchunks)
 
   ## Reduce chunks
-  results <- Reduce(c, results)
-  stopifnot(length(results) == nbr_of_elements)
-
+  results2 <- do.call(c, args = results)
+    
+  if (length(results2) != nbr_of_elements) {
+    chunk_sizes <- sapply(results, FUN = length)
+    chunk_sizes <- table(chunk_sizes)
+    chunk_summary <- sprintf("%d chunks with %s elements",
+                             chunk_sizes, names(chunk_sizes))
+    chunk_summary <- paste(chunk_summary, collapse = ", ")
+    msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)", nchunks, length(results2), nbr_of_elements, nchunks, sum(chunk_sizes), chunk_summary)
+    if (debug) {
+      mdebug(msg)
+      mprint(chunk_sizes)
+      mdebug("Results before merge chunks:")
+      mstr(results)
+      mdebug("Results after merge chunks:")
+      mstr(results2)
+    }
+    msg <- sprintf("%s. Example of the first few values: %s", msg,
+                   paste(capture.output(str(head(results2, 3L))),
+                         collapse = "\\n"))
+    ex <- FutureError(msg)
+    stop(ex)
+  }
+  results <- results2
+  rm(list = "results2")
+  
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
   if (debug) mdebug("- accumulating results")
@@ -219,9 +253,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     print(e)
     NULL
   })
-  stopifnot(length(results) == nbr_of_elements)
+  rm(list = "results")
 
-
+  
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 7. Error handling
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -246,7 +280,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
-
+  
   if (debug) mdebug("doFuture() ... DONE")
 
   res

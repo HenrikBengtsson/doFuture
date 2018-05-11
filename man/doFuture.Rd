@@ -4,9 +4,9 @@
 \name{doFuture}
 \alias{doFuture}
 \alias{doFuture-package}
-\title{doFuture: Foreach Parallel Adaptor using Futures}
+\title{doFuture: Foreach Parallel Adapter using Futures}
 \description{
-The \pkg{doFuture} package provides a \code{\%dopar\%} adaptor for
+The \pkg{doFuture} package provides a \code{\%dopar\%} adapter for
 the \pkg{foreach} package such that \emph{any} type of future
 (that is supported by Future API of the \pkg{future} package) can
 be used for asynchronous (parallel/distributed) or synchronous
@@ -22,7 +22,7 @@ Neither the developer nor the end user has to change any code.
 
 To use futures with the \pkg{foreach} package, load \pkg{doFuture},
 use \code{\link[=registerDoFuture]{registerDoFuture()}} to register it to be used as a
-\code{\%dopar\%} adaptor (no need to ever use \code{\%do\%}).
+\code{\%dopar\%} adapter (no need to ever use \code{\%do\%}).
 After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
 \code{\link[future:plan]{future::plan()}}.  For example:
@@ -38,28 +38,28 @@ See the \pkg{future} package for more examples.
 
 \section{Built-in backends}{
 
-The built-in backends of \pkg{doFuture} are for instance multicore
-(forked processes), multisession (background R sessions), and
-ad-hoc cluster (background R sessions on local and / or remote machines).
+The built-in backends of \pkg{doFuture} are for instance 'multicore'
+(forked processes), 'multisession' (background R sessions), and
+ad-hoc 'cluster' (background R sessions on local and / or remote machines).
 Additional futures are provided by other "future" packages
 (see below for some examples).
 }
 
 \section{Backends for high-performance compute clusters}{
 
-The \pkg{future.BatchJobs} package provides support for high-performance
+The \pkg{future.batchtools} package provides support for high-performance
 compute (HPC) cluster schedulers such as SGE, Slurm, and TORQUE / PBS.
 For example,
 \itemize{
-\item \code{plan(batchjobs_slurm)}:
+\item \code{plan(batchtools_slurm)}:
 Process via a Slurm scheduler job queue.
-\item \code{plan(batchjobs_torque)}:
+\item \code{plan(batchtools_torque)}:
 Process via a TORQUE / PBS scheduler job queue.
 }
 
-This builds on top of the queuing framework that the \pkg{BatchJobs}
+This builds on top of the queuing framework that the \pkg{batchtools}
 package provides. For more details on backend configuration, please see
-the \pkg{future.BatchJobs} and \pkg{BatchJobs} packages.
+the \pkg{future.Batchtools} and \pkg{batchtools} packages.
 }
 
 \section{Global variables and packages}{
@@ -90,7 +90,7 @@ and \code{doParallel::registerDoParallel(cl)}, you would get a run-time
 error on \code{Error in \{ : task 1 failed - \"could not find function "my_stat" ...}.
 
 Having said this, note that, in order for your "foreach" code to work
-everywhere and with other types of foreach adaptors as well, you may
+everywhere and with other types of foreach adapters as well, you may
 want to make sure that you always specify arguments \code{.export}
 and \code{.packages}.
 }
@@ -126,7 +126,7 @@ parallel RNG, it is recommended to use the \pkg{doRNG} package, where
 the \code{\link[doRNG:\%dorng\%]{\%dorng\%}} operator is used in place
 of \code{\link[foreach:\%dopar\%]{\%dopar\%}}.
 Note that \pkg{doRNG} is designed to work with any type of foreach
-adaptor including \pkg{doFuture}.
+adapter including \pkg{doFuture}.
 }
 
 \examples{

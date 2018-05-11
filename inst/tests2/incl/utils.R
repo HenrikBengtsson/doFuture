@@ -113,6 +113,9 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   if (file_test("-d", srcpath)) {
     destpath <- .libPaths()[1]
     pkgs <- dir(path = srcpath)
+    ## AD HOC: In case there are some 00LOCK- folders left behind,
+    ## ignore those.
+    pkgs <- grep("^00LOCK-", pkgs, value = TRUE, invert = TRUE)
     for (pkg in pkgs) {
       srcpkg <- file.path(srcpath, pkg)
       if (file_test("-d", srcpkg)) {

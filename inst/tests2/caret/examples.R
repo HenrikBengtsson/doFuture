@@ -1,12 +1,11 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("class", "cluster", "foreign", "lattice", "MASS", "Matrix", "nlme", "nnet", "rpart", "survival",
-                           "mda", "e1071", "pls"))
-install_missing_packages(c("earth", "mboost", "MLmetrics"))
-#install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
+
+if (Sys.getenv("TRAVIS") != "true") {
+  install_missing_packages(c("class", "cluster", "e1071", "earth", "fastICA", "foreign", "gam", "klaR", "lattice", "MASS", "Matrix", "mboost", "mda", "mlbench", "MLmetrics", "nlme", "nnet", "pls", "proxy", "randomForest", "rpart", "survival"))
+  ## install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
+}
 pkg <- tests2_step("start", package = "caret")
-#                   needs = c("Suggests",
-#                     "ddalpha", "dimRed", "ggplot2", "ipred", "recipes"))
 
 excl <- c(
   "featurePlot",
@@ -33,6 +32,13 @@ excl_dontrun <- c(
   "plsda",
   "rfe"
 )
+
+if (!grepl("foreach", doFuture:::globalsAs())) {
+  ## example("avNNet", run.dontrun = TRUE) only works with a more liberal
+  ## identification method for globals than 'future', e.g. 'foreach'
+  ## See https://github.com/HenrikBengtsson/doFuture/issues/17
+  excl_dontrun <- c(excl_dontrun, "avNNet")
+}
 
 excl <- getOption("doFuture.tests.topics.ignore", excl)
 options(doFuture.tests.topics.ignore = excl)
@@ -86,13 +92,6 @@ for (strategy in test_strategies()) {
     ## Leaving it at this for now. /HB 2017-12-19
     run.dontrun <- !is.element(topic, c("calibration", excl_dontrun))
 
-    if (getOption("doFuture.globalsAs", "foreach+future") == "future") {
-      ## example("avNNet", run.dontrun = TRUE) only works with a more
-      ## liberal identification method for globals than 'future'.
-      ## See https://github.com/HenrikBengtsson/doFuture/issues/17
-      run.dontrun <- (topic == "avNNet")
-    }
-    
     mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
     registerDoFuture()
     plan(strategy)
