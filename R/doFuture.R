@@ -141,34 +141,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## (c) Otherwise, the default is to preschedule ("chunk")
   if (is.null(scheduling)) scheduling <- 1.0
 
-  stop_if_not(length(scheduling) == 1, !is.na(scheduling),
-            is.numeric(scheduling) || is.logical(scheduling))
-
-  nbr_of_elements <- length(args_list)
-  if (is.logical(scheduling)) {
-    if (scheduling) {
-      nbr_of_futures <- nbrOfWorkers()
-      if (nbr_of_futures > nbr_of_elements)
-        nbr_of_futures <- nbr_of_elements
-    } else {
-      nbr_of_futures <- nbr_of_elements
-    }
-  } else {
-    stop_if_not(scheduling >= 0)
-    nbr_of_workers <- nbrOfWorkers()
-    if (nbr_of_workers > nbr_of_elements) {
-      nbr_of_workers <- nbr_of_elements
-    }
-    nbr_of_futures <- scheduling * nbr_of_workers
-    if (nbr_of_futures < 1) {
-      nbr_of_futures <- 1L
-    }
-    else if (nbr_of_futures > nbr_of_elements) {
-      nbr_of_futures <- nbr_of_elements
-    }
-  }
-
-  chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
+  chunks <- makeChunks(nbrOfElements = length(args_list),
+                       nbrOfWorkers = nbrOfWorkers(),
+                       future.scheduling = scheduling)
   if (debug) mdebug("Number of chunks: %d", length(chunks))
 
 
@@ -219,13 +194,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## Reduce chunks
   results2 <- do.call(c, args = results)
     
-  if (length(results2) != nbr_of_elements) {
+  if (length(results2) != length(args_list)) {
     chunk_sizes <- sapply(results, FUN = length)
     chunk_sizes <- table(chunk_sizes)
     chunk_summary <- sprintf("%d chunks with %s elements",
                              chunk_sizes, names(chunk_sizes))
     chunk_summary <- paste(chunk_summary, collapse = ", ")
-    msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)", nchunks, length(results2), nbr_of_elements, nchunks, sum(chunk_sizes), chunk_summary)
+    msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)", nchunks, length(results2), length(args_list), nchunks, sum(chunk_sizes), chunk_summary)
     if (debug) {
       mdebug(msg)
       mprint(chunk_sizes)
