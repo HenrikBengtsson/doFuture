@@ -268,7 +268,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## 6. Resolve futures, gather their values, and reduce
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Resolve futures
-  if (debug) mdebug("- resolving future")
+  if (debug) mdebug("- resolving futures")
   resolve(fs, value = TRUE)
 
   ## Gather values
