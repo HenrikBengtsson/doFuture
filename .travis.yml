@@ -31,11 +31,9 @@ matrix:
         - future.batchtools
       r_github_packages:
         - jimhester/covr
-        - jimhester/lintr
       after_success:
         - Rscript -e 'covr::codecov(quiet = FALSE)'
-        - Rscript -e 'library(lintr); lint_package(linters = with_defaults(commented_code_linter = NULL, closed_curly_linter = closed_curly_linter(allow_single_line = TRUE), open_curly_linter = open_curly_linter(allow_single_line = TRUE)))'
-      env: NB='w/ covr & lintr' ## Just a label
+      env: NB='w/ covr' ## Just a label
     - os: linux
       r: devel
       r_packages:
