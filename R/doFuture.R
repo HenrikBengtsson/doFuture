@@ -147,6 +147,44 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   fs <- vector("list", length = nchunks)
   if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
 
+  ## Adjust option 'future.globals.maxSize' to account for the fact that more
+  ## than one element is processed per future.  The adjustment is done by
+  ## scaling up the limit by the number of elements in the chunk.  This is
+  ## a "good enough" approach.
+  ## (https://github.com/HenrikBengtsson/future.apply/issues/8,
+  ##  https://github.com/HenrikBengtsson/doFuture/issues/26)
+  globals.maxSize <- getOption("future.globals.maxSize")
+  if (nchunks > 1 && !is.null(globals.maxSize) && globals.maxSize < +Inf) {
+    globals.maxSize.default <- globals.maxSize
+    if (is.null(globals.maxSize.default)) globals.maxSize.default <- 500 * 1024^2
+
+    globals.maxSize.adjusted <- nchunks * globals.maxSize.default
+    options(future.globals.maxSize = globals.maxSize.adjusted)
+    on.exit(options(future.globals.maxSize = globals.maxSize), add = TRUE)
+
+    ## Adjust expression 'expr' such that the non-adjusted maxSize is used
+    ## within each future
+    expr <- bquote({
+      ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
+      if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
+        oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
+        on.exit(options(oopts), add = TRUE)
+      }
+      .(expr)
+    })
+
+    if (debug) {
+      mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
+      mdebug(" - Number of chunks: %d", nchunks)
+      mdebug(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
+      mdebug(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
+      mdebug("- R expression (adjusted):")
+      mprint(expr)
+    }
+  } else {
+    globals.maxSize.adjusted <- NULL
+  }
+
   if (debug) mdebug("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
@@ -156,6 +194,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
 
+    if (!is.null(globals.maxSize.adjusted)) {
+      globals_ii <- c(globals_ii, ...future.globals.maxSize = globals.maxSize)
+    }
+    
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)
 

@@ -5,6 +5,11 @@ Version: 0.6.0-9000 [2019-01-05]
 
 NEW FEATURES:
 
+ o The maximum total size of globals allowed (option 'future.globals.maxSize')
+   per future ("chunk") is now scaled up by the number of elements processed by
+   the future ("chunk") making the protection approximately invariant to the
+   amount of chunking done by foreach.
+   
  o Added support for option 'doFuture.foreach.export = "manual", which will
    strictly follow argument '.export' of foreach() for identifying global
    variables.  None of the future+globals framework for identifying global
