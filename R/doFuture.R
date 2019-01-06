@@ -162,8 +162,6 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     ## Subsetting outside future is more efficient
     globals_ii <- globals
     globals_ii[["...future.x_ii"]] <- args_list[chunk]
-    ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-##    stop_if_not(attr(globals_ii, "resolved"))
 
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages)

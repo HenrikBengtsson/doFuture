@@ -72,24 +72,6 @@ globalsAs <- function(globalsAs = "*") {
 }
 
 
-getGlobalsAndPackages_fix <- local({
-  if (packageVersion("globals") <= "0.11.0") {
-    function(expr, envir, globals, ...) {
-      ## BUG FIX/WORKAROUND: '...' must be last unless globals (> 0.11.0)
-      if (packageVersion("globals") <= "0.11.0") {
-        idx <- which(globals == "...")
-        if (length(idx) > 0) globals <- c(globals[-idx], "...")
-      }
-      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
-    }
-  } else {
-    function(expr, envir, globals, ...) {
-      getGlobalsAndPackages(expr, envir = envir, globals = globals, ...)
-    }
-  }
-})
-
-
 #' @importFrom future getGlobalsAndPackages
 getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
   stop_if_not(is.language(expr) || is.expression(expr))
@@ -120,8 +102,8 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   globals <- list()
   if (globalsAs == "manual") {
     globals_by_name <- c(export, "...future.x_ii")
-    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
-                                    globals = globals_by_name)
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                                globals = globals_by_name)
     globals <- gp$globals
     expr <- gp$expr
     rm(list = c("gp"))
@@ -129,8 +111,8 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globals_by_name <- findGlobals_foreach(expr, envir = envir,
                                            noexport = noexport)
     globals_by_name <- c(globals_by_name, "...future.x_ii")
-    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
-                                    globals = globals_by_name)
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                                globals = globals_by_name)
     globals <- gp$globals
     expr <- gp$expr
     rm(list = c("gp"))
@@ -144,8 +126,8 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globals_by_name <- findGlobals_foreach(expr, envir = envir,
                                            noexport = noexport)
     globals_by_name <- c(globals_by_name, "...future.x_ii")
-    gp <- getGlobalsAndPackages_fix(expr, envir = globals_envir,
-                                    globals = globals_by_name)
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir,
+                                globals = globals_by_name)
     globals <- gp$globals
     gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
     globals <- unique(c(gp$globals, globals))
@@ -189,8 +171,6 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
 
   ## At this point a globals should be resolved and we should know
   ## their total size.
-  ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-##  stop_if_not(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
   
   ## Also make sure we've got our in-house '...future.x_ii' covered.
   stop_if_not("...future.x_ii" %in% names(globals),
