@@ -3,6 +3,7 @@
 #' @importFrom future future resolve value FutureError
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
+#' @importFrom globals globalsByName
 doFuture <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
@@ -17,8 +18,6 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   it <- iter(obj)
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
-  globalsAs <- data$globalsAs
-  stop_if_not(!is.null(globalsAs), length(globalsAs) == 1L)
   
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
@@ -50,12 +49,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   expr <- bquote({
     ## Tell foreach to keep using futures also in nested calls
-    ## BACKWARD COMPATILITY: Pass 'globalsAs' only if supported on worker
-    if ("globalsAs" %in% names(formals(doFuture::registerDoFuture))) {
-      doFuture::registerDoFuture(globalsAs = .(globalsAs))
-    } else {
-      doFuture::registerDoFuture()
-    }
+    doFuture::registerDoFuture()
 
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
       ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
@@ -88,7 +82,6 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
                                        export = obj$export,
                                        noexport = c(obj$noexport, argnames),
                                        packages = obj$packages,
-                                       globalsAs = globalsAs,
                                        debug = debug)
 
   expr <- gp$expr

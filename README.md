@@ -1,4 +1,4 @@
-# doFuture: A Universal Foreach Parallel Adaptor using the Future API of the 'future' Package
+# doFuture: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 
 ## Introduction
 The [future] package provides a generic API for using futures in R.
@@ -13,7 +13,7 @@ _any_ type of backend that the [batchtools] package supports.
 For an introduction to futures in R, please consult the
 vignettes of the [future] package.
 
-The [doFuture] package provides a `%dopar%` adaptor for the [foreach]
+The [doFuture] package provides a `%dopar%` adapter for the [foreach]
 package that works with _any_ type of future.
 The doFuture package is cross platform just as the future package.
 
@@ -80,7 +80,7 @@ y <- llply(x, quantile, probs = (1:3) / 4, .parallel = TRUE)
 
 
 ## Futures and BiocParallel
-The [BiocParallel] package supports any `%dopar%` adaptor as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
+The [BiocParallel] package supports any `%dopar%` adapter as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
 ```r
 library("doFuture")
 registerDoFuture()
@@ -98,7 +98,7 @@ x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
 
 ## doFuture takes care of exports and packages automatically
 
-The foreach package has some support for automated handling of globals, but it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `a` and `b` are properly exported when we do
+The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `my` and `sigma` are properly exported when we do
 ```r
 > library("doParallel")
 > registerDoParallel(parallel::makeCluster(2))
@@ -111,7 +111,7 @@ List of 3
  $ : num [1:2] 3.12 -1.33
  $ : num [1:3] -0.0376 -0.1446 1.6368
 ```
-it falls short as soon as we try
+it falls short as soon as we try to do the same from within a function;
 ```r
 > foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
 > x <- foo()
@@ -127,7 +127,7 @@ The solution is to explicitly export global variables, e.g.
 > x <- foo()
 ```
 
-However, when using the `%dopar%` adaptor of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+However, when using the `%dopar%` adapter of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
 ```r
 > library("doFuture")
 > registerDoFuture()
@@ -160,8 +160,7 @@ Error in file_ext(file) :
   task 1 failed - "could not find function "file_ext""
 ```
 
-Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.globalsAs = "foreach+future-with-warning")`, doFuture will scan each `foreach() %dopar% { ... }` call for globals.  If it detects global candidates not listed in `.export`, it will produce an informative warning message suggesting that those should be added.
-
+Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will in warn if it finds globals not listed in `.export` and produce an informative warning message suggesting that those should be added.  To assert that argument `.export` is correct, test the code with `options(doFuture.foreach.export = ".export")`, which will disable automatic identification of globals such that only the globals specified by the `.export` argument is used.
 
 
 ## doFuture replaces existing doNnn packages
@@ -216,6 +215,18 @@ registerDoParallel()
 <pre><code class="r">library("doFuture")
 registerDoFuture()
 plan(multiprocess)
+</code></pre>
+</td>
+</tr>
+
+<tr style="vertical-align: center;">
+<td>
+N/A
+</td>
+<td>
+<pre><code class="r">library("doFuture")
+registerDoFuture()
+plan(future.callr::callr)
 </code></pre>
 </td>
 </tr>
@@ -283,8 +294,7 @@ High-performance compute (HPC) schedulers, e.g.
 SGE, Slurm, and TORQUE / PBS.
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-library(future.batchtools)
-plan(batchtools_sge)
+plan(future.batchtools::batchtools_sge)
 </code></pre>
 </td>
 </tr>
@@ -310,6 +320,7 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 
 [batchtools]: https://cran.r-project.org/package=batchtools
 [BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
+[callr]: https://cran.r-project.org/package=callr
 [doFuture]: https://cran.r-project.org/package=doFuture
 [doMC]: https://cran.r-project.org/package=doMC
 [doMPI]: https://cran.r-project.org/package=doMPI
@@ -318,20 +329,21 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 [doSNOW]: https://cran.r-project.org/package=doSNOW
 [foreach]: https://cran.r-project.org/package=foreach
 [future]: https://cran.r-project.org/package=future
+[future.callr]: https://cran.r-project.org/package=future.callr
 [future.batchtools]: https://cran.r-project.org/package=future.batchtools
 [plyr]: https://cran.r-project.org/package=plyr
 
 ## Installation
 R package doFuture is available on [CRAN](https://cran.r-project.org/package=doFuture) and can be installed in R as:
 ```r
-install.packages('doFuture')
+install.packages("doFuture")
 ```
 
 ### Pre-release version
 
 To install the pre-release version that is available in Git branch `develop` on GitHub, use:
 ```r
-remotes::install_github('HenrikBengtsson/doFuture@develop')
+remotes::install_github("HenrikBengtsson/doFuture@develop")
 ```
 This will install the package from source.  
 

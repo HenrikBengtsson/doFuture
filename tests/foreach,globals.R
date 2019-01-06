@@ -53,7 +53,7 @@ for (strategy in strategies) {
 message("*** doFuture - explicitly exported globals ... DONE")
 
 
-message("*** doFuture - automatically finiding globals ...")
+message("*** doFuture - automatically finding globals ...")
 
 ## Example adopted from StackOverflow comment
 ## https://stackoverflow.com/a/10114192/1072091
@@ -82,34 +82,7 @@ for (strategy in strategies) {
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
-message("*** doFuture - automatically finiding globals ... DONE")
-
-
-message("*** doFuture - automatically finiding ambiguous global/local variables ...")
-
-oopts <- options(doFuture.globalsAs = "foreach+future")
-message("globalsAs: ", doFuture:::globalsAs())
-
-for (strategy in strategies) {
-  message(sprintf("- plan('%s') ...", strategy))
-  plan(strategy)
-
-  x <- 1
-  y <- foreach(i = 1L) %dopar% {
-    random <- FALSE
-    ## If 'random' was truly random, we would not know until *evaluating*
-    ## this statement whether 'x' is a local or a global variable
-    if (random) x <- 0
-    x + 1
-  }
-  str(list(y = y))
-  
-  message(sprintf("- plan('%s') ... DONE", strategy))
-} ## for (strategy ...)
-
-options(oopts)
-
-message("*** doFuture - automatically finiding ambiguous global/local variables ... DONE")
+message("*** doFuture - automatically finding globals ... DONE")
 
 print(sessionInfo())
 

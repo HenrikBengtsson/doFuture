@@ -4,11 +4,7 @@
 \alias{registerDoFuture}
 \title{Registers the future \%dopar\% backend}
 \usage{
-registerDoFuture(globalsAs = "*")
-}
-\arguments{
-\item{globalsAs}{A character string specifying the method on how globals
-are identified in all \code{\link[foreach:foreach]{foreach::foreach()}} calls including nested ones.}
+registerDoFuture()
 }
 \value{
 Nothing
@@ -17,72 +13,8 @@ Nothing
 Register the \link{doFuture} parallel adapter to be used by
 the \pkg{foreach} package.
 }
-\section{Globals and Packages}{
-
-Argument \code{globalsAs} controls how the doFuture adapter should identify
-globals part of the foreach expression.  By specifying the argument when
-registering the adapter, that method of global identification will be
-used until the adapter is re-registered.
-An alternative is to use \code{globalsAs = "*"} (default), which will cause
-the global-identification method to be decided by option
-\option{doFuture.globalsAs} at each call to \code{\link[foreach:foreach]{foreach::foreach()}}.
-
-Below is the set of method that can be used for argument \code{globalsAs}
-and option \option{doFuture.globalsAs}:
-
-\describe{
-\item{\code{"manual"}}{No automatic identification of globals is done.
-Only the \code{\link[foreach:foreach]{foreach::foreach()}} arguments .export\code{and}.noexport` are
-used to control what globals are exported.
-}
-
-\item{\code{"foreach"}}{Globals are identified by \code{\link[foreach:getexports]{foreach::getexports()}}
-while respecting arguments \code{.export} and \code{.noexport}.
-}
-
-\item{\code{"future"}}{Globals are identified by the future framework,
-or more specifically by \code{\link[future:getGlobalsAndPackages]{future::getGlobalsAndPackages()}},
-while respecting arguments \code{.export} and \code{.noexport}.
-\emph{Contrary to \code{"foreach"}, this method will also detect additional
-packages that need to be exported.}
-}
-
-\item{\code{"foreach+future"}}{Globals are identified by the \code{"foreach"}
-and \code{"future"} methods combined.
-}
-}
-
-By appending suffix \code{"-unless-manual"} to any of the above automated
-methods, the automated methods are used unless argument \code{.export} is
-specified (or is \code{NULL}).
-
-This is useful for developers for testing that \code{.export} statements are
-correct.
-
-By appending suffix \code{"-with-warning"} to any of the above automated
-methods, an informative warning will be produced if argument \code{.export}
-is used but it lacks some of the globals that are found through the
-automated methods.
-This is useful to developers for identifying missing \code{.export} elements.
-Note that some of the automatically found globals may be false positives.
-
-\emph{The default \option{doFuture.globalsAs} option and therefore the default
-method is \code{"future-unless-manual"}.}
-
-The following aliases are \emph{deprecated}:
-\code{".export"} (renamed to \code{"manual"}),
-\code{".export-and-automatic"} (renamed to \code{"future"}),
-\code{"automatic-unless-.export"} (renamed to \code{"future-unless-manual"}), and
-\code{".export-and-automatic-with-warning"} (renamed to \code{"future-with-warning"})
-}
-
 \examples{
-## Rely on the future framework to identify globals
-registerDoFuture(globalsAs = "future")
-
-## Like doParallel, rely on the foreach framework to identify globals
-registerDoFuture(globalsAs = "foreach")
-
+registerDoFuture()
 
 }
 \keyword{utilities}

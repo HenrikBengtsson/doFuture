@@ -61,22 +61,10 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 ## or equivalently:
 ##
 ##   library("doFuture")
-##   registerDoFuture(globalsAs = "foreach")
+##   registerDoFuture()
 ##   plan(multisession, workers = 2L)
 ##   example("train", package = "caret", run.dontrun = TRUE)
 ##
-## All examples but 'avNNet' work with:
-##
-##   registerDoFuture(globalsAs = "foreach")
-##
-## To cover also that latter example, use:
-##
-##   registerDoFuture(globalsAs = "foreach+future")
-##
-## or
-##
-##   options(doFuture.globalsAs = "future")
-##   options(doFuture.globalsAs = "foreach+future") ## default
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)

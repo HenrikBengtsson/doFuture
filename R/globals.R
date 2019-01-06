@@ -1,69 +1,24 @@
-#' @importFrom foreach getexports
-#' @importFrom globals findGlobals
-findGlobals_foreach <- function(expr, envir = parent.frame(), noexport = NULL) {
-  ## Extracted from doParallel 1.0.11
-  makeDotsEnv <- function(...) {
-    list(...)
-    function() NULL
+globalsAs <- function() {
+  ## Assert that defunct options are not used
+  if (!is.null(getOption("doFuture.globals.nullexport"))) {
+    .Defunct(msg = "Option 'doFuture.globals.nullexport' is defunct. Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.")
   }
 
-  exportenv <- tryCatch({
-    qargs <- quote(list(...))
-    args <- eval(qargs, envir = envir, enclos = baseenv())
-    environment(do.call(makeDotsEnv, args = args))
-  }, error = function(e) {
-    new.env(parent = emptyenv())
-  })
-
-  ## NOTE: getexports() does not identify '...'
-  getexports(expr, e = exportenv, env = envir, bad = noexport)
-  globals <- ls(envir = exportenv)
-
-  ## Is '...' a global?
-  if (is.element("...", findGlobals(expr, dotdotdot = "return"))) {
-    globals <- c(globals, "...")
-  }
-  
-  globals
-}
-
-
-globalsAs <- function(globalsAs = "*") {
-  stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
-
-  ## Set 'globalsAs' according to 'doFuture.*' options?
-  if (globalsAs == "*") {
-    ## Using defunct option?
-    if (!is.null(getOption("doFuture.globals.nullexport"))) {
-      .Defunct(msg = "Option 'doFuture.globals.nullexport' is defunct. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
-    }
-
-    globalsAs <- getOption("doFuture.globalsAs")
-    
-    ## Backward compatibility with doFuture (<= 0.6.0) - with warning
-    t <- getOption("doFuture.foreach.export")
-    if (!is.null(t) && is.null(globalsAs)) {
-      if (t %in% c("automatic", "automatic-unless-.export")) {
-        .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.globalsAs = 'future'.", dQuote(t)))
-      }
-    
-      if (t == ".export-and-automatic") {
-        globalsAs <- "future"
-      } else if (t == ".export-and-automatic-with-warning") {
-        globalsAs <- "future-with-warning"
-      } else {
-        .Defunct(msg = sprintf("Option 'doFuture.foreach.export' is defunct and replaced by option 'doFuture.globalsAs'. Also, value '%s' is unknown.", dQuote(t)))
-      }
-
-      .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is deprecated and has been replaced by doFuture.globalsAs = %s", dQuote(t), sQuote(globalsAs)))
-    }
-  }
-
-  ## No option set?
-  if (is.null(globalsAs)) {
-    globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "future-unless-manual")
-#    globalsAs <- Sys.getenv("R_DOFUTURE_GLOBALSAS", "foreach+future")
-    globalsAs <- getOption("doFuture.globalsAs.fallback", globalsAs)
+  t <- getOption("doFuture.foreach.export", ".export-and-automatic")
+  if (t == ".export-and-automatic") {
+    globalsAs <- "future"
+  } else if (t == ".export-and-automatic-with-warning") {
+    globalsAs <- "future-with-warning"
+  } else if (t == ".export") {
+    globalsAs <- "manual"
+  } else if (t == "automatic") {
+    .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
+    globalsAs <- "future"
+  } else if (t == "automatic-unless-.export") {
+    .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
+    globalsAs <- "future"
+  } else {
+    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
   }
 
   stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
@@ -73,24 +28,16 @@ globalsAs <- function(globalsAs = "*") {
 
 
 #' @importFrom future getGlobalsAndPackages
-getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, globalsAs, debug = FALSE) {
+getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport = NULL, packages = NULL, debug = FALSE) {
   stop_if_not(is.language(expr) || is.expression(expr))
   stop_if_not(is.environment(envir))
   stop_if_not(is.logical(debug))
   export <- unique(export)
   noexport <- unique(noexport)
   packages <- unique(packages)
-  globalsAs <- globalsAs(globalsAs)
 
-  ## Automatic or manual?
-  if (grepl("-unless-manual$", globalsAs)) {
-    if (is.null(export)) {
-      globalsAs <- gsub("-unless-manual$", "", globalsAs)
-    } else {
-      globalsAs <- "manual"
-    }
-  }
-
+  globalsAs <- globalsAs()
+  
   ## Warn if manual does not match automatic findings?
   withWarning <- grepl("-with-warning$", globalsAs)
   if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
@@ -107,36 +54,14 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globals <- gp$globals
     expr <- gp$expr
     rm(list = c("gp"))
-  } else if (globalsAs == "foreach") {
-    globals_by_name <- findGlobals_foreach(expr, envir = envir,
-                                           noexport = noexport)
-    globals_by_name <- c(globals_by_name, "...future.x_ii")
-    gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                                globals = globals_by_name)
-    globals <- gp$globals
-    expr <- gp$expr
-    rm(list = c("gp"))
   } else if (globalsAs == "future") {
     gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
     globals <- gp$globals
     packages <- unique(c(gp$packages, packages))
     expr <- gp$expr
     rm(list = c("gp"))
-  } else if (globalsAs == "foreach+future") {
-    globals_by_name <- findGlobals_foreach(expr, envir = envir,
-                                           noexport = noexport)
-    globals_by_name <- c(globals_by_name, "...future.x_ii")
-    gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                                globals = globals_by_name)
-    globals <- gp$globals
-    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
-    globals <- unique(c(gp$globals, globals))
-    packages <- unique(c(gp$packages, packages))
-    expr <- gp$expr
-    rm(list = c("gp"))
   } else {
-    stop("Unknown value of argument 'globalsAs' for registerDoFuture(): ",
-         sQuote(globalsAs))
+    stop("INTERNAL ERROR: Unknown value of 'globalsAs': ", sQuote(globalsAs))
   }
 
   mstr(globals)
@@ -150,7 +75,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
                                         "future.call.arguments"))
     if (length(missing) > 0) {
-      warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (as identified by globalsAs = c(%s) of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), paste(sQuote(globalsAs), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
+      warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables of which some might be false positives: %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
     }
     globals2 <- NULL
   }

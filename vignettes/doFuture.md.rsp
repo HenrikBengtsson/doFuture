@@ -115,7 +115,7 @@ x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
 
 ## doFuture takes care of exports and packages automatically
 
-The foreach package has some support for automated handling of globals, but it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `a` and `b` are properly exported when we do
+The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `my` and `sigma` are properly exported when we do
 ```r
 > library("doParallel")
 > registerDoParallel(parallel::makeCluster(2))
@@ -128,7 +128,7 @@ List of 3
  $ : num [1:2] 3.12 -1.33
  $ : num [1:3] -0.0376 -0.1446 1.6368
 ```
-it falls short as soon as we try
+it falls short as soon as we try to do the same from within a function;
 ```r
 > foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
 > x <- foo()
@@ -177,8 +177,7 @@ Error in file_ext(file) :
   task 1 failed - "could not find function "file_ext""
 ```
 
-Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.globalsAs = "foreach+future-with-warning")`, doFuture will scan each `foreach() %dopar% { ... }` call for globals.  If it detects global candidates not listed in `.export`, it will produce an informative warning message suggesting that those should be added.
-
+Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will in warn if it finds globals not listed in `.export` and produce an informative warning message suggesting that those should be added.  To assert that argument `.export` is correct, test the code with `options(doFuture.foreach.export = ".export")`, which will disable automatic identification of globals such that only the globals specified by the `.export` argument is used.
 
 
 ## doFuture replaces existing doNnn packages
@@ -351,4 +350,4 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 [future.batchtools]: https://cran.r-project.org/package=future.batchtools
 [plyr]: https://cran.r-project.org/package=plyr
 ---
-Copyright Henrik Bengtsson, 2016-2018
+Copyright Henrik Bengtsson, 2016-2019
