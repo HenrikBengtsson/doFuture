@@ -52,7 +52,9 @@ BUG FIXES:
 
 DEPRECATED:
 
- o Options 'doFuture.foreach.export' is deprecated and replaced by option
+ o Previously deprecated option 'doFuture.foreach.nullexport' is defunct.
+
+ o Option 'doFuture.foreach.export' is deprecated and replaced by option
    'doFuture.globalsAs'.
    
 

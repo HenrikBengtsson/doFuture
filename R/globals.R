@@ -35,7 +35,7 @@ globalsAs <- function(globalsAs = "*") {
   if (globalsAs == "*") {
     ## Using defunct option?
     if (!is.null(getOption("doFuture.globals.nullexport"))) {
-      .Defunct(msg = "Option 'doFuture.globals.nullexport' is deprecated. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
+      .Defunct(msg = "Option 'doFuture.globals.nullexport' is defunct. Use 'doFuture.globalsAs = \"future-unless-manual\" or \"manual\" instead.")
     }
 
     globalsAs <- getOption("doFuture.globalsAs")
