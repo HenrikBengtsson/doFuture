@@ -84,6 +84,38 @@ for (strategy in strategies) {
 
 message("*** doFuture - automatically finding globals ... DONE")
 
+
+message("*** doFuture - automatically finding globals in 'args_list' ...")
+
+library("tools") ## toTitleCase()
+
+a <- 42
+b <- 21
+F <- list(
+  function() b / 2,
+  function(b) 2 * a,
+  function() a + b
+)
+G <- list(
+  function(b) 2 * a,
+  function() b / 2,
+  function() nchar(toTitleCase("hello world"))
+)
+z0 <- foreach(f = F, g = G) %do% list(f(), g())
+str(z0)
+
+for (strategy in strategies) {
+  message(sprintf("- plan('%s') ...", strategy))
+  plan(strategy)
+  message("- foreach(f = X, ...) - 'f' containing globals ...")
+  ## From https://github.com/HenrikBengtsson/future.apply/issues/12
+  z1 <- foreach(f = F, g = G) %do% list(f(), g())
+  str(z1)
+  stopifnot(identical(z1, z0))
+} ## for (strategy ...)
+
+message("*** doFuture - automatically finding globals in 'args_list' ... DONE")
+
 print(sessionInfo())
 
 source("incl/end.R")

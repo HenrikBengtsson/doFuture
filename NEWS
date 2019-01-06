@@ -3,6 +3,11 @@ Package: doFuture
 
 Version: 0.6.0-9000 [2019-01-05]
 
+SIGNIFICANT CHANGES:
+
+ o Globals are now searched for also among elements that foreach() iterates
+   over, e.g. foreach(f = F, g = G) %dopar% { f() + g() }.
+   
 NEW FEATURES:
 
  o The maximum total size of globals allowed (option 'future.globals.maxSize')

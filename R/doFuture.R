@@ -1,6 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value FutureError
+#' @importFrom future future resolve value FutureError getGlobalsAndPackages
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
@@ -87,6 +87,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   expr <- gp$expr
   globals <- gp$globals
   packages <- gp$packages
+  scanForGlobals <- gp$scanForGlobals
   rm(list = "gp")
   
   ## Have the future backend/framework handle also the required 'doFuture'
@@ -192,17 +193,53 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
-    globals_ii[["...future.x_ii"]] <- args_list[chunk]
+    packages_ii <- packages
+    args_list_ii <- args_list[chunk]
+    globals_ii[["...future.x_ii"]] <- args_list_ii
 
+    if (scanForGlobals) {
+      if (debug) mdebug(" - Finding globals in 'args_list' chunk #%d ...", ii)
+      ## Search for globals in 'args_list_ii':
+      gp <- getGlobalsAndPackages(args_list_ii, envir = envir, globals = TRUE)
+      globals_X <- gp$globals
+      packages_X <- gp$packages
+      gp <- NULL
+
+      if (debug) {
+        mdebug("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
+        mdebug("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
+      }
+    
+      ## Export also globals found in 'args_list_ii'
+      if (length(globals_X) > 0L) {
+        reserved <- intersect(c("...future.FUN", "...future.x_ii"), names(globals_X))
+        if (length(reserved) > 0) {
+          stop("Detected globals in 'args_list' using reserved variables names: ",
+               paste(sQuote(reserved), collapse = ", "))
+        }
+        globals_ii <- unique(c(globals_ii, globals_X))
+
+        ## Packages needed due to globals in 'args_list_ii'?
+        if (length(packages_X) > 0L)
+          packages_ii <- unique(c(packages_ii, packages_X))
+      }
+      
+      rm(list = c("globals_X", "packages_X"))
+      
+      if (debug) mdebug(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
+    }
+
+    rm(list = "args_list_ii")
+    
     if (!is.null(globals.maxSize.adjusted)) {
       globals_ii <- c(globals_ii, ...future.globals.maxSize = globals.maxSize)
     }
     
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
-                       globals = globals_ii, packages = packages)
+                       globals = globals_ii, packages = packages_ii)
 
     ## Not needed anymore
-    rm(list = c("chunk", "globals_ii"))
+    rm(list = c("chunk", "globals_ii", "packages_ii"))
 
     if (debug) mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)

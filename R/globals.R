@@ -37,7 +37,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   packages <- unique(packages)
 
   globalsAs <- globalsAs()
-  
+ 
   ## Warn if manual does not match automatic findings?
   withWarning <- grepl("-with-warning$", globalsAs)
   if (withWarning) globalsAs <- gsub("-with-warning$", "", globalsAs)
@@ -47,6 +47,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
 
   globals <- list()
+  scanForGlobals <- TRUE
   if (globalsAs == "manual") {
     globals_by_name <- c(export, "...future.x_ii")
     gp <- getGlobalsAndPackages(expr, envir = globals_envir,
@@ -54,6 +55,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globals <- gp$globals
     expr <- gp$expr
     rm(list = c("gp"))
+    scanForGlobals <- FALSE
   } else if (globalsAs == "future") {
     gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
     globals <- gp$globals
@@ -104,5 +106,5 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
 
   rm(list = c("globals_envir", "names_globals")) ## Not needed anymore
 
-  list(expr = expr, globals = globals, packages = packages)
+  list(expr = expr, globals = globals, packages = packages, scanForGlobals = scanForGlobals)
 }
