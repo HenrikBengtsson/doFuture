@@ -37,6 +37,7 @@ Rplots.pdf$
 ^[.]devel
 ^[.]test
 ^[.]check
+^revdep/*
 ^.*[.]tar[.]gz$
 
 #----------------------------

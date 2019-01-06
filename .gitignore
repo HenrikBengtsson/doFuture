@@ -16,3 +16,6 @@
 .covr.rds
 .Rproj.user
 .make/
+revdep/checks/
+revdep/data.sqlite
+revdep/library/
