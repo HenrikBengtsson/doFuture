@@ -39,19 +39,19 @@ for (strategy1 in strategies) {
     message("foreach() - level 1 ...")
     x <- foreach(a = as, .export = c("bs", "strategy2"),
                  .packages = "foreach") %dopar% {
-      plan <- future::plan()
-      stopifnot(inherits(plan, strategy2))
+      plan_list <- future::plan()
+      stopifnot(inherits(plan_list, strategy2))
       plan_a <- future::plan("list")
       str(plan_a)
       stopifnot(inherits(plan_a[[1]], strategy2))
 
       message("foreach() - level 2 ...")
       y <- foreach(b = bs, .export = c("a", "plan_a")) %dopar% {
-        plan <- future::plan()
-        message(capture.output(print(plan)))
+        plan_list <- future::plan()
+        message(capture.output(print(plan_list)))
         stopifnot(
-          inherits(plan, "future"),
-          inherits(plan, getOption("future.default", "sequential"))
+          inherits(plan_list, "future"),
+          inherits(plan_list, getOption("future.default", "sequential"))
         )
 
         plan_b <- future::plan("list")

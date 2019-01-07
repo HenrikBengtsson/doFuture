@@ -15,12 +15,8 @@ res_truth <- nmf(esGolub, rank = 3L, method = "brunet", nrun = 2L, .opt = "p",
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
 
-  ## Workaround for https://github.com/HenrikBengtsson/future/issues/166
-  ns <- getNamespace("future")
-  strategy_fcn <- get(strategy, envir = ns, mode = "function")
-  plan(strategy_fcn)
-
   registerDoFuture()
+  plan(strategy)
 
   res <- nmf(esGolub, rank = 3L, method = "brunet", nrun = 2L, .opt = "p",
              seed = 0xBEEF, .pbackend = NULL)

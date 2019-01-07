@@ -36,11 +36,30 @@ excl <- c(excl, "rdply")
 excl <- c(excl, "aaply", "quoted")
 options("doFuture.tests.topics.ignore" = excl)
 
+subset <- as.integer(Sys.getenv("R_CHECK_SUBSET_"))
+topics <- test_topics(pkg, subset = subset, max_subset = 3)
+
+## See example(topic, package = "plyr") for why 'run.dontrun' must be FALSE
+excl_dontrun <- c("failwith", "here")
+## Exclude because it requires Tk, which is not available on Travis CI
+excl_dontrun <- c(excl_dontrun, "create_progress_bar", "progress_tk")
+
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
-  run_examples(pkg, strategy = strategy, local = TRUE)
+
+  for (ii in seq_along(topics)) {
+    topic <- topics[ii]
+    run.dontrun <- !is.element(topic, excl_dontrun)
+    
+    mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ...", ii, length(topics), topic, pkg, run.dontrun, strategy) #nolint
+    registerDoFuture()
+    plan(strategy)
+    dt <- run_example(topic = topic, package = pkg, run.dontrun = run.dontrun, local = TRUE)
+    mprintf("- #%d of %d example('%s', package = '%s', run.dontrun = %s) using plan(%s) ... DONE (%s)", ii, length(topics), topic, pkg, run.dontrun, strategy, dt) #nolint
+  } ## for (ii ...)
+  
   mprintf("- plan('%s') ... DONE", strategy)
 } ## for (strategy ...)
 

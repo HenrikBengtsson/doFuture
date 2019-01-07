@@ -1,6 +1,11 @@
 source("incl/start.R")
 
+options(future.debug = FALSE)
+
 message("*** options  ...")
+
+globalsAs <- doFuture:::globalsAs
+message("globalsAs: ", globalsAs())
 
 plan(multisession, workers = 2L)
 
@@ -9,11 +14,12 @@ b <- 2
 y_truth <- foreach(1:2, .export = c("a", "b")) %do% { b * a }
 str(y_truth)
 
-
 options(doFuture.foreach.export = ".export")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
+
 res2 <- tryCatch({
   y2 <- foreach(1:2) %dopar% { b * a }
 }, error = identity)
@@ -32,26 +38,8 @@ res5 <- tryCatch({
 stopifnot(inherits(res5, "error"))
 
 
-
-options(doFuture.foreach.export = "automatic")
-y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
-str(y1)
-stopifnot(identical(y1, y_truth))
-y2 <- foreach(1:2) %dopar% { b * a }
-str(y2)
-stopifnot(identical(y2, y_truth))
-y3 <- foreach(1:2, .export = NULL) %dopar% { b * a }
-str(y3)
-stopifnot(identical(y3, y_truth))
-y4 <- foreach(1:2, .export = "a") %dopar% { b * a }
-str(y4)
-stopifnot(identical(y4, y_truth))
-y5 <- foreach(1:2, .export = "c") %dopar% { b * a }
-str(y5)
-stopifnot(identical(y5, y_truth))
-
-
 options(doFuture.foreach.export = ".export-and-automatic")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -70,6 +58,7 @@ stopifnot(identical(y5, y_truth))
 
 
 options(doFuture.foreach.export = ".export-and-automatic-with-warning")
+message("globalsAs: ", globalsAs())
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -85,6 +74,7 @@ stopifnot(identical(y4, y_truth))
 y5 <- foreach(1:2, .export = "c") %dopar% { b * a }
 str(y5)
 stopifnot(identical(y5, y_truth))
+
 
 ## Assert warnings, if any
 res1 <- tryCatch({
@@ -114,7 +104,15 @@ str(res5)
 stopifnot(inherits(res5, "warning"))
 
 
+message("- Deprecated")
+
 options(doFuture.foreach.export = "automatic-unless-.export")
+res <- tryCatch({
+  message("globalsAs: ", globalsAs())
+}, warning = identity)
+stopifnot(inherits(res, "warning"))
+stopifnot(globalsAs() == "future")
+
 y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
 str(y1)
 stopifnot(identical(y1, y_truth))
@@ -124,24 +122,32 @@ stopifnot(identical(y2, y_truth))
 y3 <- foreach(1:2, .export = NULL) %dopar% { b * a }
 str(y3)
 stopifnot(identical(y3, y_truth))
-res4 <- tryCatch({
-  y4 <- foreach(1:2, .export = "b") %dopar% { b * a }
-}, error = identity)
-stopifnot(inherits(res4, "error"))
-res5 <- tryCatch({
-  y5 <- foreach(1:2, .export = "c") %dopar% { b * a }
-}, error = identity)
-stopifnot(inherits(res5, "error"))
 
+if (FALSE) {
+  res4 <- tryCatch({
+    y4 <- foreach(1:2, .export = "b") %dopar% { b * a }
+  }, error = identity)
+  stopifnot(inherits(res4, "error"))
+  res5 <- tryCatch({
+    y5 <- foreach(1:2, .export = "c") %dopar% { b * a }
+  }, error = identity)
+  stopifnot(inherits(res5, "error"))
+}
 
 message("- exceptions")
 
 options(doFuture.foreach.export = "unknown")
 res <- tryCatch({
+  message("globalsAs: ", globalsAs())
+}, error = identity)
+stopifnot(inherits(res, "error"))
+
+res <- tryCatch({
   y <- foreach(1:2) %dopar% TRUE
 }, error = identity)
 print(res)
 stopifnot(inherits(res, "error"))
+
 
 message("*** options ... DONE")
 

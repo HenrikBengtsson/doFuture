@@ -6,7 +6,7 @@ mprintf("*** doFuture() - all %s examples ...", pkg)
 
 for (strategy in test_strategies()) {
   mprintf("- plan('%s') ...", strategy)
-  run_examples(pkg, strategy = strategy)
+  run_examples(pkg, strategy = strategy, run.dontrun = TRUE)
   mprintf("- plan('%s') ... DONE", strategy)
 } ## for (strategy ...)
 

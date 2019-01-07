@@ -4,9 +4,9 @@
 \name{doFuture}
 \alias{doFuture}
 \alias{doFuture-package}
-\title{doFuture: Foreach Parallel Adaptor using Futures}
+\title{doFuture: Foreach Parallel Adapter using Futures}
 \description{
-The \pkg{doFuture} package provides a \code{\%dopar\%} adaptor for
+The \pkg{doFuture} package provides a \code{\%dopar\%} adapter for
 the \pkg{foreach} package such that \emph{any} type of future
 (that is supported by Future API of the \pkg{future} package) can
 be used for asynchronous (parallel/distributed) or synchronous
@@ -21,17 +21,16 @@ Neither the developer nor the end user has to change any code.
 \section{Usage}{
 
 To use futures with the \pkg{foreach} package, load \pkg{doFuture},
-use \code{\link{registerDoFuture}()} to register it to be used as a
-\code{\%dopar\%} adaptor (need to ever use \code{\%do\%}).
+use \code{\link[=registerDoFuture]{registerDoFuture()}} to register it to be used as a
+\code{\%dopar\%} adapter (no need to ever use \code{\%do\%}).
 After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
-\code{\link[future:plan]{future::plan}()}.  For example:
-
+\code{\link[future:plan]{future::plan()}}.  For example:
 \itemize{
- \item {\code{plan(multiprocess)}: }{
-   multiple R processes on the local machine.}
- \item {\code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}: }{
-   multiple R processes on external machines.}
+\item \code{plan(multiprocess)}:
+multiple R processes on the local machine.
+\item \code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}:
+multiple R processes on external machines.
 }
 
 See the \pkg{future} package for more examples.
@@ -39,27 +38,28 @@ See the \pkg{future} package for more examples.
 
 \section{Built-in backends}{
 
-The built-in backends of \pkg{doFuture} are for instance multicore
-(forked processes), multisession (background R sessions), and
-ad-hoc cluster (background R sessions on local and / or remote machines).
+The built-in backends of \pkg{doFuture} are for instance 'multicore'
+(forked processes), 'multisession' (background R sessions), and
+ad-hoc 'cluster' (background R sessions on local and / or remote machines).
 Additional futures are provided by other "future" packages
 (see below for some examples).
 }
 
 \section{Backends for high-performance compute clusters}{
 
-The \pkg{future.BatchJobs} package provides support for high-performance
+The \pkg{future.batchtools} package provides support for high-performance
 compute (HPC) cluster schedulers such as SGE, Slurm, and TORQUE / PBS.
 For example,
 \itemize{
- \item {\code{plan(batchjobs_slurm)}: }{
-   Process via a Slurm scheduler job queue.}
- \item {\code{plan(batchjobs_torque)}: }{
-   Process via a TORQUE / PBS scheduler job queue.}
+\item \code{plan(batchtools_slurm)}:
+Process via a Slurm scheduler job queue.
+\item \code{plan(batchtools_torque)}:
+Process via a TORQUE / PBS scheduler job queue.
 }
-This builds on top of the queuing framework that the \pkg{BatchJobs}
+
+This builds on top of the queuing framework that the \pkg{batchtools}
 package provides. For more details on backend configuration, please see
-the \pkg{future.BatchJobs} and \pkg{BatchJobs} packages.
+the \pkg{future.Batchtools} and \pkg{batchtools} packages.
 }
 
 \section{Global variables and packages}{
@@ -72,7 +72,7 @@ get errors on one or missing variables when moving from running a
 \code{res <- foreach() \%dopar\% { ... }} statement on the local machine
 to, say, another machine on the same network.  The solution to the
 problem is to explicitly export those variables by specifying them in
-the \code{.export} argument to \code{\link[foreach:foreach]{foreach}()},
+the \code{.export} argument to \code{\link[foreach:foreach]{foreach::foreach()}},
 e.g. \code{foreach(..., .export = c("mu", "sigma"))}.  Likewise, if the
 expression needs specific packages to be attached, they can be listed
 in argument \code{.packages} of \code{foreach()}.
@@ -87,10 +87,10 @@ by the below example, which does \emph{not} specify
 detects that function \code{my_stat()} is needed and makes sure it is
 exported.  If you would use, say, \code{cl <- parallel::makeCluster(2)}
 and \code{doParallel::registerDoParallel(cl)}, you would get a run-time
-error on 'Error in \{ : task 1 failed - "could not find function "my_stat"'.
+error on \code{Error in \{ : task 1 failed - \"could not find function "my_stat" ...}.
 
 Having said this, note that, in order for your "foreach" code to work
-everywhere and with other types of foreach adaptors as well, you may
+everywhere and with other types of foreach adapters as well, you may
 want to make sure that you always specify arguments \code{.export}
 and \code{.packages}.
 }
@@ -103,7 +103,8 @@ controlled by \code{foreach()} option
 The value \code{scheduling} specifies the average number of futures
 ("chunks") per worker.
 If \code{0.0}, then a single future is used to process all iterations
-- none of the other workers are not used.
+\itemize{
+\item none of the other workers are not used.
 If \code{1.0} or \code{TRUE}, then one future per worker is used.
 If \code{2.0}, then each worker will process two futures (if there are
 enough iterations).
@@ -114,6 +115,19 @@ which in case that becomes the default.  In other words, it is also
 possible to disable load balancing by using
 \code{.options.multicore = list(preschedule = FALSE)}.
 }
+}
+
+\section{Random Number Generation (RNG)}{
+
+The \pkg{doFuture} package does \emph{not} itself provide a framework
+for generating proper random numbers in parallel. This is a deliberate
+design choice based on how the foreach ecosystem is set up.  For valid
+parallel RNG, it is recommended to use the \pkg{doRNG} package, where
+the \code{\link[doRNG:\%dorng\%]{\%dorng\%}} operator is used in place
+of \code{\link[foreach:\%dopar\%]{\%dopar\%}}.
+Note that \pkg{doRNG} is designed to work with any type of foreach
+adapter including \pkg{doFuture}.
+}
 
 \examples{
 \donttest{
@@ -121,18 +135,50 @@ library("doFuture")
 registerDoFuture()
 plan(multiprocess)
 
+
+## Example 1
+A <- matrix(rnorm(100^2), nrow = 100)
+B <- t(A)
+
+y1 <- apply(B, MARGIN = 2L, FUN = function(b) {
+  A \%*\% b
+})
+
+y2 <- foreach(b = iter(B, by='col'), .combine = cbind) \%dopar\% {
+  A \%*\% b
+}
+stopifnot(all.equal(y2, y1))
+
+
+
+## Example 2 - Simulation with parallel RNG
+library("doRNG")
+
 my_stat <- function(x) {
   median(x)
 }
 
 my_experiment <- function(n, mu = 0.0, sigma = 1.0) {
-  foreach(i = 1:n) \%dopar\% {
+  ## Important: use \%dorng\% whenever random numbers
+  ##            are involved in parallel evaluation
+  foreach(i = 1:n) \%dorng\% {
     x <- rnorm(i, mean = mu, sd = sigma)
     list(mu = mean(x), sigma = sd(x), own = my_stat(x))
   }
 }
 
-y <- my_experiment(n = 3)
-str(y)
+## Reproducible results when using the same RNG seed
+set.seed(0xBEEF)
+y1 <- my_experiment(n = 3)
+
+set.seed(0xBEEF)
+y2 <- my_experiment(n = 3)
+
+stopifnot(identical(y2, y1))
+
+## But only then
+y3 <- my_experiment(n = 3)
+str(y3)
+stopifnot(!identical(y3, y1))
 }
 }

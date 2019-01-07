@@ -4,12 +4,12 @@ find_rd_topics <- function(package) {
   path <- find.package(package)
   file <- file.path(path, "help", "aliases.rds")
   topics <- readRDS(file)
-  unique(topics)
+  sort(unique(topics))
 }
 
 test_topics <- local({
   topics <- NULL
-  function(package, subset = NULL, max_subset = NULL) {
+  function(package, subset = NA_integer_, max_subset = NULL) {
     if (is.null(topics)) {
       topics <- getOption("doFuture.tests.topics", find_rd_topics(package))
     
@@ -17,7 +17,8 @@ test_topics <- local({
       excl <- getOption("doFuture.tests.topics.ignore", NULL)
       topics <- setdiff(topics, excl)
     }
-    if (!is.null(subset)) {
+    subset <- as.integer(subset)
+    if (!is.na(subset)) {
       stopifnot(is.numeric(subset), is.numeric(max_subset))
       n <- length(topics)
       topics <- topics[split(1:n, sort(1:n %% max_subset))[[subset]]]
@@ -26,7 +27,7 @@ test_topics <- local({
   }
 })
 
-run_example <- function(topic, package, local = FALSE, envir = globalenv()) {
+run_example <- function(topic, package, local = FALSE, run.dontrun = TRUE, envir = globalenv()) {
   ovars <- ls(all.names = TRUE, envir = envir)
   on.exit({
     graphics.off()
@@ -36,7 +37,8 @@ run_example <- function(topic, package, local = FALSE, envir = globalenv()) {
   
   dt <- system.time({
     utils::example(topic = topic, package = package, character.only = TRUE,
-                   echo = TRUE, ask = FALSE, local = local)
+                   echo = TRUE, ask = FALSE, local = local,
+                   run.dontrun = run.dontrun)
   })
   
   dt <- dt[1:3]; names(dt) <- c("user", "system", "elapsed")
@@ -111,6 +113,9 @@ install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.
   if (file_test("-d", srcpath)) {
     destpath <- .libPaths()[1]
     pkgs <- dir(path = srcpath)
+    ## AD HOC: In case there are some 00LOCK- folders left behind,
+    ## ignore those.
+    pkgs <- grep("^00LOCK-", pkgs, value = TRUE, invert = TRUE)
     for (pkg in pkgs) {
       srcpkg <- file.path(srcpath, pkg)
       if (file_test("-d", srcpkg)) {

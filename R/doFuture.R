@@ -1,11 +1,13 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value getGlobalsAndPackages
+#' @importFrom future future resolve value FutureError getGlobalsAndPackages
 #' @importFrom parallel splitIndices
+#' @importFrom utils head
+#' @importFrom globals globalsByName
 doFuture <- function(obj, expr, envir, data) {   #nolint
-  stopifnot(inherits(obj, "foreach"))
-  stopifnot(inherits(envir, "environment"))
-
+  stop_if_not(inherits(obj, "foreach"))
+  stop_if_not(inherits(envir, "environment"))
+  
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture() ...")
 
@@ -16,48 +18,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   it <- iter(obj)
   args_list <- as.list(it)
   accumulator <- makeAccum(it)
-
+  
   ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
   argnames <- it$argnames
   argnames <- argnames[nzchar(argnames)]
-
-  nullexport <- getOption("doFuture.globals.nullexport")
-  if (!is.null(nullexport)) {
-    .Deprecated(msg = "Option 'doFuture.globals.nullexport' is deprecated.  Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.") # nolint
-    export <- if (nullexport) "automatic-unless-.export" else ".export"
-  } else {
-    export <- getOption("doFuture.foreach.export", "automatic-unless-.export")
-  }
-
-  ## Global variables?
-  if (export == "automatic-unless-.export") {
-    export_names <- unique(obj$export)
-    if (is.null(export_names)) {
-      globals <- TRUE
-    } else {
-      ## Export also the other foreach arguments
-      globals <- unique(c(export_names, "...future.x_ii"))
-      export_names <- NULL
-    }
-  } else if (export == ".export") {
-    globals <- unique(c(unique(obj$export), "...future.x_ii"))
-  } else if (export %in% c("automatic", ".export-and-automatic",
-                           ".export-and-automatic-with-warning")) {
-    globals <- TRUE
-  } else {
-    stop("Unknown value on option 'doFuture.foreach.export': ", sQuote(export))
-  }
-
-  ## Any packages to be on the search path?
-  pkgs <- obj$packages
-  if (length(pkgs) > 0L) {
-    exprs <- lapply(pkgs, FUN = function(p) call("library", p))
-    exprs <- c(exprs, expr)
-    expr <- Reduce(function(a, b) {
-      substitute({ a; b }, list(a = a, b = b))
-    }, x = exprs)
-    exprs <- NULL
-  }
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +37,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     mdebug("- dummy globals (as locals): [%d] %s",
            length(argnames), paste(sQuote(argnames), collapse = ", "))
   }
-  dummy_globals <- NULL  #nolint
+  dummy_globals <- NULL
   for (kk in seq_along(argnames)) {
     name <- as.symbol(argnames[kk])  #nolint
     if (kk == 1L) {
@@ -83,9 +47,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
   }
 
-
-  ## Tell foreach to keep using futures also in nested calls
   expr <- bquote({
+    ## Tell foreach to keep using futures also in nested calls
     doFuture::registerDoFuture()
 
     lapply(seq_along(...future.x_ii), FUN = function(jj) {
@@ -102,6 +65,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     })
   })
 
+  rm(list = "dummy_globals") ## Not needed anymore
+
   if (debug) {
     mdebug("- R expression:")
     mprint(expr)
@@ -111,68 +76,36 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 3. Indentify globals and packages
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (debug) {
-    mdebug("- identifying globals and packages ...")
-  }
-  globals_envir <- new.env(parent = envir)
-  assign("...future.x_ii", NULL, envir = globals_envir, inherits = FALSE)
-  gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                              globals = globals)
-  globals <- gp$globals
-  packages <- unique(c(gp$packages, pkgs))
-  expr <- gp$expr
-  rm(list = c("gp", "pkgs"))
-  names_globals <- names(globals)
-
-  ## Add automatically found globals to explicit '.export' globals?
-  if (export %in% c(".export-and-automatic",
-                    ".export-and-automatic-with-warning")) {
-    globals2 <- unique(obj$export)
-
-    ## Warn about automically found globals not in '.export'?
-    if (export == ".export-and-automatic-with-warning") {
-      missing <- setdiff(names_globals, c(globals2, "...future.x_ii",
-                                          "future.call.arguments"))
-      if (length(missing) > 0) {
-        warning(sprintf("Detected a foreach(..., .export = c(%s)) call where '.export' might lack one or more variables (of which some might be false positives): %s", paste(dQuote(globals2), collapse = ", "), paste(dQuote(missing), collapse = ", ")))
-      }
-    }
-    
-    ## Drop duplicates
-    globals2 <- setdiff(globals2, names_globals)
-    if (length(globals2) > 0) {
-      mdebug("  - appending %d '.export' globals (not already found): %s",
-             length(globals2), paste(sQuote(globals2)), collapse = ", ")
-      gp <- getGlobalsAndPackages(expr, envir = globals_envir,
-                                  globals = globals2)
-      globals2 <- gp$globals
-      packages <- unique(c(gp$packages, packages))
-      globals <- c(globals, globals2)
-      rm(list = "gp")
-    }
-    rm(list = "globals2")
-  }
+  if (debug) mdebug("- identifying globals and packages ...")
   
-  rm(list = c("globals_envir"))
+  gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
+                                       export = obj$export,
+                                       noexport = c(obj$noexport, argnames),
+                                       packages = obj$packages,
+                                       debug = debug)
 
+  expr <- gp$expr
+  globals <- gp$globals
+  packages <- gp$packages
+  scanForGlobals <- gp$scanForGlobals
+  rm(list = "gp")
+  
+  ## Have the future backend/framework handle also the required 'doFuture'
+  ## package.  That way we will get a more informative error message in
+  ## case it is missing.
+  packages <- c("doFuture", packages)
+  
   if (debug) {
+    mdebug("  - R expression:")
+    mprint(expr)
     mdebug("  - globals: [%d] %s", length(globals),
-           paste(sQuote(names_globals), collapse = ", "))
+           paste(sQuote(names(globals)), collapse = ", "))
     mstr(globals)
     mdebug("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
-    mdebug("  - R expression:")
-    mprint(expr)
+  
     mdebug("- identifying globals and packages ... DONE")
   }
-
-  ## At this point a globals should be resolved and we should know
-  ## their total size.
-  ## NOTE: This is 1st of the 2 places where we req future (>= 1.4.0)
-##  stopifnot(attr(globals, "resolved"), !is.na(attr(globals, "total_size")))
-  
-  ## Also make sure we've got our in-house '...future.x_ii' covered.
-  stopifnot("...future.x_ii" %in% names(globals))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,7 +123,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
-      stopifnot(length(preschedule) == 1L, !is.na(preschedule))
+      stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
       if (preschedule) {
         scheduling <- 1.0
       } else {
@@ -202,35 +135,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## (c) Otherwise, the default is to preschedule ("chunk")
   if (is.null(scheduling)) scheduling <- 1.0
 
-  stopifnot(length(scheduling) == 1, !is.na(scheduling),
-            is.numeric(scheduling) || is.logical(scheduling))
-
-  nbr_of_elements <- length(args_list)
-  if (is.logical(scheduling)) {
-    if (scheduling) {
-      nbr_of_futures <- nbrOfWorkers()
-      if (nbr_of_futures > nbr_of_elements)
-        nbr_of_futures <- nbr_of_elements
-    } else {
-      nbr_of_futures <- nbr_of_elements
-    }
-  } else {
-    stopifnot(scheduling >= 0)
-    nbr_of_workers <- nbrOfWorkers()
-    if (nbr_of_workers > nbr_of_elements) {
-      nbr_of_workers <- nbr_of_elements
-    }
-    nbr_of_futures <- scheduling * nbr_of_workers
-    if (nbr_of_futures < 1) {
-      nbr_of_futures <- 1L
-    }
-    else if (nbr_of_futures > nbr_of_elements) {
-      nbr_of_futures <- nbr_of_elements
-    }
-  }
-
-  chunks <- splitIndices(nbr_of_elements, ncl = nbr_of_futures)
-  mdebug("Number of chunks: %d", length(chunks))
+  chunks <- makeChunks(nbrOfElements = length(args_list),
+                       nbrOfWorkers = nbrOfWorkers(),
+                       future.scheduling = scheduling)
+  if (debug) mdebug("Number of chunks: %d", length(chunks))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -238,30 +146,106 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
-  mdebug("Number of futures (= number of chunks): %d", nchunks)
+  if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
 
-  mdebug("Launching %d futures (chunks) ...", nchunks)
+  ## Adjust option 'future.globals.maxSize' to account for the fact that more
+  ## than one element is processed per future.  The adjustment is done by
+  ## scaling up the limit by the number of elements in the chunk.  This is
+  ## a "good enough" approach.
+  ## (https://github.com/HenrikBengtsson/future.apply/issues/8,
+  ##  https://github.com/HenrikBengtsson/doFuture/issues/26)
+  globals.maxSize <- getOption("future.globals.maxSize")
+  if (nchunks > 1 && !is.null(globals.maxSize) && globals.maxSize < +Inf) {
+    globals.maxSize.default <- globals.maxSize
+    if (is.null(globals.maxSize.default)) globals.maxSize.default <- 500 * 1024^2
+
+    globals.maxSize.adjusted <- nchunks * globals.maxSize.default
+    options(future.globals.maxSize = globals.maxSize.adjusted)
+    on.exit(options(future.globals.maxSize = globals.maxSize), add = TRUE)
+
+    ## Adjust expression 'expr' such that the non-adjusted maxSize is used
+    ## within each future
+    expr <- bquote({
+      ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
+      if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
+        oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
+        on.exit(options(oopts), add = TRUE)
+      }
+      .(expr)
+    })
+
+    if (debug) {
+      mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
+      mdebug(" - Number of chunks: %d", nchunks)
+      mdebug(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
+      mdebug(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
+      mdebug("- R expression (adjusted):")
+      mprint(expr)
+    }
+  } else {
+    globals.maxSize.adjusted <- NULL
+  }
+
+  if (debug) mdebug("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
-    mdebug("Chunk #%d of %d ...", ii, length(chunks))
+    if (debug) mdebug("Chunk #%d of %d ...", ii, length(chunks))
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
-    globals_ii[["...future.x_ii"]] <- args_list[chunk]
-    ## NOTE: This is 2nd of the 2 places where we req future (>= 1.4.0)
-##    stopifnot(attr(globals_ii, "resolved"))
+    packages_ii <- packages
+    args_list_ii <- args_list[chunk]
+    globals_ii[["...future.x_ii"]] <- args_list_ii
 
+    if (scanForGlobals) {
+      if (debug) mdebug(" - Finding globals in 'args_list' chunk #%d ...", ii)
+      ## Search for globals in 'args_list_ii':
+      gp <- getGlobalsAndPackages(args_list_ii, envir = envir, globals = TRUE)
+      globals_X <- gp$globals
+      packages_X <- gp$packages
+      gp <- NULL
+
+      if (debug) {
+        mdebug("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
+        mdebug("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
+      }
+    
+      ## Export also globals found in 'args_list_ii'
+      if (length(globals_X) > 0L) {
+        reserved <- intersect(c("...future.FUN", "...future.x_ii"), names(globals_X))
+        if (length(reserved) > 0) {
+          stop("Detected globals in 'args_list' using reserved variables names: ",
+               paste(sQuote(reserved), collapse = ", "))
+        }
+        globals_ii <- unique(c(globals_ii, globals_X))
+
+        ## Packages needed due to globals in 'args_list_ii'?
+        if (length(packages_X) > 0L)
+          packages_ii <- unique(c(packages_ii, packages_X))
+      }
+      
+      rm(list = c("globals_X", "packages_X"))
+      
+      if (debug) mdebug(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
+    }
+
+    rm(list = "args_list_ii")
+    
+    if (!is.null(globals.maxSize.adjusted)) {
+      globals_ii <- c(globals_ii, ...future.globals.maxSize = globals.maxSize)
+    }
+    
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
-                       globals = globals_ii, packages = packages)
+                       globals = globals_ii, packages = packages_ii)
 
     ## Not needed anymore
-    rm(list = c("chunk", "globals_ii"))
+    rm(list = c("chunk", "globals_ii", "packages_ii"))
 
-    mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
+    if (debug) mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
   rm(list = c("chunks", "globals", "packages"))
-  mdebug("Launching %d futures (chunks) ... DONE", nchunks)
-  stopifnot(length(fs) == nchunks)
+  if (debug) mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  stop_if_not(length(fs) == nchunks)
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,16 +255,46 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- resolving futures")
   resolve(fs, value = TRUE)
 
+  ## Gather results and relay stdout and conditions (except errors)
+  if (debug) mdebug("- relaying conditions of futures")
+  dummy <- lapply(fs, FUN = function(f) {
+    tryCatch(value(f, stdout = TRUE, signal = TRUE), error = identity)
+  })
+  rm(list = "dummy")
+  
   ## Gather values
-  if (debug) mdebug("- collecting values of future")
-  results <- lapply(fs, FUN = value, signal = FALSE)
+  if (debug) mdebug("- collecting values of futures")
+  results <- lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)
   rm(list = "fs")
-  stopifnot(length(results) == nchunks)
+  stop_if_not(length(results) == nchunks)
 
   ## Reduce chunks
-  results <- Reduce(c, results)
-  stopifnot(length(results) == nbr_of_elements)
-
+  results2 <- do.call(c, args = results)
+    
+  if (length(results2) != length(args_list)) {
+    chunk_sizes <- sapply(results, FUN = length)
+    chunk_sizes <- table(chunk_sizes)
+    chunk_summary <- sprintf("%d chunks with %s elements",
+                             chunk_sizes, names(chunk_sizes))
+    chunk_summary <- paste(chunk_summary, collapse = ", ")
+    msg <- sprintf("Unexpected error in doFuture(): After gathering and merging the results from %d chunks in to a list, the total number of elements (= %d) does not match the number of input elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)", nchunks, length(results2), length(args_list), nchunks, sum(chunk_sizes), chunk_summary)
+    if (debug) {
+      mdebug(msg)
+      mprint(chunk_sizes)
+      mdebug("Results before merge chunks:")
+      mstr(results)
+      mdebug("Results after merge chunks:")
+      mstr(results2)
+    }
+    msg <- sprintf("%s. Example of the first few values: %s", msg,
+                   paste(capture.output(str(head(results2, 3L))),
+                         collapse = "\\n"))
+    ex <- FutureError(msg)
+    stop(ex)
+  }
+  results <- results2
+  rm(list = "results2")
+  
   ## Combine results (and identify errors)
   ## NOTE: This is adopted from foreach:::doSEQ()
   if (debug) mdebug("- accumulating results")
@@ -291,9 +305,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     print(e)
     NULL
   })
-  stopifnot(length(results) == nbr_of_elements)
+  rm(list = "results")
 
-
+  
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 7. Error handling
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -318,7 +332,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- extracting results")
   res <- getResult(it)
-
+  
   if (debug) mdebug("doFuture() ... DONE")
 
   res

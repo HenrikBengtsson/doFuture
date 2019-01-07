@@ -10,7 +10,11 @@ registerDoFuture()
 Nothing
 }
 \description{
-Register the \code{\link{doFuture}} parallel adaptor to be used by
+Register the \link{doFuture} parallel adapter to be used by
 the \pkg{foreach} package.
+}
+\examples{
+registerDoFuture()
+
 }
 \keyword{utilities}

@@ -1,15 +1,13 @@
-#' Options used by the doFuture adaptor 
+#' Options used by the doFuture adapter 
 #'
 #' Below are all \R options specific to the \pkg{doFuture} package.
-#' For options controlling futures in general,
-#' see \link[future:future.options]{the options} for the
-#' \pkg{future} package.\cr
+#' For options controlling futures in general, see
+#' [the options][future::future.options] for the \pkg{future} package.\cr
 #' \cr
-#' \emph{WARNING: Note that the names and the default values of
+#' _WARNING: Note that the names and the default values of
 #' these options may change in future versions of the package.
-#' Please use with care until further notice.}
+#' Please use with care until further notice._
 #'
-#' @section Options for controlling futures:
 #' \describe{
 #'  \item{\option{doFuture.foreach.export}:}{
 #'    Specifies to what extent the \code{.export} argument of
@@ -34,11 +32,9 @@
 #'    - this is helpful feedback to developers using \code{foreach()}.
 #' 
 #'    (Default: \code{"automatic-unless-.export"})}
-#' }
 #'
-#' @section Options for debugging:
-#' \describe{
-#'  \item{\option{doFuture.debug}:}{If \code{TRUE}, extensive debug messages are generated. (Default: \code{FALSE})}
+#'  \item{\option{doFuture.debug}:}{If `TRUE`, extensive debug messages are
+#'        generated. (Default: `FALSE`)}
 #' }
 #'
 #' @keywords internal
