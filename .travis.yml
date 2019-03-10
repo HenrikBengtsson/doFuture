@@ -9,10 +9,6 @@ warnings_are_errors: false
 r_check_args: --as-cran
 latex: false
 
-before_install:
-  - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
-  - export _R_CHECK_TIMINGS_=0
-
 r_packages:
   - future.BatchJobs
   - future.batchtools
@@ -38,10 +34,6 @@ matrix:
         - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
         - _R_CHECK_LENGTH_1_CONDITION_=true
         - _R_CHECK_LENGTH_1_LOGIC2_=true
-    - before_install:
-      - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
-      - export _R_CHECK_TIMINGS_=0
-      - _R_CHECK_LENGTH_1_LOGIC2_=false Rscript -e 'install.packages("lambda.r")'
     - os: osx
       r: oldrel
     - os: osx
@@ -404,6 +396,11 @@ matrix:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+
+before_install:
+  - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
+  - export _R_CHECK_TIMINGS_=0
+  - _R_CHECK_LENGTH_1_LOGIC2_=false Rscript -e 'install.packages("lambda.r")'
 
 notifications:
   email:
