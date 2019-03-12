@@ -1,6 +1,6 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
-#' @importFrom future future resolve value FutureError getGlobalsAndPackages
+#' @importFrom future future resolve value Future FutureError getGlobalsAndPackages
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
@@ -149,6 +149,14 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 5. Create futures
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Relay standard output or conditions?
+  stdout <- obj[["options"]][["future"]][["stdout"]]
+  if (is.null(stdout)) stdout <- eval(formals(Future)$stdout)
+
+  conditions <- obj[["options"]][["future"]][["conditions"]]
+  if (is.null(conditions)) conditions <- eval(formals(Future)$conditions)
+
+
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
   if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
@@ -241,7 +249,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
     
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
-                       globals = globals_ii, packages = packages_ii)
+                       globals = globals_ii, packages = packages_ii,
+		       stdout = stdout, conditions = conditions)
 
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii", "packages_ii"))

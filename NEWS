@@ -5,8 +5,8 @@ Version: 0.7.0-9000 [2019-03-11]
 
 NEW FEATURES:
 
- * The foreach() argument '.options.future' (a list) can already be used to
-   control whether "chunking" should take place or not, and if so, how much,
+ * The foreach() argument '.options.future' (a named list) can already be used
+   to control whether "chunking" should take place or not, and if so, how much,
    e.g. .options.future = list(scheduling = 2.0)).  As an alternative to
    'scheduling', this can now be specified by 'chunk.size' - the number of
    elements processed per future ("chunk").  In R 3.5.0, the parallel package
@@ -18,6 +18,11 @@ NEW FEATURES:
    This  improve load balancing in cases where there is a correlation
    between processing time and ordering of the elements. Note that the order of
    the returned values is not affected when randomizing the processing order.
+
+ * Passing argument '.options.future = list(stdout = ...)' can be used to
+   to control how standard output should be relayed.  See ?future::Future for
+   futher details.  Analogously, '.options.future = list(conditions = ...)'
+   can be used to control how messages and warnings are relayed, if at all.
 
 
 Version: 0.7.0 [2019-01-05]
