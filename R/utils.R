@@ -62,3 +62,10 @@ hpaste <- function(..., sep = "", collapse = ", ", lastCollapse = NULL, maxHead 
 
   x
 } # hpaste()
+
+
+stealth_sample.int <- function(n, size = n, replace = FALSE, ...) {
+  oseed <- .GlobalEnv$.Random.seed
+  on.exit(.GlobalEnv$.Random.seed <- oseed)
+  sample.int(n = n, size = size, replace = replace, ...)
+}

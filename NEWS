@@ -1,10 +1,24 @@
 Package: doFuture
 =================
 
-Version: 0.7.0-9000 [2019-01-07]
+Version: 0.7.0-9000 [2019-03-11]
 
- * ...
- 
+NEW FEATURES:
+
+ * The foreach() argument '.options.future' (a list) can already be used to
+   control whether "chunking" should take place or not, and if so, how much,
+   e.g. .options.future = list(scheduling = 2.0)).  As an alternative to
+   'scheduling', this can now be specified by 'chunk.size' - the number of
+   elements processed per future ("chunk").  In R 3.5.0, the parallel package
+   introduced argument 'chunk.size'.
+
+ * Elements can be processed in random order by setting attribute 'ordering'
+   of '.options.future' elements 'chunk.size' or 'scheduling', e.g. 
+   .options.future = list(chunk.size = structure(TRUE, ordering = "random")).
+   This  improve load balancing in cases where there is a correlation
+   between processing time and ordering of the elements. Note that the order of
+   the returned values is not affected when randomizing the processing order.
+
 
 Version: 0.7.0 [2019-01-05]
 

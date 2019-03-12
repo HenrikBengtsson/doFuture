@@ -112,14 +112,18 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## 4. Load balancing ("chunking")
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Options:
-  ## (a) .options.future = list(scheduling = <numeric>)
+  ## (a) .options.future = list(chunk.size = <numeric>)
+  ##      cf. future_lapply(..., future.chunk.size)
+  chunk.size <- obj[["options"]][["future"]][["chunk.size"]]
+
+  ## (b) .options.future = list(scheduling = <numeric>)
   ##      cf. future_lapply(..., future.scheduling)
   scheduling <- obj[["options"]][["future"]][["scheduling"]]
 
   ## If not set, fall back to:
-  ## (b) .options.multicore = list(preschedule = <logical>)
+  ## (c) .options.multicore = list(preschedule = <logical>)
   ##      cf. mclapply(..., preschedule)
-  if (is.null(scheduling)) {
+  if (is.null(chunk.size) && is.null(scheduling)) {
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
@@ -132,12 +136,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     }
   }
 
-  ## (c) Otherwise, the default is to preschedule ("chunk")
-  if (is.null(scheduling)) scheduling <- 1.0
+  ## (d) Otherwise, the default is to preschedule ("chunk")
+  if (is.null(scheduling) && is.null(scheduling)) scheduling <- 1.0
 
   chunks <- makeChunks(nbrOfElements = length(args_list),
                        nbrOfWorkers = nbrOfWorkers(),
-                       future.scheduling = scheduling)
+                       future.scheduling = scheduling,
+                       future.chunk.size = chunk.size)
   if (debug) mdebug("Number of chunks: %d", length(chunks))
 
 
