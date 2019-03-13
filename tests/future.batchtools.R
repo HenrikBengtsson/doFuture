@@ -53,9 +53,9 @@ for (strategy in strategies) {
     print(sessionInfo())
 
     x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
-    y0 <- llply(x, quantile, probs = (1:3)/4, .parallel = FALSE)
+    y0 <- llply(x, quantile, probs = (1:3) / 4, .parallel = FALSE)
     print(y0)
-    y1 <- llply(x, quantile, probs = (1:3)/4, .parallel = TRUE)
+    y1 <- llply(x, quantile, probs = (1:3) / 4, .parallel = TRUE)
     print(y1)
     stopifnot(all.equal(y1, y0))
 
