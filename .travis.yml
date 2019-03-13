@@ -25,6 +25,11 @@ matrix:
       r: release
     - os: linux
       r: devel
+      r_packages:
+        - doRNG
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
     - os: linux
       r: devel
       env:
