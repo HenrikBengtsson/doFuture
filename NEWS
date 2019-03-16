@@ -24,6 +24,8 @@ NEW FEATURES:
    futher details.  Analogously, '.options.future = list(conditions = ...)'
    can be used to control how messages and warnings are relayed, if at all.
 
+ * Debug messages are now prepended with a timestamp.
+ 
 
 Version: 0.7.0 [2019-01-05]
 
