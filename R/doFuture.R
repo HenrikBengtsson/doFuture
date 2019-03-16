@@ -34,7 +34,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## As a workaround, we will inject them as dummy variables in the expression
   ## inspected, making them look like local variables.
   if (debug) {
-    mdebug("- dummy globals (as locals): [%d] %s",
+    mdebugf("- dummy globals (as locals): [%d] %s",
            length(argnames), paste(sQuote(argnames), collapse = ", "))
   }
   dummy_globals <- NULL
@@ -98,10 +98,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) {
     mdebug("  - R expression:")
     mprint(expr)
-    mdebug("  - globals: [%d] %s", length(globals),
+    mdebugf("  - globals: [%d] %s", length(globals),
            paste(sQuote(names(globals)), collapse = ", "))
     mstr(globals)
-    mdebug("  - packages: [%d] %s", length(packages),
+    mdebugf("  - packages: [%d] %s", length(packages),
            paste(sQuote(packages), collapse = ", "))
   
     mdebug("- identifying globals and packages ... DONE")
@@ -143,7 +143,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
                        nbrOfWorkers = nbrOfWorkers(),
                        future.scheduling = scheduling,
                        future.chunk.size = chunk.size)
-  if (debug) mdebug("Number of chunks: %d", length(chunks))
+  if (debug) mdebugf("Number of chunks: %d", length(chunks))
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,7 +159,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
-  if (debug) mdebug("Number of futures (= number of chunks): %d", nchunks)
+  if (debug) mdebugf("Number of futures (= number of chunks): %d", nchunks)
 
   ## Adjust option 'future.globals.maxSize' to account for the fact that more
   ## than one element is processed per future.  The adjustment is done by
@@ -189,9 +189,9 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
     if (debug) {
       mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
-      mdebug(" - Number of chunks: %d", nchunks)
-      mdebug(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
-      mdebug(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
+      mdebugf(" - Number of chunks: %d", nchunks)
+      mdebugf(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
+      mdebugf(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
       mdebug("- R expression (adjusted):")
       mprint(expr)
     }
@@ -199,10 +199,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals.maxSize.adjusted <- NULL
   }
 
-  if (debug) mdebug("Launching %d futures (chunks) ...", nchunks)
+  if (debug) mdebugf("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
-    if (debug) mdebug("Chunk #%d of %d ...", ii, length(chunks))
+    if (debug) mdebugf("Chunk #%d of %d ...", ii, length(chunks))
 
     ## Subsetting outside future is more efficient
     globals_ii <- globals
@@ -211,7 +211,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals_ii[["...future.x_ii"]] <- args_list_ii
 
     if (scanForGlobals) {
-      if (debug) mdebug(" - Finding globals in 'args_list' chunk #%d ...", ii)
+      if (debug) mdebugf(" - Finding globals in 'args_list' chunk #%d ...", ii)
       ## Search for globals in 'args_list_ii':
       gp <- getGlobalsAndPackages(args_list_ii, envir = envir, globals = TRUE)
       globals_X <- gp$globals
@@ -219,8 +219,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       gp <- NULL
 
       if (debug) {
-        mdebug("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
-        mdebug("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
+        mdebugf("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
+        mdebugf("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
       }
     
       ## Export also globals found in 'args_list_ii'
@@ -239,7 +239,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       
       rm(list = c("globals_X", "packages_X"))
       
-      if (debug) mdebug(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
+      if (debug) mdebugf(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
     }
 
     rm(list = "args_list_ii")
@@ -255,10 +255,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii", "packages_ii"))
 
-    if (debug) mdebug("Chunk #%d of %d ... DONE", ii, nchunks)
+    if (debug) mdebugf("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
   rm(list = c("chunks", "globals", "packages"))
-  if (debug) mdebug("Launching %d futures (chunks) ... DONE", nchunks)
+  if (debug) mdebugf("Launching %d futures (chunks) ... DONE", nchunks)
   stop_if_not(length(fs) == nchunks)
 
 
@@ -329,7 +329,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## NOTE: This is adopted from foreach:::doSEQ()
   error_handling <- obj$errorHandling
   if (debug) {
-    mdebug("- processing errors (handler = %s)", sQuote(error_handling))
+    mdebugf("- processing errors (handler = %s)", sQuote(error_handling))
   }
   error_value <- getErrorValue(it)
   if (identical(error_handling, "stop") && !is.null(error_value)) {

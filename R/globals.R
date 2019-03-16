@@ -86,7 +86,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   if (globalsAs != "manual") {
     globals2 <- setdiff(export, names_globals)
     if (length(globals2) > 0) {
-      mdebug("  - appending %d '.export' globals (not already found through automatic lookup): %s",
+      mdebugf("  - appending %d '.export' globals (not already found through automatic lookup): %s",
              length(globals2), paste(sQuote(globals2)), collapse = ", ")
       gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                                   globals = globals2)

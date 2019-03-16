@@ -1,6 +1,11 @@
 mdebug <- function(...) {
   if (!getOption("doFuture.debug", FALSE)) return()
-  message(paste(sprintf(...), collapse = "\n"))
+  message(paste(..., collapse = "\n"))
+}
+
+mdebugf <- function(..., appendLF = TRUE) {
+  if (!getOption("doFuture.debug", FALSE)) return()
+  message(paste(sprintf(...), collapse = "\n"), appendLF = appendLF)
 }
 
 #' @importFrom utils capture.output str
