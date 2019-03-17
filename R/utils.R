@@ -1,18 +1,29 @@
-mdebug <- function(...) {
-  if (!getOption("doFuture.debug", FALSE)) return()
-  message(paste(sprintf(...), collapse = "\n"))
+now <- function(x = Sys.time(), format = "[%H:%M:%OS3] ") {
+  ## format(x, format = format) ## slower
+  format(as.POSIXlt(x, tz = ""), format = format)
+}
+
+mdebug <- function(..., debug = getOption("doFuture.debug", FALSE)) {
+  if (!debug) return()
+  message(now(), ...)
+}
+
+mdebugf <- function(..., appendLF = TRUE,
+                    debug = getOption("doFuture.debug", FALSE)) {
+  if (!debug) return()
+  message(now(), sprintf(...), appendLF = appendLF)
 }
 
 #' @importFrom utils capture.output str
-mstr <- function(...) {
-  if (!getOption("doFuture.debug", FALSE)) return()
-  message(paste(capture.output(str(...)), collapse = "\n"))
+mstr <- function(..., debug = getOption("doFuture.debug", FALSE)) {
+  if (!debug) return()
+  message(paste(now(), capture.output(str(...)), sep = "", collapse = "\n"))
 }
 
 #' @importFrom utils capture.output
-mprint <- function(...) {
-  if (!getOption("doFuture.debug", FALSE)) return()
-  message(paste(capture.output(print(...)), collapse = "\n"))
+mprint <- function(..., debug = getOption("doFuture.debug", FALSE)) {
+  if (!debug) return()
+  message(paste(now(), capture.output(print(...)), sep = "", collapse = "\n"))
 }
 
 stop_if_not <- function(...) {
@@ -62,3 +73,10 @@ hpaste <- function(..., sep = "", collapse = ", ", lastCollapse = NULL, maxHead 
 
   x
 } # hpaste()
+
+
+stealth_sample.int <- function(n, size = n, replace = FALSE, ...) {
+  oseed <- .GlobalEnv$.Random.seed
+  on.exit(.GlobalEnv$.Random.seed <- oseed)
+  sample.int(n = n, size = size, replace = replace, ...)
+}

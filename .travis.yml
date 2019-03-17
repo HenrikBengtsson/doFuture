@@ -21,39 +21,38 @@ matrix:
   include:
     - os: linux
       r: oldrel
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
     - os: linux
       r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
-      r_github_packages:
-        - jimhester/covr
-      after_success:
-        - Rscript -e 'covr::codecov(quiet = FALSE)'
-      env: NB='w/ covr' ## Just a label
     - os: linux
       r: devel
       r_packages:
+        - doRNG
         - future.BatchJobs
         - future.batchtools
+        - plyr
+    - os: linux
+      r: devel
+      env:
+        - R_KEEP_PKG_SOURCE=yes
+        - _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
+        - _R_S3_METHOD_LOOKUP_USE_TOPENV_AS_DEFENV_=true
+        - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
+        - _R_CHECK_LENGTH_1_CONDITION_=true
+        - _R_CHECK_LENGTH_1_LOGIC2_=true
     - os: osx
       r: oldrel
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
     - os: osx
       r: release
-      r_packages:
-        - future.BatchJobs
-        - future.batchtools
     - os: linux
       r: release
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       r_packages:
-        - future.BatchJobs
-        - future.batchtools
+        - covr
+      after_success:
+        - Rscript -e 'covr::codecov(quiet=FALSE)'
+      env: NB='w/ covr' ## Just a label
+    - os: linux
+      r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ foreach' ## Just a label
@@ -403,10 +402,10 @@ matrix:
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
 
-
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
   - export _R_CHECK_TIMINGS_=0
+  - _R_CHECK_LENGTH_1_LOGIC2_=false Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
 
 notifications:
   email:
