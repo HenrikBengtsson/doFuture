@@ -49,7 +49,7 @@ for (type in types) {
   message(sprintf("Test set #1 with cluster type %s ...", sQuote(type)))
 
   cl <- setupClusterWithoutPkgs(type, withouts = c("future", "doFuture"))  
-  if (all(attr(cl, "withs") && !all(attr(cl, "withouts")))) {
+  if (all(attr(cl, "withs")) && !all(attr(cl, "withouts"))) {
     plan(cluster, workers = cl, .init = FALSE)
     
     ## Here we will get:
@@ -67,7 +67,7 @@ for (type in types) {
   }
   
   cl <- setupClusterWithoutPkgs(type)  
-  if (all(attr(cl, "withs") && !all(attr(cl, "withouts")))) {
+  if (all(attr(cl, "withs")) && !all(attr(cl, "withouts"))) {
     plan(cluster, workers = cl, .init = FALSE)
     
     ## Here we will get:

@@ -1,10 +1,13 @@
 Package: doFuture
 =================
 
-Version: 0.8.0-9000 [2019-03-17]
+Version: 0.8.0-9000 [2019-05-05]
 
- * ...
+BUG FIXES:
 
+ * One of the package tests had a _R_CHECK_LENGTH_1_LOGIC2_=true bug. This bug
+   did _not_ affect how the package worked or any of its results.
+ 
 
 Version: 0.8.0 [2019-03-17]
 
