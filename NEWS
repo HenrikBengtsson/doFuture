@@ -3,6 +3,10 @@ Package: doFuture
 
 Version: 0.8.0-9000 [2019-05-15]
 
+NEW FEATURES:
+
+ * Standard output and conditions are now relayed as soon as possible.
+
 BUG FIXES:
 
  * One of the package tests had a _R_CHECK_LENGTH_1_LOGIC2_=true bug. This bug
