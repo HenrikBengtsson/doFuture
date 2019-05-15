@@ -267,11 +267,16 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Resolve futures
   if (debug) mdebug("- resolving futures")
-  resolve(fs, value = TRUE)
+  ## FIXME: Add ASAP relaying available in future (>= 1.14.0)
+  ## resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
+  resolve(fs, result = TRUE)
 
   ## Gather results and relay stdout and conditions (except errors)
   if (debug) mdebug("- relaying conditions of futures")
   dummy <- lapply(fs, FUN = function(f) {
+    ## FIXME: Use new resignalConditions() in future (>= 1.14.0):
+    ## value(f, stdout = TRUE, signal = FALSE)
+    ## resignalConditions(f, exclude = "error")
     tryCatch(value(f, stdout = TRUE, signal = TRUE), error = identity)
   })
   rm(list = "dummy")
