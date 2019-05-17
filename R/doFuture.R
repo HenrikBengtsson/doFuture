@@ -276,11 +276,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     if (debug) mdebug("- gathering results")
     resolve(fs, result = TRUE)
     if (debug) mdebug("- relaying conditions (except errors)")
-    dummy <- lapply(fs, FUN = function(f) {
+    lapply(fs, FUN = function(f) {
       tryCatch(value(f, stdout = TRUE, signal = TRUE), error = identity)
     })
   }
-  rm(list = "dummy")
   
   ## Gather values
   if (debug) mdebug("- collecting values of futures")
