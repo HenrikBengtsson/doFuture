@@ -269,20 +269,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- resolving futures")
   future_develop <- (packageVersion("future") >= "1.13.0-9000")
   if (future_develop) {
-    resignalConditions <- import_future("resignalConditions")
+    if (debug) mdebug("- gathering results & relaying conditions  (except errors)")
+    ## Gather results and relay stdout and conditions (except errors)
     resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
   } else {
+    if (debug) mdebug("- gathering results")
     resolve(fs, result = TRUE)
-  }
-
-  ## Gather results and relay stdout and conditions (except errors)
-  if (debug) mdebug("- relaying conditions of futures")
-  if (future_develop) {
-    dummy <- lapply(fs, FUN = function(f) {
-      value(f, stdout = TRUE, signal = FALSE)
-      resignalConditions(f, exclude = "error")
-    })
-  } else {
+    if (debug) mdebug("- relaying conditions (except errors)")
     dummy <- lapply(fs, FUN = function(f) {
       tryCatch(value(f, stdout = TRUE, signal = TRUE), error = identity)
     })
