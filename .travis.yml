@@ -1,6 +1,11 @@
 #----------------------------------------------------------------
-# Travis-CI Configuration for R Packages
-# https://docs.travis-ci.com/user/languages/r
+# Travis-CI configuration for R packages
+#
+# REFERENCES:
+# * Travis CI: https://docs.travis-ci.com/user/languages/r
+# * covr: https://github.com/jimhester/covr
+#
+# YAML validated using http://www.yamllint.com/
 #----------------------------------------------------------------
 language: r
 sudo: false
@@ -22,6 +27,10 @@ matrix:
       r: oldrel
     - os: linux
       r: release
+    - os: linux
+      r: release
+      env:
+        - R_FUTURE_FORKS_ENABLED=false
     - os: linux
       r: devel
       r_packages:
