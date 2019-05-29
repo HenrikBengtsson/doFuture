@@ -51,14 +51,14 @@ for (strategy1 in strategies) {
         message(capture.output(print(plan_list)))
         stopifnot(
           inherits(plan_list, "future"),
-          inherits(plan_list, getOption("future.default", "sequential"))
+          inherits(plan_list, getOption("future.plan", "sequential"))
         )
 
         plan_b <- future::plan("list")
         str(plan_b)
         stopifnot(
           inherits(plan_b[[1]], "future"),
-          inherits(plan_b[[1]], getOption("future.default", "sequential"))
+          inherits(plan_b[[1]], getOption("future.plan", "sequential"))
         )
 
         list(a = a, plan_a = plan_a,
@@ -87,7 +87,7 @@ for (strategy1 in strategies) {
             inherits(x_aa_bb$plan_a[[1]], strategy2),
             inherits(x_aa_bb$plan_b[[1]], "future"),
             inherits(x_aa_bb$plan_b[[1]],
-                     getOption("future.default", "sequential"))
+                     getOption("future.plan", "sequential"))
           )
         }
       }
