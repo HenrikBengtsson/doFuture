@@ -49,17 +49,19 @@ for (strategy1 in strategies) {
       y <- foreach(b = bs, .export = c("a", "plan_a")) %dopar% {
         plan_list <- future::plan()
         message(capture.output(print(plan_list)))
-        stopifnot(
-          inherits(plan_list, "future"),
-          inherits(plan_list, getOption("future.plan", "sequential"))
-        )
+	
+        stopifnot(inherits(plan_list, "future"))
+        ## future.plan can be either a string or a future function
+        default <- getOption("future.plan", "sequential")
+        if (is.function(default)) default <- class(default)
+        stopifnot(inherits(plan_list, default))
 
         plan_b <- future::plan("list")
         str(plan_b)
         stopifnot(
-          inherits(plan_b[[1]], "future"),
-          inherits(plan_b[[1]], getOption("future.plan", "sequential"))
-        )
+	  inherits(plan_b[[1]], "future"),
+          inherits(plan_b[[1]], default)
+	)
 
         list(a = a, plan_a = plan_a,
              b = b, plan_b = plan_b)
