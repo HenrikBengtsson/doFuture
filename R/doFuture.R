@@ -269,7 +269,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   if (debug) mdebug("- resolving futures")
   future_develop <- (packageVersion("future") >= "1.13.0-9000")
   if (future_develop) {
-    if (debug) mdebug("- gathering results & relaying conditions  (except errors)")
+    if (debug) mdebug("- gathering results & relaying conditions (except errors)")
     ## Gather results and relay stdout and conditions (except errors)
     resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
   } else {
