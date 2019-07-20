@@ -9,8 +9,8 @@
 |language |en                                          |
 |collate  |en_US.UTF-8                                 |
 |ctype    |en_US.UTF-8                                 |
-|tz       |America/Los_Angeles                         |
-|date     |2019-06-24                                  |
+|tz       |Europe/Stockholm                            |
+|date     |2019-07-20                                  |
 
 # Dependencies
 
@@ -18,9 +18,9 @@
 |:---------|:------|:----------|:--|
 |doFuture  |0.8.0  |0.8.0-9000 |*  |
 |codetools |0.2-16 |0.2-16     |   |
-|digest    |0.6.19 |0.6.19     |   |
+|digest    |0.6.20 |0.6.20     |   |
 |foreach   |1.4.4  |1.4.4      |   |
-|future    |1.13.0 |1.13.0     |   |
+|future    |1.14.0 |1.14.0     |   |
 |globals   |0.12.4 |0.12.4     |   |
 |iterators |1.0.10 |1.0.10     |   |
 |listenv   |0.7.0  |0.7.0      |   |
