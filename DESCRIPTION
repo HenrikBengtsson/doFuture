@@ -1,9 +1,9 @@
 Package: doFuture
-Version: 0.8.0
+Version: 0.8.1
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     globals (>= 0.12.4),
-    future (>= 1.12.0),
+    future (>= 1.14.0),
     foreach (>= 1.4.4),
     iterators (>= 1.0.9),
     parallel,

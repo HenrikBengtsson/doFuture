@@ -266,15 +266,12 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## 6. Resolve futures, gather their values, and reduce
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Resolve futures
-  if (debug) mdebug("- resolving futures")
-  resolve(fs, value = TRUE)
-
+  if (debug) {
+    mdebug("- resolving futures")
+    mdebug("  - gathering results & relaying conditions (except errors)")
+  }
   ## Gather results and relay stdout and conditions (except errors)
-  if (debug) mdebug("- relaying conditions of futures")
-  dummy <- lapply(fs, FUN = function(f) {
-    tryCatch(value(f, stdout = TRUE, signal = TRUE), error = identity)
-  })
-  rm(list = "dummy")
+  resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
   
   ## Gather values
   if (debug) mdebug("- collecting values of futures")
