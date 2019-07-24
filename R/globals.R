@@ -11,12 +11,8 @@ globalsAs <- function() {
     globalsAs <- "future-with-warning"
   } else if (t == ".export") {
     globalsAs <- "manual"
-  } else if (t == "automatic") {
-    .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
-    globalsAs <- "future"
-  } else if (t == "automatic-unless-.export") {
-    .Deprecated(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
-    globalsAs <- "future"
+  } else if (t %in% c("automatic", "automatic-unless-.export")) {
+    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
   } else {
     .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
   }

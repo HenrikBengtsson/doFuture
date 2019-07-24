@@ -104,35 +104,20 @@ str(res5)
 stopifnot(inherits(res5, "warning"))
 
 
-message("- Deprecated")
+message("- Defunct")
+
+options(doFuture.foreach.export = "automatic")
+res <- tryCatch({
+  message("globalsAs: ", globalsAs())
+}, error = identity)
+stopifnot(inherits(res, "error"))
 
 options(doFuture.foreach.export = "automatic-unless-.export")
 res <- tryCatch({
   message("globalsAs: ", globalsAs())
-}, warning = identity)
-stopifnot(inherits(res, "warning"))
-stopifnot(globalsAs() == "future")
+}, error = identity)
+stopifnot(inherits(res, "error"))
 
-y1 <- foreach(1:2, .export = c("a", "b")) %dopar% { b * a }
-str(y1)
-stopifnot(identical(y1, y_truth))
-y2 <- foreach(1:2) %dopar% { b * a }
-str(y2)
-stopifnot(identical(y2, y_truth))
-y3 <- foreach(1:2, .export = NULL) %dopar% { b * a }
-str(y3)
-stopifnot(identical(y3, y_truth))
-
-if (FALSE) {
-  res4 <- tryCatch({
-    y4 <- foreach(1:2, .export = "b") %dopar% { b * a }
-  }, error = identity)
-  stopifnot(inherits(res4, "error"))
-  res5 <- tryCatch({
-    y5 <- foreach(1:2, .export = "c") %dopar% { b * a }
-  }, error = identity)
-  stopifnot(inherits(res5, "error"))
-}
 
 message("- exceptions")
 

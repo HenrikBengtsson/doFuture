@@ -1,9 +1,12 @@
 Package: doFuture
 =================
 
-Version: 0.8.1-9000 [2019-07-20]
+Version: 0.8.9-9000 [2019-07-24]
 
- * ...
+DEPRECATED AND DEFUNCT:
+
+ * Option 'doFuture.foreach.export' values 'automatic-unless-.export' and
+   'automatic' are defunct. They have been deprecated since doFuture 0.7.0.
 
 
 Version: 0.8.1 [2019-07-20]
@@ -88,11 +91,11 @@ BUG FIXES:
  * foreach() would not relay captured conditions as provided by
    future (>= 0.11.0).
 
-DEPRECATED:
+DEPRECATED AND DEFUNCT:
 
  * Previously deprecated option 'doFuture.foreach.nullexport' is defunct.
 
- * Option 'doFuture.foreach.export' values 'automatic-unless-export' and
+ * Option 'doFuture.foreach.export' values 'automatic-unless-.export' and
    'automatic' are defunct and will fall back to 'export-and-automatic'.
 
 
