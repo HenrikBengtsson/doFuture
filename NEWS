@@ -1,12 +1,18 @@
 Package: doFuture
 =================
 
-Version: 0.8.9-9000 [2019-07-24]
+Version: 0.8.9-9000 [2019-10-17]
 
 DEPRECATED AND DEFUNCT:
 
  * Option 'doFuture.foreach.export' values 'automatic-unless-.export' and
    'automatic' are defunct. They have been deprecated since doFuture 0.7.0.
+
+BUG FIXES:
+
+ * Package could set '.Random.seed' to NULL, instead of removing it, which in
+   turn would produce a warning on "'.Random.seed' is not an integer vector but
+   of type 'NULL', so ignored" when the next random number generated.
 
 
 Version: 0.8.1 [2019-07-20]
