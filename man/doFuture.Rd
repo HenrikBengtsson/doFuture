@@ -98,23 +98,32 @@ and \code{.packages}.
 \section{Load balancing ("chunking")}{
 
 Whether load balancing ("chunking") should take place or not can be
-controlled by \code{foreach()} option
-\code{.options.future = list(scheduling = <value>)}.
+controlled specifying either
+\code{.options.future = list(scheduling = <ratio>)} or
+\code{.options.future = list(chunk_size = <count>)} to \code{foreach()}.
+
+The value \code{chunk.size} specifies the average number of elements
+processed per future ("chunks").
+If \code{+Inf}, then all elements are processed in a single future (one worker).
+If \code{NULL}, then argument \code{future.scheduling} is used.
+
 The value \code{scheduling} specifies the average number of futures
-("chunks") per worker.
-If \code{0.0}, then a single future is used to process all iterations
-\itemize{
-\item none of the other workers are not used.
+("chunks") that each worker processes.
+If \code{0.0}, then a single future is used to process all iterations;
+none of the other workers are not used.
 If \code{1.0} or \code{TRUE}, then one future per worker is used.
 If \code{2.0}, then each worker will process two futures (if there are
 enough iterations).
-If \code{Inf} or \code{FALSE}, then one future per iteration is used.
-The default value is \code{scheduling = 1.0}, unless option
-\code{.options.multicore = list(preschedule = <logical>)} is set,
-which in case that becomes the default.  In other words, it is also
-possible to disable load balancing by using
-\code{.options.multicore = list(preschedule = FALSE)}.
-}
+If \code{+Inf} or \code{FALSE}, then one future per iteration is used.
+The default value is \code{scheduling = 1.0}.
+
+For "backward" compatibility reasons with existing foreach code, one
+also use \code{.options.multicore = list(preschedule = <logical>)}, which
+if set overrides the above two options.
+\code{.options.multicore = list(preschedule = TRUE)} is equivalent to
+\code{.options.future = list(scheduling = 1.0)} and
+\code{.options.multicore = list(preschedule = FALSE)} is equivalent to
+\code{.options.future = list(scheduling = +Inf)}.
 }
 
 \section{Random Number Generation (RNG)}{
