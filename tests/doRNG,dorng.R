@@ -3,6 +3,11 @@ source("incl/start.R")
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
 
+## Due to a bug in doRNG (https://github.com/renozao/doRNG/issues/12), we
+## need to initiate the RNG state in order to achieve full reproducibility
+## FIXME: Keep an eye on doRNG and remove this if it get fixed /HB 2019-10-26
+if (utils::packageVersion("future") > "1.14.0") sample.int(1L)
+
 ## Adopted from demo("doRNG", package = "doRNG")
 if (require("doRNG")) {
 
