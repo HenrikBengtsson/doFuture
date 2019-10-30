@@ -12,14 +12,22 @@ y1 <- apply(B, MARGIN = 2L, FUN = function(b) {
   A %*% b
 })
 
-y2 <- foreach(b = iter(B, by='col'), .combine = cbind) %dopar% {
+y2 <- foreach(b = iter(B, by="col"), .combine = cbind) %dopar% {
   A %*% b
 }
 stopifnot(all.equal(y2, y1))
 
 
 
-## Example 2 - Simulation with parallel RNG
+## Example 2 - Chunking (4 elements per future [= worker])
+y3 <- foreach(b = iter(B, by="col"), .combine = cbind,
+              .options.future = list(chunk.size = 10)) %dopar% {
+  A %*% b
+}
+stopifnot(all.equal(y3, y1))
+
+
+## Example 3 - Simulation with parallel RNG
 library("doRNG")
 
 my_stat <- function(x) {

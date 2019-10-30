@@ -1,6 +1,24 @@
 Package: doFuture
 =================
 
+Version: 0.8.2 [2019-10-29]
+
+DOCUMENTATION:
+
+ * Document also .options.future = list(chunk_size = <count>) to foreach().
+
+DEPRECATED AND DEFUNCT:
+
+ * Option 'doFuture.foreach.export' values 'automatic-unless-.export' and
+   'automatic' are defunct. They have been deprecated since doFuture 0.7.0.
+
+BUG FIXES:
+
+ * Package could set '.Random.seed' to NULL, instead of removing it, which in
+   turn would produce a warning on "'.Random.seed' is not an integer vector but
+   of type 'NULL', so ignored" when the next random number generated.
+
+
 Version: 0.8.1 [2019-07-20]
 
 NEW FEATURES:
@@ -83,11 +101,11 @@ BUG FIXES:
  * foreach() would not relay captured conditions as provided by
    future (>= 0.11.0).
 
-DEPRECATED:
+DEPRECATED AND DEFUNCT:
 
  * Previously deprecated option 'doFuture.foreach.nullexport' is defunct.
 
- * Option 'doFuture.foreach.export' values 'automatic-unless-export' and
+ * Option 'doFuture.foreach.export' values 'automatic-unless-.export' and
    'automatic' are defunct and will fall back to 'export-and-automatic'.
 
 
