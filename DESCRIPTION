@@ -1,5 +1,5 @@
 Package: doFuture
-Version: 0.8.2
+Version: 0.8.2-9000
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     globals (>= 0.12.4),
