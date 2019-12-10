@@ -1,4 +1,4 @@
-#' Registers the future \%dopar\% backend
+#' Registers the future %dopar% backend
 #'
 #' Register the [doFuture] parallel adapter to be used by
 #' the \pkg{foreach} package.

@@ -120,5 +120,6 @@
 #' @example incl/doFuture.R
 #'
 #' @docType package
+#' @aliases doFuture-package
 #' @name doFuture
 NULL
