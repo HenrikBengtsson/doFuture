@@ -3,7 +3,10 @@ Package: doFuture
 
 Version: 0.8.2-9000 [2019-12-28]
 
- * ...
+NEW FEATURES:
+
+ * Now doFuture sets a label on each future that reflects its name and the
+   index of the chunk, e.g. 'doFuture-3'.
 
 
 Version: 0.8.2 [2019-10-29]

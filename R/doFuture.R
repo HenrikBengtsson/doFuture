@@ -199,6 +199,8 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals.maxSize.adjusted <- NULL
   }
 
+  labels <- sprintf("doFuture-%s", seq_len(nchunks))
+
   if (debug) mdebugf("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
@@ -251,14 +253,15 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages_ii,
                        seed = NULL,
-                       stdout = stdout, conditions = conditions)
+                       stdout = stdout, conditions = conditions,
+		       label = labels[ii])
 
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii", "packages_ii"))
 
     if (debug) mdebugf("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
-  rm(list = c("chunks", "globals", "packages"))
+  rm(list = c("chunks", "globals", "packages", "labels"))
   if (debug) mdebugf("Launching %d futures (chunks) ... DONE", nchunks)
   stop_if_not(length(fs) == nchunks)
 
