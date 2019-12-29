@@ -250,6 +250,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages_ii,
+                       seed = NULL,
                        stdout = stdout, conditions = conditions)
 
     ## Not needed anymore
