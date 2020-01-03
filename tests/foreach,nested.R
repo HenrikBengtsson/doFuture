@@ -16,7 +16,7 @@ for (strategy1 in strategies) {
     as <- 1:2
     bs <- 3:1
     x <- foreach(a = as) %:% foreach(b = bs) %dopar% {
-      list(a = a, b = b, plan_b = future::plan("list"), plan = future::plan())
+      list(a = a, b = b, plan_b = future::plan("list"), plan = future::plan("next"))
     }
 
     stopifnot(length(x) == length(as))
