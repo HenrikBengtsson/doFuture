@@ -2,7 +2,7 @@
 
 |field    |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.6.1 (2019-07-05) |
+|version  |R version 3.6.2 (2019-12-12) |
 |os       |Ubuntu 18.04.3 LTS           |
 |system   |x86_64, linux-gnu            |
 |ui       |X11                          |
@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |America/Los_Angeles          |
-|date     |2019-11-26                   |
+|date     |2020-01-07                   |
 
 # Dependencies
 
@@ -20,9 +20,9 @@
 |digest    |0.6.23 |0.6.23     |   |
 |foreach   |1.4.7  |1.4.7      |   |
 |future    |1.15.1 |1.15.1     |   |
-|globals   |0.12.4 |0.12.4     |   |
+|globals   |0.12.5 |0.12.5     |   |
 |iterators |1.0.12 |1.0.12     |   |
-|listenv   |0.7.0  |0.7.0      |   |
+|listenv   |0.8.0  |0.8.0      |   |
 
 # Revdeps
 
