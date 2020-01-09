@@ -10,6 +10,15 @@ pkg <- tests2_step("start", package = "glmnet",
 ## simply set up a dummy registerDoMC() here.
 registerDoMC <- function(...) NULL
 
+## Skip example("cv.glmnet", package = "glmnet", run.dontrun = TRUE) because
+## it produces an error also with 'R --vanilla';
+##   Error in cbind2(1, newx) %*% nbeta : 
+##     Cholmod error 'X and/or Y have wrong dimensions' at file
+##     ../MatrixOps/cholmod_sdmult.c, line 90
+## /HB 2020-01-09
+excl_topics <- "cv.glmnet"
+options(doFuture.tests.topics.ignore = excl_topics)
+
 mprintf("*** doFuture() - all %s examples ...", pkg)
 
 for (strategy in test_strategies()) {
