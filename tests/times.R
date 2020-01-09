@@ -13,9 +13,12 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
+  ## NOTE: Using times() with %dopar% without proper parallel RNG will likely
+  ## produce unreliable results.  Here we don't produce random numbers so it
+  ## is ok, but it's a toy example because just like base::replicate(),
+  ## foreach::times() is commonly used for resampling purposes.
   res <- times(3L) %dopar% {
-    set.seed(0xBEEF)
-    rnorm(2L, mean = mu, sd = sigma)
+    dnorm(2L, mean = mu, sd = sigma)
   }
   print(res)
 
