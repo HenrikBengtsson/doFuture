@@ -4,8 +4,8 @@ Title: A Universal Foreach Parallel Adapter using the Future API of the 'future'
 Depends:
     globals (>= 0.12.5),
     future (>= 1.15.1),
-    foreach (>= 1.4.4),
-    iterators (>= 1.0.9),
+    foreach (>= 1.4.7),
+    iterators (>= 1.0.12),
     parallel,
     utils
 Suggests:
