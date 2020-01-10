@@ -1,12 +1,16 @@
 Package: doFuture
 =================
 
-Version: 0.8.2-9000 [2020-01-09]
+Version: 0.8.2-9000 [2020-01-10]
 
 NEW FEATURES:
 
  * Now doFuture sets a label on each future that reflects its name and the
    index of the chunk, e.g. 'doFuture-3'.
+
+ * doFuture will now detect when doRNG is in use allowing underlying futures
+   to skip the test of incorrectly generated random numbers - an optional
+   validation of parallel RNG that will be added to future (>= 1.16.0).
 
 
 Version: 0.8.2 [2019-10-29]
