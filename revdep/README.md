@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |America/Los_Angeles          |
-|date     |2020-01-07                   |
+|date     |2020-01-09                   |
 
 # Dependencies
 
@@ -31,7 +31,7 @@
 |package                          |version |error |warning |note |
 |:--------------------------------|:-------|:-----|:-------|:----|
 |biotmle                          |1.10.0  |      |        |     |
-|drtmle                           |1.0.4   |      |        |     |
+|drtmle                           |1.0.5   |      |        |     |
 |kergp                            |0.5.0   |      |        |     |
 |[methyvim](problems.md#methyvim) |1.8.0   |      |        |1    |
 |rangeMapper                      |0.3-7   |      |        |     |
