@@ -10,19 +10,19 @@
 |collate  |en_US.UTF-8                  |
 |ctype    |en_US.UTF-8                  |
 |tz       |America/Los_Angeles          |
-|date     |2020-01-09                   |
+|date     |2020-01-10                   |
 
 # Dependencies
 
-|package   |old    |new        |Δ  |
-|:---------|:------|:----------|:--|
-|doFuture  |0.8.2  |0.8.2-9000 |*  |
-|digest    |0.6.23 |0.6.23     |   |
-|foreach   |1.4.7  |1.4.7      |   |
-|future    |1.15.1 |1.15.1     |   |
-|globals   |0.12.5 |0.12.5     |   |
-|iterators |1.0.12 |1.0.12     |   |
-|listenv   |0.8.0  |0.8.0      |   |
+|package   |old    |new    |Δ  |
+|:---------|:------|:------|:--|
+|doFuture  |0.8.2  |0.9.0  |*  |
+|digest    |0.6.23 |0.6.23 |   |
+|foreach   |1.4.7  |1.4.7  |   |
+|future    |1.15.1 |1.15.1 |   |
+|globals   |0.12.5 |0.12.5 |   |
+|iterators |1.0.12 |1.0.12 |   |
+|listenv   |0.8.0  |0.8.0  |   |
 
 # Revdeps
 
