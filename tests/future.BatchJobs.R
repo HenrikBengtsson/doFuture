@@ -17,8 +17,7 @@ for (strategy in strategies) {
   sigma <- 2.0
   res1 <- foreach(i = 1:3, .export = c("mu", "sigma"),
                   .packages = "stats") %dopar% {
-    set.seed(0xBEEF)
-    rnorm(i, mean = mu, sd = sigma)
+    dnorm(i, mean = mu, sd = sigma)
   }
   print(res1)
 
@@ -33,8 +32,7 @@ for (strategy in strategies) {
   mu <- 1.0
   sigma <- 2.0
   res2 <- foreach(i = 1:3, .packages = "stats") %dopar% {
-    set.seed(0xBEEF)
-    rnorm(i, mean = mu, sd = sigma)
+    dnorm(i, mean = mu, sd = sigma)
   }
   print(res2)
   stopifnot(all.equal(res2, res0))

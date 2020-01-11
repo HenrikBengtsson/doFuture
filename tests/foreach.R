@@ -14,8 +14,7 @@ for (strategy in strategies) {
   mu <- 1.0
   sigma <- 2.0
   res <- foreach(i = 1:3, .packages = "stats") %dopar% {
-    set.seed(0xBEEF)
-    rnorm(i, mean = mu, sd = sigma)
+    dnorm(i, mean = mu, sd = sigma)
   }
   print(res)
 

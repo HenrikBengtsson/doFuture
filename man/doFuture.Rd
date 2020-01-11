@@ -99,8 +99,8 @@ and \code{.packages}.
 
 Whether load balancing ("chunking") should take place or not can be
 controlled specifying either
-\code{.options.future = list(scheduling = <ratio>)} or
-\code{.options.future = list(chunk_size = <count>)} to \code{foreach()}.
+\verb{.options.future = list(scheduling = <ratio>)} or
+\verb{.options.future = list(chunk_size = <count>)} to \code{foreach()}.
 
 The value \code{chunk.size} specifies the average number of elements
 processed per future ("chunks").
@@ -118,7 +118,7 @@ If \code{+Inf} or \code{FALSE}, then one future per iteration is used.
 The default value is \code{scheduling = 1.0}.
 
 For "backward" compatibility reasons with existing foreach code, one
-also use \code{.options.multicore = list(preschedule = <logical>)}, which
+also use \verb{.options.multicore = list(preschedule = <logical>)}, which
 if set overrides the above two options.
 \code{.options.multicore = list(preschedule = TRUE)} is equivalent to
 \code{.options.future = list(scheduling = 1.0)} and

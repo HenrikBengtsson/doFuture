@@ -102,3 +102,12 @@ import_from <- function(name, default = NULL, package) {
 import_future <- function(name, default = NULL) {
   import_from(name, default = default, package = "future")
 }
+
+#' @importFrom utils packageVersion
+future_version <- local({
+  ver <- NULL
+  function() {
+    if (is.null(ver)) ver <<- packageVersion("future")
+    ver
+  }
+})

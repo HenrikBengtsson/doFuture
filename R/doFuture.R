@@ -199,6 +199,23 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     globals.maxSize.adjusted <- NULL
   }
 
+  ## Random Number Generation
+  ## Produce a warning if random numbers are used by mistake, that is,
+  ## if the RNG state is updated without having request to use parallel RNG.
+  seed <- FALSE
+
+  ## This check is only available in future (> 1.15.1)
+  if (future_version() <= "1.15.1") seed <- NULL
+
+  ## SPECIAL CASE: If parallel RNG is taken care of by the doRNG package,
+  ## then disable this check.
+  if (".doRNG.stream" %in% obj[["argnames"]] &&
+      "doRNG" %in% loadedNamespaces()) {
+    seed <- NULL
+  }
+
+  labels <- sprintf("doFuture-%s", seq_len(nchunks))
+
   if (debug) mdebugf("Launching %d futures (chunks) ...", nchunks)
   for (ii in seq_along(chunks)) {
     chunk <- chunks[[ii]]
@@ -250,14 +267,16 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     
     fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
                        globals = globals_ii, packages = packages_ii,
-                       stdout = stdout, conditions = conditions)
+                       seed = seed,
+                       stdout = stdout, conditions = conditions,
+		       label = labels[ii])
 
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii", "packages_ii"))
 
     if (debug) mdebugf("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
-  rm(list = c("chunks", "globals", "packages"))
+  rm(list = c("chunks", "globals", "packages", "labels"))
   if (debug) mdebugf("Launching %d futures (chunks) ... DONE", nchunks)
   stop_if_not(length(fs) == nchunks)
 

@@ -1,11 +1,11 @@
 Package: doFuture
-Version: 0.8.2
+Version: 0.9.0
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
-    globals (>= 0.12.4),
-    future (>= 1.14.0),
-    foreach (>= 1.4.4),
-    iterators (>= 1.0.9),
+    globals (>= 0.12.5),
+    future (>= 1.15.1),
+    foreach (>= 1.4.7),
+    iterators (>= 1.0.12),
     parallel,
     utils
 Suggests:
@@ -22,5 +22,5 @@ License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://github.com/HenrikBengtsson/doFuture
 BugReports: https://github.com/HenrikBengtsson/doFuture/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Roxygen: list(markdown = TRUE)
