@@ -55,7 +55,7 @@ jobs:
         - future.BatchJobs
         - future.batchtools
         - plyr
-      r_check_args:
+      r_check_args: --timings
       env: NB='w/out --as-cran' ## Just a label
     - os: linux
       r: devel
