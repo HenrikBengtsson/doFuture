@@ -52,11 +52,17 @@ jobs:
       r: devel
       r_packages:
         - doRNG
+      r_check_args: --timings
+      env: NB='w/out --as-cran' ## Just a label
+    - os: linux
+      r: devel
+      r_packages:
+        - doRNG
         - future.BatchJobs
         - future.batchtools
         - plyr
       r_check_args: --timings
-      env: NB='w/out --as-cran' ## Just a label
+      env: NB='w/out --as-cran + pkgs' ## Just a label
     - os: linux
       r: devel
       env:
