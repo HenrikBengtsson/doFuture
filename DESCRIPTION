@@ -3,13 +3,13 @@ Version: 0.9.0-9000
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     globals (>= 0.12.5),
-    future (>= 1.15.1),
+    future (>= 1.16.0),
     foreach (>= 1.4.7),
     iterators (>= 1.0.12),
     parallel,
     utils
 Suggests:
-    doRNG (>= 1.6.6),
+    doRNG (>= 1.8.2),
     markdown,
     R.rsp
 VignetteBuilder:

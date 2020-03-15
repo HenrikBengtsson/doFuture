@@ -204,9 +204,6 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## if the RNG state is updated without having request to use parallel RNG.
   seed <- FALSE
 
-  ## This check is only available in future (> 1.15.1)
-  if (future_version() <= "1.15.1") seed <- NULL
-
   ## SPECIAL CASE: If parallel RNG is taken care of by the doRNG package,
   ## then disable this check.
   if (".doRNG.stream" %in% obj[["argnames"]] &&
