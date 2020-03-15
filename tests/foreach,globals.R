@@ -116,6 +116,4 @@ for (strategy in strategies) {
 
 message("*** doFuture - automatically finding globals in 'args_list' ... DONE")
 
-print(sessionInfo())
-
 source("incl/end.R")

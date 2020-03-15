@@ -40,6 +40,4 @@ if (require(plyr, character.only = TRUE)) {
   message("*** dplyr w / doFuture + parallel ... DONE")
 } ## if (require(plyr))
 
-print(sessionInfo())
-
 source("incl/end.R")

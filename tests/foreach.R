@@ -29,6 +29,4 @@ for (strategy in strategies) {
 
 message("*** doFuture - reproducibility ... DONE")
 
-print(sessionInfo())
-
 source("incl/end.R")

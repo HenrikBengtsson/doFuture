@@ -53,6 +53,4 @@ if (require(BiocParallel, character.only = TRUE) &&
   message("*** BiocParallel w / doFuture + parallel ... DONE")
 } ## if (require(BiocParallel))
 
-print(sessionInfo())
-
 source("incl/end.R")
