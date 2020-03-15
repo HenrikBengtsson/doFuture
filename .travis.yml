@@ -50,6 +50,15 @@ jobs:
         - plyr
     - os: linux
       r: devel
+      r_packages:
+        - doRNG
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args:
+      env: NB='w/out --as-cran' ## Just a label
+    - os: linux
+      r: devel
       env:
         - R_KEEP_PKG_SOURCE=yes
         - _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
