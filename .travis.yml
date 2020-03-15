@@ -80,7 +80,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,foreach.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,foreach,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -98,7 +98,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,NMF,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -120,7 +120,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,TSP.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,TSP,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -141,7 +141,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,glmnet.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,glmnet,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -156,7 +156,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -171,7 +171,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -186,7 +186,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -201,7 +201,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -215,7 +215,7 @@ jobs:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -266,7 +266,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -317,7 +317,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -368,7 +368,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -419,7 +419,7 @@ jobs:
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
