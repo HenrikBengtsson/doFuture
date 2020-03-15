@@ -58,6 +58,13 @@ jobs:
       r: devel
       r_packages:
         - doRNG
+        - plyr
+      r_check_args: --timings
+      env: NB='w/out --as-cran + plyr' ## Just a label
+    - os: linux
+      r: devel
+      r_packages:
+        - doRNG
         - future.BatchJobs
         - future.batchtools
         - plyr
