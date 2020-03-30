@@ -62,14 +62,6 @@ for (nbrOfElements in c(1L, 2L, 8L)) {
   }
 }
 
-
-message("*** makeChunks() -  ...")
-
-
-
-message("*** makeChunks() - future.chunk.size ... DONE")
-
-
 message("*** makeChunks() ... DONE")
 
 source("incl/end.R")
