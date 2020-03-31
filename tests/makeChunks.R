@@ -26,10 +26,10 @@ for (nbrOfElements in c(1L, 2L, 8L)) {
       function(n) rev(seq_len(n))
     )
 
-    for (oo in orderings) {
+    for (ordering in orderings) {
       ## future.chunk.size
       for (future.chunk.size in seq_len(nbrOfElements + 1L)) {
-        if (!is.null(ordering)) attr(future.chunk.size) <- ordering
+        if (!is.null(ordering)) attr(future.chunk.size, "ordering") <- ordering
         chunks <- makeChunks(nbrOfElements, nbrOfWorkers = nbrOfWorkers,
                              future.chunk.size = future.chunk.size)
         str(chunks)
@@ -45,7 +45,7 @@ for (nbrOfElements in c(1L, 2L, 8L)) {
     
       ## future.scheduling
       for (future.scheduling in c(0, 0.01, 0.5, 1.0, 2.0, +Inf)) {
-        if (!is.null(ordering)) attr(future.scheduling) <- ordering
+        if (!is.null(ordering)) attr(future.scheduling, "ordering") <- ordering
         chunks <- makeChunks(nbrOfElements, nbrOfWorkers = nbrOfWorkers,
                              future.scheduling = future.scheduling)
         str(chunks)
