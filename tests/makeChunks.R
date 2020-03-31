@@ -44,7 +44,7 @@ for (nbrOfElements in c(1L, 2L, 8L)) {
       }
     
       ## future.scheduling
-      for (future.scheduling in c(0, 0.01, 0.5, 1.0, 2.0, +Inf)) {
+      for (future.scheduling in list(FALSE, TRUE, 0, 0.01, 0.5, 1.0, 2.0, +Inf)) {
         if (!is.null(ordering)) attr(future.scheduling, "ordering") <- ordering
         chunks <- makeChunks(nbrOfElements, nbrOfWorkers = nbrOfWorkers,
                              future.scheduling = future.scheduling)
@@ -61,6 +61,23 @@ for (nbrOfElements in c(1L, 2L, 8L)) {
     } ## for (ordering ...)
   }
 }
+
+
+message("- Exceptions")
+
+opt <- TRUE
+attr(opt, "ordering") <- "unknown"
+res <- tryCatch({
+  makeChunks(3L, nbrOfWorkers = 2L, future.chunk.size = opt)
+}, error = identity)
+str(res)
+stopifnot(inherits(res, "error"))
+
+res <- tryCatch({
+  makeChunks(3L, nbrOfWorkers = 2L, future.scheduling = opt)
+}, error = identity)
+str(res)
+stopifnot(inherits(res, "error"))
 
 message("*** makeChunks() ... DONE")
 
