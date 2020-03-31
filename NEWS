@@ -22,7 +22,7 @@ Version: 0.8.2 [2019-10-29]
 
 DOCUMENTATION:
 
- * Document also .options.future = list(chunk_size = <count>) to foreach().
+ * Document also .options.future = list(chunk.size = <count>) to foreach().
 
 DEPRECATED AND DEFUNCT:
 
