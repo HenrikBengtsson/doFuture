@@ -1,7 +1,8 @@
 \donttest{
-library("doFuture")
+library(doFuture)
 registerDoFuture()
 plan(multiprocess)
+library(iterators)  # iter()
 
 
 ## Example 1
@@ -28,7 +29,7 @@ stopifnot(all.equal(y3, y1))
 
 
 ## Example 3 - Simulation with parallel RNG
-library("doRNG")
+library(doRNG)
 
 my_stat <- function(x) {
   median(x)

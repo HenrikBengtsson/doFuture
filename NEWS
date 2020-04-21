@@ -1,9 +1,12 @@
 Package: doFuture
 =================
 
-Version: 0.9.0-9000 [2020-01-10]
+Version: 0.9.0-9000 [2020-04-20]
 
- * ...
+SIGNIFICANT CHANGES:
+
+ * Package now only imports packages 'globals', 'iterators', 'parallel' and
+   'utils' - packages that were attached previously.
  
 
 Version: 0.9.0 [2020-01-10]
