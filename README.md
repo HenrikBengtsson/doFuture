@@ -18,15 +18,13 @@ package that works with _any_ type of future.
 The doFuture package is cross platform just as the future package.
 
 Below is an example showing how to make `%dopar%` work with
-_multiprocess_ futures.  A multiprocess future will be evaluated in
-parallel using forked processes.  If process forking is not supported
-by the operating system, then multiple background R sessions will
-instead be used to resolve the futures.
+_multisession_ futures.  A multisession future will be evaluated in
+parallel using background R processs.
 
 ```r
 library("doFuture")
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
 
 mu <- 1.0
 sigma <- 2.0
@@ -60,7 +58,7 @@ The [plyr] package uses [foreach] as a parallel backend.  This means that with [
 ```r
 library("doFuture")
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
 
 library("plyr")
 x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
@@ -84,7 +82,7 @@ The [BiocParallel] package supports any `%dopar%` adapter as a parallel backend.
 ```r
 library("doFuture")
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
 library("BiocParallel")
 register(DoparParam(), default = TRUE)
 
