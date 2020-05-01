@@ -1,7 +1,7 @@
 \donttest{
 library(doFuture)
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
 library(iterators)  # iter()
 
 
@@ -57,4 +57,10 @@ stopifnot(identical(y2, y1))
 y3 <- my_experiment(n = 3)
 str(y3)
 stopifnot(!identical(y3, y1))
+
+}
+
+\dontshow{
+## R CMD check: make sure any open connections are closed afterward
+if (!inherits(plan(), "sequential")) plan(sequential)
 }

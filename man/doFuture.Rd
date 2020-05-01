@@ -27,7 +27,7 @@ After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
 \code{\link[future:plan]{future::plan()}}.  For example:
 \itemize{
-\item \code{plan(multiprocess)}:
+\item \code{plan(multisession)}:
 multiple R processes on the local machine.
 \item \code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}:
 multiple R processes on external machines.
@@ -142,7 +142,7 @@ adapter including \pkg{doFuture}.
 \donttest{
 library(doFuture)
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
 library(iterators)  # iter()
 
 
@@ -198,5 +198,11 @@ stopifnot(identical(y2, y1))
 y3 <- my_experiment(n = 3)
 str(y3)
 stopifnot(!identical(y3, y1))
+
+}
+
+\dontshow{
+## R CMD check: make sure any open connections are closed afterward
+if (!inherits(plan(), "sequential")) plan(sequential)
 }
 }

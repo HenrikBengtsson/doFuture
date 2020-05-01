@@ -19,7 +19,7 @@
 #' solely by the future strategy set, which in controlled by
 #' [future::plan()].  For example:
 #'
-#' * `plan(multiprocess)`: 
+#' * `plan(multisession)`: 
 #'      multiple R processes on the local machine.
 #' * `plan(cluster, workers = c("n1", "n2", "n2", "n3"))`:
 #'      multiple R processes on external machines.
