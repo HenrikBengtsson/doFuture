@@ -92,6 +92,19 @@ jobs:
       after_success:
         - Rscript -e 'covr::codecov(quiet=FALSE)'
       env: NB='w/ covr' ## Just a label
+
+    - os: linux
+      r: release
+      bioc_packages:
+        - BiocParallel
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ BiocParallel' ## Just a label
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz,BiocParallel.R", chdir = TRUE, echo = TRUE)'
+
     - os: linux
       r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
