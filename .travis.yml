@@ -100,6 +100,7 @@ jobs:
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       env:
         - NB='w/ BiocParallel' ## Just a label
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -112,6 +113,7 @@ jobs:
         - NB='w/ foreach' ## Just a label
         - _R_CHECK_TESTSETS_=foreach
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -130,6 +132,7 @@ jobs:
         - NB='w/ NMF' ## Just a label
         - _R_CHECK_TESTSETS_=NMF
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -152,6 +155,7 @@ jobs:
         - NB='w/ TSP' ## Just a label
         - _R_CHECK_TESTSETS_=TSP
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -173,6 +177,7 @@ jobs:
         - NB='w/ glmnet' ## Just a label
         - _R_CHECK_TESTSETS_=glmnet
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -188,6 +193,7 @@ jobs:
         - NB='w/ plyr & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=sequential
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -203,6 +209,7 @@ jobs:
         - NB='w/ plyr & multisession' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=multisession
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -218,6 +225,7 @@ jobs:
         - NB='w/ plyr & future.BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -233,6 +241,7 @@ jobs:
         - NB='w/ plyr & future.batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -246,6 +255,7 @@ jobs:
         - NB='w/ plyr & future.callr' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -298,6 +308,7 @@ jobs:
         - NB='w/ caret & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=sequential
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -349,6 +360,7 @@ jobs:
         - NB='w/ caret & multisession' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=multisession
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -400,6 +412,7 @@ jobs:
         - NB='w/ caret & BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
@@ -451,6 +464,7 @@ jobs:
         - NB='w/ caret & batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
