@@ -100,7 +100,7 @@ and \code{.packages}.
 Whether load balancing ("chunking") should take place or not can be
 controlled specifying either
 \verb{.options.future = list(scheduling = <ratio>)} or
-\verb{.options.future = list(chunk_size = <count>)} to \code{foreach()}.
+\verb{.options.future = list(chunk.size = <count>)} to \code{foreach()}.
 
 The value \code{chunk.size} specifies the average number of elements
 processed per future ("chunks").

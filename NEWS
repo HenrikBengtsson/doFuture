@@ -1,13 +1,18 @@
 Package: doFuture
 =================
 
-Version: 0.9.0-9000 [2020-04-20]
+Version: 0.9.0-9000 [2020-09-03]
 
 SIGNIFICANT CHANGES:
 
  * Package now only imports packages 'globals', 'iterators', 'parallel' and
    'utils' - packages that were attached previously.
- 
+
+DOCUMENTATION:
+
+ * The package help incorrectly mentioned `chunk_size`, which now has been
+   corrected to mention `chunk.size`.
+
 
 Version: 0.9.0 [2020-01-10]
 
