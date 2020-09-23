@@ -298,7 +298,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -350,7 +349,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -402,7 +400,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -454,7 +451,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -473,8 +469,8 @@ jobs:
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
   - export _R_CHECK_TIMINGS_=0
-  - _R_CHECK_LENGTH_1_LOGIC2_=false Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
-
+  - Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
+  
 notifications:
   email:
     on_success: change
