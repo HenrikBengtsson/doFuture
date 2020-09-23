@@ -82,16 +82,27 @@ package_dependencies <- function(package, needs = NULL) {
 
 install_missing_packages <- function(pkgs, bioc = FALSE, repos = "https://cloud.r-project.org") {
   if (bioc) {
-    install_pkg <- local({
-      .biocLite <- NULL
-      function(...) {
-        if (is.null(.biocLite)) {
-          source("https://bioconductor.org/biocLite.R")
-          .biocLite <<- biocLite
+    if (getRversion() > "3.5.0") {
+      install_pkg <- local({
+        function(...) {
+          if (!requireNamespace("BiocManager", quietly = TRUE)) {
+            install.packages("BiocManager", repos = repos)
+          }
+          BiocManager::install(...)
         }
-        .biocLite(...)
-      }
-    })
+      })
+    } else {
+      install_pkg <- local({
+        .biocLite <- NULL
+        function(...) {
+          if (is.null(.biocLite)) {
+            source("https://bioconductor.org/biocLite.R")
+            .biocLite <<- biocLite
+          }
+          .biocLite(...)
+        }
+      })
+    }
   } else {
     install_pkg <- function(...) install.packages(..., repos = repos)
   }
@@ -195,4 +206,3 @@ tests2_step <- local({
     invisible(package)
   }
 })
-
