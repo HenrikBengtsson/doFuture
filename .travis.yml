@@ -298,7 +298,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -350,7 +349,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -402,7 +400,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -454,7 +451,6 @@ jobs:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -474,7 +470,6 @@ before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
   - export _R_CHECK_TIMINGS_=0
   - Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
-  - Rscript -e 'install.packages("https://cloud.r-project.org/src/contrib/Archive/superpc/superpc_1.09.tar.gz", repos=NULL)' ## archived since 2020-08-26
   
 notifications:
   email:
