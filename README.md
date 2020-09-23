@@ -19,7 +19,7 @@ The doFuture package is cross platform just as the future package.
 
 Below is an example showing how to make `%dopar%` work with
 _multisession_ futures.  A multisession future will be evaluated in
-parallel using background R processs.
+parallel using background R process.
 
 ```r
 library("doFuture")

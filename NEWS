@@ -12,7 +12,7 @@ NEW FEATURES:
 
  * %dorng% of the doRNG package no longer produces a warning on 'Foreach loop
    had changed the current RNG type: RNG was restored to same type, next state'
-   when using the doFuture adaptor.
+   when using the doFuture adapter.
    
 DOCUMENTATION:
 
@@ -82,7 +82,7 @@ NEW FEATURES:
 
  * Passing argument '.options.future = list(stdout = ...)' can be used to
    to control how standard output should be relayed.  See ?future::Future for
-   futher details.  Analogously, '.options.future = list(conditions = ...)'
+   further details.  Analogously, '.options.future = list(conditions = ...)'
    can be used to control how messages and warnings are relayed, if at all.
 
  * Debug messages are now prepended with a timestamp.
