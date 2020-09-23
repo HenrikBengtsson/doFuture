@@ -1,11 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 
-if (Sys.getenv("TRAVIS") == "true") {
-  ## 'superpc' is archived since 2020-08-26 causing Travis CI to fail
-  install.packages("https://cloud.r-project.org/src/contrib/Archive/superpc/superpc_1.09.tar.gz", repos = NULL)
-}
-
 if (Sys.getenv("TRAVIS") != "true") {
   install_missing_packages(c("class", "cluster", "e1071", "earth", "fastICA", "foreign", "gam", "KernSmooth", "classInt", "questionr", "klaR", "lattice", "MASS", "Matrix", "mda", "mlbench", "MLmetrics", "nlme", "nnet", "pls", "proxy", "randomForest", "rpart", "survival", "partykit", "mboost"))
   ## install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
