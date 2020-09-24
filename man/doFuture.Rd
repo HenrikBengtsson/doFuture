@@ -27,7 +27,7 @@ After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
 \code{\link[future:plan]{future::plan()}}.  For example:
 \itemize{
-\item \code{plan(multiprocess)}:
+\item \code{plan(multisession)}:
 multiple R processes on the local machine.
 \item \code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))}:
 multiple R processes on external machines.
@@ -100,7 +100,7 @@ and \code{.packages}.
 Whether load balancing ("chunking") should take place or not can be
 controlled specifying either
 \verb{.options.future = list(scheduling = <ratio>)} or
-\verb{.options.future = list(chunk_size = <count>)} to \code{foreach()}.
+\verb{.options.future = list(chunk.size = <count>)} to \code{foreach()}.
 
 The value \code{chunk.size} specifies the average number of elements
 processed per future ("chunks").
@@ -140,9 +140,10 @@ adapter including \pkg{doFuture}.
 
 \examples{
 \donttest{
-library("doFuture")
+library(doFuture)
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)
+library(iterators)  # iter()
 
 
 ## Example 1
@@ -169,7 +170,7 @@ stopifnot(all.equal(y3, y1))
 
 
 ## Example 3 - Simulation with parallel RNG
-library("doRNG")
+library(doRNG)
 
 my_stat <- function(x) {
   median(x)
@@ -197,5 +198,11 @@ stopifnot(identical(y2, y1))
 y3 <- my_experiment(n = 3)
 str(y3)
 stopifnot(!identical(y3, y1))
+
+}
+
+\dontshow{
+## R CMD check: make sure any open connections are closed afterward
+if (!inherits(plan(), "sequential")) plan(sequential)
 }
 }

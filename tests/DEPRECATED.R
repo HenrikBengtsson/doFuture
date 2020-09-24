@@ -17,14 +17,14 @@ res <- tryCatch({
   y <- foreach(1:2) %dopar% TRUE
 }, error = identity)
 print(res)
-## stopifnot(inherits(res, "error"))
+stopifnot(inherits(res, "error"))
 
 options(doFuture.foreach.export = ".export-and-automatic")
 res <- tryCatch({
   y <- foreach(1:2) %dopar% TRUE
 }, warning = identity)
 print(res)
-## stopifnot(inherits(res, "warning"))
+#stopifnot(inherits(res, "warning"))
 
 message("*** DEPRECATED & DEFUNCT ... DONE")
 

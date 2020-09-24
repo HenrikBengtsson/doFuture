@@ -33,6 +33,4 @@ for (strategy in strategies) {
 
 message("*** times() ... DONE")
 
-print(sessionInfo())
-
 source("incl/end.R")

@@ -1,6 +1,25 @@
 Package: doFuture
 =================
 
+Version: 0.10.0 [2020-09-23]
+
+SIGNIFICANT CHANGES:
+
+ * Package now only imports packages 'globals', 'iterators', 'parallel' and
+   'utils' - packages that were attached previously.
+
+NEW FEATURES:
+
+ * %dorng% of the doRNG package no longer produces a warning on 'Foreach loop
+   had changed the current RNG type: RNG was restored to same type, next state'
+   when using the doFuture adapter.
+   
+DOCUMENTATION:
+
+ * The package help incorrectly mentioned `chunk_size`, which now has been
+   corrected to mention `chunk.size`.
+
+
 Version: 0.9.0 [2020-01-10]
 
 NEW FEATURES:
@@ -17,7 +36,7 @@ Version: 0.8.2 [2019-10-29]
 
 DOCUMENTATION:
 
- * Document also .options.future = list(chunk_size = <count>) to foreach().
+ * Document also .options.future = list(chunk.size = <count>) to foreach().
 
 DEPRECATED AND DEFUNCT:
 
@@ -63,7 +82,7 @@ NEW FEATURES:
 
  * Passing argument '.options.future = list(stdout = ...)' can be used to
    to control how standard output should be relayed.  See ?future::Future for
-   futher details.  Analogously, '.options.future = list(conditions = ...)'
+   further details.  Analogously, '.options.future = list(conditions = ...)'
    can be used to control how messages and warnings are relayed, if at all.
 
  * Debug messages are now prepended with a timestamp.

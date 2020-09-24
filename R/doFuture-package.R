@@ -19,7 +19,7 @@
 #' solely by the future strategy set, which in controlled by
 #' [future::plan()].  For example:
 #'
-#' * `plan(multiprocess)`: 
+#' * `plan(multisession)`: 
 #'      multiple R processes on the local machine.
 #' * `plan(cluster, workers = c("n1", "n2", "n2", "n3"))`:
 #'      multiple R processes on external machines.
@@ -82,7 +82,7 @@
 #' Whether load balancing ("chunking") should take place or not can be
 #' controlled specifying either
 #' `.options.future = list(scheduling = <ratio>)` or
-#' `.options.future = list(chunk_size = <count>)` to `foreach()`.
+#' `.options.future = list(chunk.size = <count>)` to `foreach()`.
 #'
 #' The value `chunk.size` specifies the average number of elements
 #' processed per future ("chunks").

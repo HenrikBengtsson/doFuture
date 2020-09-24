@@ -1,6 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("cluster", "lattice", "MASS"))
+install_missing_packages(c("cluster", "lattice", "MASS", "mgcv", "isoband", "testthat", "ggplot2"))
 install_missing_packages(c("BiocGenerics", "Biobase"), bioc = TRUE)
 pkg <- tests2_step("start", package = "NMF")
 

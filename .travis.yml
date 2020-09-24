@@ -8,7 +8,6 @@
 # YAML validated using http://www.yamllint.com/
 #----------------------------------------------------------------
 language: r
-sudo: false
 cache: packages
 warnings_are_errors: false
 r_check_args: --as-cran
@@ -21,7 +20,7 @@ r_packages:
 bioc_packages:
   - Biobase
 
-matrix:
+jobs:
   include:
     - os: linux
       r: oldrel
@@ -51,6 +50,28 @@ matrix:
         - plyr
     - os: linux
       r: devel
+      r_packages:
+        - doRNG
+      r_check_args: --timings
+      env: NB='w/out --as-cran' ## Just a label
+    - os: linux
+      r: devel
+      r_packages:
+        - doRNG
+        - plyr
+      r_check_args: --timings
+      env: NB='w/out --as-cran + plyr' ## Just a label
+    - os: linux
+      r: devel
+      r_packages:
+        - doRNG
+        - future.BatchJobs
+        - future.batchtools
+        - plyr
+      r_check_args: --timings
+      env: NB='w/out --as-cran + pkgs' ## Just a label
+    - os: linux
+      r: devel
       env:
         - R_KEEP_PKG_SOURCE=yes
         - _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
@@ -71,6 +92,20 @@ matrix:
       after_success:
         - Rscript -e 'covr::codecov(quiet=FALSE)'
       env: NB='w/ covr' ## Just a label
+
+    - os: linux
+      r: release
+      bioc_packages:
+        - BiocParallel
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
+      env:
+        - NB='w/ BiocParallel' ## Just a label
+        - R_FUTURE_RNG_ONMISUSE=error
+      script:
+        - R CMD build .
+        - R CMD INSTALL --no-docs doFuture_*.tar.gz
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz,BiocParallel.R", chdir = TRUE, echo = TRUE)'
+
     - os: linux
       r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
@@ -78,10 +113,11 @@ matrix:
         - NB='w/ foreach' ## Just a label
         - _R_CHECK_TESTSETS_=foreach
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,foreach.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,foreach,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -96,10 +132,11 @@ matrix:
         - NB='w/ NMF' ## Just a label
         - _R_CHECK_TESTSETS_=NMF
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,NMF.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,NMF,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -118,10 +155,11 @@ matrix:
         - NB='w/ TSP' ## Just a label
         - _R_CHECK_TESTSETS_=TSP
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,TSP.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,TSP,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -139,10 +177,11 @@ matrix:
         - NB='w/ glmnet' ## Just a label
         - _R_CHECK_TESTSETS_=glmnet
         - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,glmnet.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,glmnet,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -154,10 +193,11 @@ matrix:
         - NB='w/ plyr & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=sequential
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -169,10 +209,11 @@ matrix:
         - NB='w/ plyr & multisession' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=multisession
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -184,10 +225,11 @@ matrix:
         - NB='w/ plyr & future.BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -199,10 +241,11 @@ matrix:
         - NB='w/ plyr & future.batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -212,11 +255,12 @@ matrix:
         - NB='w/ plyr & future.callr' ## Just a label
         - _R_CHECK_TESTSETS_=plyr
         - _R_CHECK_FUTURE_STRATEGIES_="future.callr::callr"
+        - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
         - Rscript -e "source('https://install-github.me/HenrikBengtsson/future.callr')"
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -254,7 +298,6 @@ matrix:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -264,10 +307,11 @@ matrix:
         - NB='w/ caret & sequential' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=sequential
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -305,7 +349,6 @@ matrix:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -315,10 +358,11 @@ matrix:
         - NB='w/ caret & multisession' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=multisession
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -356,7 +400,6 @@ matrix:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -366,10 +409,11 @@ matrix:
         - NB='w/ caret & BatchJobs' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
     - os: linux
       r: release
       r_packages:
@@ -407,7 +451,6 @@ matrix:
         - spls
         - subselect
         - pamr
-        - superpc
         - Cubist
         - pls
         - recipes
@@ -417,16 +460,17 @@ matrix:
         - NB='w/ caret & batchtools' ## Just a label
         - _R_CHECK_TESTSETS_=caret
         - _R_CHECK_FUTURE_STRATEGIES_=batchtools_local
+        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
         - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret.R", chdir = TRUE, echo = TRUE)'
+        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
 
 before_install:
   - Rscript -e 'c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())'
   - export _R_CHECK_TIMINGS_=0
-  - _R_CHECK_LENGTH_1_LOGIC2_=false Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
-
+  - Rscript -e 'install.packages(c("lambda.r", "futile.logger"))'
+  
 notifications:
   email:
     on_success: change

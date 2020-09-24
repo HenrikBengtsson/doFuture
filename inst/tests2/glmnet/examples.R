@@ -1,6 +1,6 @@
 path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
-install_missing_packages(c("cluster", "lattice", "MASS", "Matrix"))
+install_missing_packages(c("cluster", "lattice", "MASS", "Matrix", "survival"))
 pkg <- tests2_step("start", package = "glmnet",
                    needs = c("Suggests"))
 

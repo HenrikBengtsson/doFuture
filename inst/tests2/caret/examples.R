@@ -2,7 +2,7 @@ path <- system.file("tests2", "incl", package = "doFuture", mustWork = TRUE)
 source(file.path(path, "utils.R"))
 
 if (Sys.getenv("TRAVIS") != "true") {
-  install_missing_packages(c("class", "cluster", "e1071", "earth", "fastICA", "foreign", "gam", "klaR", "lattice", "MASS", "Matrix", "mda", "mlbench", "MLmetrics", "nlme", "nnet", "pls", "proxy", "randomForest", "rpart", "survival", "partykit", "mboost"))
+  install_missing_packages(c("class", "cluster", "e1071", "earth", "fastICA", "foreign", "gam", "KernSmooth", "classInt", "questionr", "klaR", "lattice", "MASS", "Matrix", "mda", "mlbench", "MLmetrics", "nlme", "nnet", "pls", "proxy", "randomForest", "rpart", "survival", "partykit", "mboost"))
   ## install_missing_packages(c("ddalpha", "dimRed", "ipred", "ggplot2", "recipes"))
 }
 pkg <- tests2_step("start", package = "caret")
