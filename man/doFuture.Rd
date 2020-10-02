@@ -98,7 +98,7 @@ and \code{.packages}.
 \section{Load balancing ("chunking")}{
 
 Whether load balancing ("chunking") should take place or not can be
-controlled specifying either
+controlled specifying either argument
 \verb{.options.future = list(scheduling = <ratio>)} or
 \verb{.options.future = list(chunk.size = <count>)} to \code{foreach()}.
 
@@ -117,7 +117,11 @@ enough iterations).
 If \code{+Inf} or \code{FALSE}, then one future per iteration is used.
 The default value is \code{scheduling = 1.0}.
 
-For "backward" compatibility reasons with existing foreach code, one
+The name of \code{foreach()} argument \code{.options.future} stems from argument
+\code{.options.multicore} used by the \strong{doMC} and \strong{doParallel} packages.
+It should not be mistake for the \R
+\link[future:future.options]{options of the future package}.
+For "backward" compatibility reasons with existing foreach code, one may
 also use \verb{.options.multicore = list(preschedule = <logical>)}, which
 if set overrides the above two options.
 \code{.options.multicore = list(preschedule = TRUE)} is equivalent to

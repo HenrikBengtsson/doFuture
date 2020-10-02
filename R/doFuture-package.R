@@ -80,7 +80,7 @@
 #'
 #' @section Load balancing ("chunking"):
 #' Whether load balancing ("chunking") should take place or not can be
-#' controlled specifying either
+#' controlled specifying either argument
 #' `.options.future = list(scheduling = <ratio>)` or
 #' `.options.future = list(chunk.size = <count>)` to `foreach()`.
 #'
@@ -99,13 +99,18 @@
 #' If `+Inf` or `FALSE`, then one future per iteration is used.
 #' The default value is `scheduling = 1.0`.
 #'
-#' For "backward" compatibility reasons with existing foreach code, one 
+#' The name of `foreach()` argument `.options.future` stems from argument
+#' `.options.multicore` used by the **doMC** and **doParallel** packages.
+#' It should not be mistake for the \R
+#' \link[future:future.options]{options of the future package}.
+#' For "backward" compatibility reasons with existing foreach code, one may
 #' also use `.options.multicore = list(preschedule = <logical>)`, which
 #' if set overrides the above two options.
 #' `.options.multicore = list(preschedule = TRUE)` is equivalent to
 #' `.options.future = list(scheduling = 1.0)` and
 #' `.options.multicore = list(preschedule = FALSE)` is equivalent to
 #' `.options.future = list(scheduling = +Inf)`.
+
 #'
 #' @section Random Number Generation (RNG):
 #' The \pkg{doFuture} package does _not_ itself provide a framework
