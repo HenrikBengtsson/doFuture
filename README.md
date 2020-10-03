@@ -215,7 +215,8 @@ registerDoParallel()
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-plan(multiprocess)
+plan(multisession)  ## on MS Windows
+plan(multicore)     ## on Linux, Solaris, and macOS
 </code></pre>
 </td>
 </tr>
