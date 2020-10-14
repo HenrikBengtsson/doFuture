@@ -1,9 +1,16 @@
 Package: doFuture
 =================
 
-Version: 0.10.0-9000 [2020-09-23]
+Version: 0.10.0-9000 [2020-10-13]
 
- * ...
+NEW FEATURE:
+
+ * foreach() argument '.options.snow = list(preschedule = <logical>)' is now
+   acknowledged as a fallback to analogous argument '.options.multicore' -
+   two arguments defined by the 'doMC' and the 'doSNOW' packages and also
+   used by the 'doParallel' package.  As before, argument '.options.future'
+   will always take precedence if 'list(scheduling = <logical>/<numeric>)' or
+   'list(chunk.size = <integer>)' is given.
  
 
 Version: 0.10.0 [2020-09-23]

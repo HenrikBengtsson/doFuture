@@ -122,9 +122,14 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   ## If not set, fall back to:
   ## (c) .options.multicore = list(preschedule = <logical>)
-  ##      cf. mclapply(..., preschedule)
+  ##      used by doParallel:::doParallelMC(), cf. mclapply(..., preschedule)
+  ## (d) .options.snow      = list(preschedule = <logical>)
+  ##      used by doParallel:::doParallelSNOW()
   if (is.null(chunk.size) && is.null(scheduling)) {
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
+    if (is.null(preschedule)) {
+      preschedule <- obj[["options"]][["snow"]][["preschedule"]]
+    }
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
       stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
