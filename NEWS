@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.10.0-9000 [2020-10-13]
+Version: 0.10.0-9000 [2020-11-19]
 
 NEW FEATURE:
 
@@ -11,6 +11,10 @@ NEW FEATURE:
    used by the 'doParallel' package.  As before, argument '.options.future'
    will always take precedence if 'list(scheduling = <logical>/<numeric>)' or
    'list(chunk.size = <integer>)' is given.
+
+BUG FIXES:
+
+ * foreach() argument '.noexport' was completely ignored by doFuture.
  
 
 Version: 0.10.0 [2020-09-23]

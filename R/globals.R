@@ -46,6 +46,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   scanForGlobals <- TRUE
   if (globalsAs == "manual") {
     globals_by_name <- c(export, "...future.x_ii")
+    globals_by_name <- setdiff(globals_by_name, noexport)
     gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                                 globals = globals_by_name)
     globals <- gp$globals
@@ -53,7 +54,10 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     rm(list = c("gp"))
     scanForGlobals <- FALSE
   } else if (globalsAs == "future") {
-    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
+    globals <- TRUE
+    attr(globals, "add") <- export
+    attr(globals, "ignore") <- noexport
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals)
     globals <- gp$globals
     packages <- unique(c(gp$packages, packages))
     expr <- gp$expr
