@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.10.0-9000 [2020-11-19]
+Version: 0.10.0-9000 [2020-11-24]
 
 NEW FEATURE:
 
@@ -11,6 +11,9 @@ NEW FEATURE:
    used by the 'doParallel' package.  As before, argument '.options.future'
    will always take precedence if 'list(scheduling = <logical>/<numeric>)' or
    'list(chunk.size = <integer>)' is given.
+
+ * Warnings and errors produced when using the RNG without using '%dorng%' of
+   the 'doRNG' package are now tailored to the 'doFuture' package.
 
 BUG FIXES:
 
