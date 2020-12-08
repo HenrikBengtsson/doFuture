@@ -80,3 +80,5 @@ VignetteIndexEntry
 VignetteKeyword
 VignetteTangle
 Vorobiev
+noexport
+mtcars

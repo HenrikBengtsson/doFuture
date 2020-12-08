@@ -43,11 +43,11 @@ library("doFuture")
 registerDoFuture()
 plan(multisession)
 
-mu <- 1.0
-sigma <- 2.0
-x <- foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
-  rnorm(i, mean = mu, sd = sigma)
+cutoff <- 0.10
+y <- foreach(x = mtcars, .export = c("cutoff")) %dopar% {
+  mean(x, trim = cutoff)
 }
+names(y) <- colnames(mtcars)
 ```
 
 ## Futures bring foreach to the HPC cluster
@@ -59,14 +59,13 @@ evaluation on the compute nodes.
 ```r
 library("doFuture")
 registerDoFuture()
-library("future.batchtools")
-plan(batchjobs_slurm)
+plan(future.batchtools::batchjobs_slurm)
 
-mu <- 1.0
-sigma <- 2.0
-x <- foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
-  rnorm(i, mean = mu, sd = sigma)
+cutoff <- 0.10
+y <- foreach(x = mtcars, .export = c("cutoff")) %dopar% {
+  mean(x, trim = cutoff)
 }
+names(y) <- colnames(mtcars)
 ```
 
 
@@ -76,10 +75,10 @@ The [plyr] package uses [foreach] as a parallel backend.  This means that with [
 library("doFuture")
 registerDoFuture()
 plan(multisession)
-
 library("plyr")
-x <- list(a = 1:10, beta = exp(-3:3), logic = c(TRUE, FALSE, FALSE, TRUE))
-y <- llply(x, quantile, probs = (1:3) / 4, .parallel = TRUE)
+
+cutoff <- 0.10
+y <- llply(mtcars, mean, trim = cutoff, .parallel = TRUE)
 ## $a
 ##  25%  50%  75%
 ## 3.25 5.50 7.75
@@ -103,11 +102,8 @@ plan(multisession)
 library("BiocParallel")
 register(DoparParam(), default = TRUE)
 
-mu <- 1.0
-sigma <- 2.0
-x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
-  rnorm(i, mean = mu, sd = sigma)
-})
+cutoff <- 0.10
+x <- bplapply(mtcars, mean, trim = cutoff)
 ```
 
 
@@ -115,64 +111,76 @@ x <- bplapply(1:3, mu = mu, sigma = sigma, function(i, mu, sigma) {
 
 The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `my` and `sigma` are properly exported when we do
 ```r
-> library("doParallel")
-> registerDoParallel(parallel::makeCluster(2))
-> mu <- 1.0
-> sigma <- 2.0
-> x <- foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
-> str(x)
-List of 3
- $ : num -1.42
- $ : num [1:2] 3.12 -1.33
- $ : num [1:3] -0.0376 -0.1446 1.6368
+library("doParallel")
+registerDoParallel(parallel::makeCluster(2))
+
+cutoff <- 0.10
+y <- foreach(x = mtcars) %dopar% {
+  mean(x, trim = cutoff)
+}
+names(y) <- colnames(mtcars)
 ```
 it falls short as soon as we try to do the same from within a function;
 ```r
-> foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
-> x <- foo()
-Error in { : task 1 failed - "object 'mu' not found"
-```
-The solution is to explicitly export global variables, e.g.
-```r
-> foo <- function() {
-+   foreach(i = 1:3, .export = c("mu", "sigma")) %dopar% {
-+     rnorm(i, mean = mu, sd = sigma)
-+   }
-+ }
-> x <- foo()
+my_mean <- function() {
+  y <- foreach(x = mtcars) %dopar% {
+    mean(x, trim = cutoff)
+  }
+  names(y) <- colnames(mtcars)
+  y
+}
+
+x <- my_mean()
+## Error in { : task 1 failed - "object 'cutoff' not found"
 ```
 
-However, when using the `%dopar%` adapter of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+The solution is to explicitly export global variables, e.g.
 ```r
-> library("doFuture")
-> registerDoFuture()
-> plan(multisession, workers = 2)
-> mu <- 1.0
-> sigma <- 2.0
-> foo <- function() foreach(i = 1:3) %dopar% { rnorm(i, mean = mu, sd = sigma) }
-> x <- foo()
-> str(x)
-List of 3
- $ : num 0.358
- $ : num [1:2] 3.317 -0.689
- $ : num [1:3] -0.104 1.237 2.474
+my_mean <- function() {
+  y <- foreach(x = mtcars, .export = "cutoff") %dopar% {
+    mean(x, trim = cutoff)
+  }
+  names(y) <- colnames(mtcars)
+  y
+}
+
+y <- my_mean()
 ```
+
+In contrast, when using the `%dopar%` adapter of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+```r
+library("doFuture")
+registerDoFuture()
+plan(multisession, workers = 2)
+
+my_mean <- function() {
+  y <- foreach(x = mtcars) %dopar% {
+    mean(x, trim = cutoff)
+  }
+  names(y) <- colnames(mtcars)
+  y
+}
+
+x <- my_mean()
+```
+
+will indeed work.
 
 Another advantage with doFuture is that, contrary to doParallel, packages that need to be attached are also automatically taken care of, e.g.
 ```r
-> registerDoFuture()
-> library("tools")
-> ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
-> unlist(ext)
-[1] "txt" "log"
+registerDoFuture()
+library("tools")
+ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
+unlist(ext)
+## [1] "txt" "log"
 ```
 whereas
 ```r
-> registerDoParallel(parallel::makeCluster(2))
-> library("tools")
-> ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
-Error in file_ext(file) : 
-  task 1 failed - "could not find function "file_ext""
+registerDoParallel(parallel::makeCluster(2))
+library("tools")
+ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
+## Error in file_ext(file) : 
+##   task 1 failed - "could not find function "file_ext""
 ```
 
 Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will in warn if it finds globals not listed in `.export` and produce an informative warning message suggesting that those should be added.  To assert that argument `.export` is correct, test the code with `options(doFuture.foreach.export = ".export")`, which will disable automatic identification of globals such that only the globals specified by the `.export` argument is used.
@@ -349,4 +357,4 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 [future.batchtools]: https://cran.r-project.org/package=future.batchtools
 [plyr]: https://cran.r-project.org/package=plyr
 ---
-Copyright Henrik Bengtsson, 2016-2019
+Copyright Henrik Bengtsson, 2016-2020
