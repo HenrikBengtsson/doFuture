@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.10.0-9000 [2020-11-24]
+Version: 0.10.0-9000 [2020-12-11]
 
 NEW FEATURE:
 
@@ -18,7 +18,12 @@ NEW FEATURE:
 BUG FIXES:
 
  * foreach() argument '.noexport' was completely ignored by doFuture.
- 
+
+DEPRECATED AND DEFUNCT:
+
+ * Removed defunct option 'doFuture.foreach.export' values 'automatic' and
+   'automatic-unless-.export'. They were made defunct in doFuture 0.8.2.
+
 
 Version: 0.10.0 [2020-09-23]
 

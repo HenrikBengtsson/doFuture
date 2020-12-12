@@ -1,9 +1,4 @@
 globalsAs <- function() {
-  ## Assert that defunct options are not used
-  if (!is.null(getOption("doFuture.globals.nullexport"))) {
-    .Defunct(msg = "Option 'doFuture.globals.nullexport' is defunct. Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.")
-  }
-
   t <- getOption("doFuture.foreach.export", ".export-and-automatic")
   if (t == ".export-and-automatic") {
     globalsAs <- "future"
@@ -11,13 +6,15 @@ globalsAs <- function() {
     globalsAs <- "future-with-warning"
   } else if (t == ".export") {
     globalsAs <- "manual"
-  } else if (t %in% c("automatic", "automatic-unless-.export")) {
-    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
   } else {
-    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
+    stop(sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
   }
 
-  stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
+  stop_if_not(
+    is.character(globalsAs),
+    length(globalsAs) == 1L,
+    !is.na(globalsAs)
+  )
 
   globalsAs
 }
