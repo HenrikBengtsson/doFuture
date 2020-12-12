@@ -1,9 +1,4 @@
 globalsAs <- function() {
-  ## Assert that defunct options are not used
-  if (!is.null(getOption("doFuture.globals.nullexport"))) {
-    .Defunct(msg = "Option 'doFuture.globals.nullexport' is defunct. Use 'doFuture.foreach.export = \"automatic-unless-.export\" or \".export\" instead.")
-  }
-
   t <- getOption("doFuture.foreach.export", ".export-and-automatic")
   if (t == ".export-and-automatic") {
     globalsAs <- "future"
@@ -11,13 +6,15 @@ globalsAs <- function() {
     globalsAs <- "future-with-warning"
   } else if (t == ".export") {
     globalsAs <- "manual"
-  } else if (t %in% c("automatic", "automatic-unless-.export")) {
-    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is no longer supported. The closest is doFuture.foreach.export = '.export-and-automatic', which will be used instead.", dQuote(t)))
   } else {
-    .Defunct(msg = sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
+    stop(sprintf("Option doFuture.foreach.export = %s is unknown.", dQuote(t)))
   }
 
-  stop_if_not(is.character(globalsAs), !anyNA(globalsAs), length(globalsAs) == 1)
+  stop_if_not(
+    is.character(globalsAs),
+    length(globalsAs) == 1L,
+    !is.na(globalsAs)
+  )
 
   globalsAs
 }
@@ -46,6 +43,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
   scanForGlobals <- TRUE
   if (globalsAs == "manual") {
     globals_by_name <- c(export, "...future.x_ii")
+    globals_by_name <- setdiff(globals_by_name, noexport)
     gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                                 globals = globals_by_name)
     globals <- gp$globals
@@ -53,7 +51,10 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     rm(list = c("gp"))
     scanForGlobals <- FALSE
   } else if (globalsAs == "future") {
-    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = TRUE)
+    globals <- TRUE
+    attr(globals, "add") <- export
+    attr(globals, "ignore") <- noexport
+    gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals)
     globals <- gp$globals
     packages <- unique(c(gp$packages, packages))
     expr <- gp$expr
@@ -83,7 +84,7 @@ getGlobalsAndPackages_doFuture <- function(expr, envir, export = NULL, noexport 
     globals2 <- setdiff(export, names_globals)
     if (length(globals2) > 0) {
       mdebugf("  - appending %d '.export' globals (not already found through automatic lookup): %s",
-             length(globals2), paste(sQuote(globals2)), collapse = ", ")
+             length(globals2), paste(sQuote(globals2), collapse = ", "))
       gp <- getGlobalsAndPackages(expr, envir = globals_envir,
                                   globals = globals2)
       globals <- unique(c(gp$globals, globals))

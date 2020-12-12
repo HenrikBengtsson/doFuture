@@ -1,6 +1,30 @@
 Package: doFuture
 =================
 
+Version: 0.11.0 [2020-12-11]
+
+NEW FEATURE:
+
+ * foreach() argument '.options.snow = list(preschedule = <logical>)' is now
+   acknowledged as a fallback to analogous argument '.options.multicore' -
+   two arguments defined by the 'doMC' and the 'doSNOW' packages and also
+   used by the 'doParallel' package.  As before, argument '.options.future'
+   will always take precedence if 'list(scheduling = <logical>/<numeric>)' or
+   'list(chunk.size = <integer>)' is given.
+
+ * Warnings and errors produced when using the RNG without using '%dorng%' of
+   the 'doRNG' package are now tailored to the 'doFuture' package.
+
+BUG FIXES:
+
+ * foreach() argument '.noexport' was completely ignored by doFuture.
+
+DEPRECATED AND DEFUNCT:
+
+ * Removed defunct option 'doFuture.foreach.export' values 'automatic' and
+   'automatic-unless-.export'. They were made defunct in doFuture 0.8.2.
+
+
 Version: 0.10.0 [2020-09-23]
 
 SIGNIFICANT CHANGES:

@@ -14,14 +14,14 @@ makeChunks(
 \arguments{
 \item{nbrOfElements}{(integer) Total number of elements to iterate over.}
 
+\item{nbrOfWorkers}{(integer) Number of workers available.}
+
 \item{future.scheduling}{(numeric) A strictly positive scalar.
 Only used if argument \code{future.chunk.size} is \code{NULL}.}
 
 \item{future.chunk.size}{(numeric) The maximum number of elements per
 chunk, or \code{NULL}.  If \code{NULL}, then the chunk sizes are given by the
 \code{future.scheduling} argument.}
-
-\item{nbrOfWorker}{(integer) Number of workers available.}
 }
 \value{
 A list of chunks, where each chunk is an integer vector of

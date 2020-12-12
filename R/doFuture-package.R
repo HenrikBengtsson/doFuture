@@ -80,7 +80,7 @@
 #'
 #' @section Load balancing ("chunking"):
 #' Whether load balancing ("chunking") should take place or not can be
-#' controlled specifying either
+#' controlled by specifying either argument
 #' `.options.future = list(scheduling = <ratio>)` or
 #' `.options.future = list(chunk.size = <count>)` to `foreach()`.
 #'
@@ -99,13 +99,24 @@
 #' If `+Inf` or `FALSE`, then one future per iteration is used.
 #' The default value is `scheduling = 1.0`.
 #'
-#' For "backward" compatibility reasons with existing foreach code, one 
-#' also use `.options.multicore = list(preschedule = <logical>)`, which
-#' if set overrides the above two options.
+#' The name of `foreach()` argument `.options.future` follows the naming
+#' conventions of the \pkg{doMC}, \pkg{doSNOW}, and \pkg{doParallel} packages,
+#. i.e. `.options.multicore` and `.options.snow`.
+#' _This argument should not be mistaken for the \R
+#' \link[future:future.options]{options of the future package}_.
+#'
+#' For backward-compatibility reasons with existing foreach code, one may
+#' also use arguments `.options.multicore = list(preschedule = <logical>)` and
+#' `.options.snow = list(preschedule = <logical>)` when using \pkg{doFuture}.
+#" Using the latter corresponds to the following `.options.future` settings:
 #' `.options.multicore = list(preschedule = TRUE)` is equivalent to
 #' `.options.future = list(scheduling = 1.0)` and
 #' `.options.multicore = list(preschedule = FALSE)` is equivalent to
 #' `.options.future = list(scheduling = +Inf)`.
+#' and analogously for `.options.snow`.
+#' Argument `.options.future` takes precedence over argument 
+#' `.option.multicore` which takes precedence over argument `.option.snow`,
+#' when it comes to chunking.
 #'
 #' @section Random Number Generation (RNG):
 #' The \pkg{doFuture} package does _not_ itself provide a framework

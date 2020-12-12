@@ -122,9 +122,14 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   ## If not set, fall back to:
   ## (c) .options.multicore = list(preschedule = <logical>)
-  ##      cf. mclapply(..., preschedule)
+  ##      used by doParallel:::doParallelMC(), cf. mclapply(..., preschedule)
+  ## (d) .options.snow      = list(preschedule = <logical>)
+  ##      used by doParallel:::doParallelSNOW()
   if (is.null(chunk.size) && is.null(scheduling)) {
     preschedule <- obj[["options"]][["multicore"]][["preschedule"]]
+    if (is.null(preschedule)) {
+      preschedule <- obj[["options"]][["snow"]][["preschedule"]]
+    }
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
       stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
@@ -287,8 +292,38 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     mdebug("  - gathering results & relaying conditions (except errors)")
   }
   ## Gather results and relay stdout and conditions (except errors)
-  resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
+
+  ## Check for RngFutureCondition:s when resolving futures?
+  if (isFALSE(seed)) {
+    withCallingHandlers({
+      resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
+    }, RngFutureCondition = function(cond) {
+      f <- attr(cond, "future")
   
+      ## Not one of our future?
+      if (!isFALSE(f$seed)) return()
+      
+      ## One of our futures?
+      for (kk in seq_along(fs)) {
+        if (identical(fs[[kk]], f)) {
+          ## Adjust message to give instructions relevant to this package
+          label <- f$label
+          if (is.null(label)) label <- "<none>"
+          message <- sprintf("UNRELIABLE VALUE: One of the foreach() iterations (%s) unexpectedly generated random numbers without declaring so. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, use '%%dorng%%' from the 'doRNG' package instead of '%%dopar%%'. This ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-CMRG method. To disable this check, set option 'future.rng.onMisuse' to \"ignore\".", sQuote(label))
+          cond$message <- message
+          if (inherits(cond, "warning")) {
+            warning(cond)
+            invokeRestart("muffleWarning")
+          } else if (inherits(cond, "error")) {
+            stop(cond)
+          }
+        }
+      }
+    })
+  } else {
+    resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
+  }
+
   ## Gather values
   if (debug) mdebug("- collecting values of futures")
   results <- lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)

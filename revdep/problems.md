@@ -1,38 +1,3 @@
-# biotmle
-
-<details>
-
-* Version: 1.12.0
-* GitHub: https://github.com/nhejazi/biotmle
-* Source code: https://github.com/cran/biotmle
-* Date/Publication: 2020-04-27
-* Number of recursive dependencies: 157
-
-Run `revdep_details(, "biotmle")` for more info
-
-</details>
-
-## In both
-
-*   checking re-building of vignette outputs ... WARNING
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘exposureBiomarkers.Rmd’ using rmarkdown
-    Warning in grDevices::png(f) :
-      unable to open connection to X11 display ''
-    Quitting from lines 41-48 (exposureBiomarkers.Rmd) 
-    Error: processing vignette 'exposureBiomarkers.Rmd' failed with diagnostics:
-    argument is of length zero
-    --- failed re-building ‘exposureBiomarkers.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘exposureBiomarkers.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
-    ```
-
 # CLVTools
 
 <details>
@@ -41,35 +6,13 @@ Run `revdep_details(, "biotmle")` for more info
 * GitHub: https://github.com/bachmannpatrick/CLVTools
 * Source code: https://github.com/cran/CLVTools
 * Date/Publication: 2020-08-26 20:10:02 UTC
-* Number of recursive dependencies: 82
+* Number of recursive dependencies: 86
 
 Run `revdep_details(, "CLVTools")` for more info
 
 </details>
 
 ## In both
-
-*   checking re-building of vignette outputs ... WARNING
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘CLVTools.Rmd’ using rmarkdown
-    Warning in grDevices::png(f) :
-      unable to open connection to X11 display ''
-    Warning in system2(..., stdout = if (use_file_stdout()) f1 else FALSE, stderr = f2) :
-      error in running command
-    ! sh: xelatex: command not found
-    
-    Error: processing vignette 'CLVTools.Rmd' failed with diagnostics:
-    LaTeX failed to compile /home/henrik/c4/repositories/doFuture/revdep/checks/CLVTools/new/CLVTools.Rcheck/vign_test/CLVTools/vignettes/CLVTools.tex. See https://yihui.org/tinytex/r/#debugging for debugging tips. See CLVTools.log for more info.
-    --- failed re-building ‘CLVTools.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘CLVTools.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
-    ```
 
 *   checking installed package size ... NOTE
     ```
@@ -78,37 +21,15 @@ Run `revdep_details(, "CLVTools")` for more info
         libs  11.4Mb
     ```
 
-# JointAI
-
-<details>
-
-* Version: 1.0.0
-* GitHub: https://github.com/nerler/JointAI
-* Source code: https://github.com/cran/JointAI
-* Date/Publication: 2020-08-31 06:40:09 UTC
-* Number of recursive dependencies: 131
-
-Run `revdep_details(, "JointAI")` for more info
-
-</details>
-
-## In both
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespace in Imports field not imported from: ‘mathjaxr’
-      All declared Imports should be used.
-    ```
-
 # methyvim
 
 <details>
 
-* Version: 1.10.0
+* Version: 1.11.0
 * GitHub: https://github.com/nhejazi/methyvim
 * Source code: https://github.com/cran/methyvim
 * Date/Publication: 2020-04-27
-* Number of recursive dependencies: 203
+* Number of recursive dependencies: 211
 
 Run `revdep_details(, "methyvim")` for more info
 
@@ -119,46 +40,27 @@ Run `revdep_details(, "methyvim")` for more info
 *   checking tests ...
     ```
     ...
-      > library(testthat)
-      > library(methyvim)
-      Setting options('download.file.method.GEOquery'='auto')
-      Setting options('GEOquery.inmemory.gpl'=FALSE)
-      methyvim v1.10.0: Targeted, Robust, and Model-free Differential Methylation Analysis
-      > 
-      > set.seed(43719)
-      > test_check("methyvim")
-      ── 1. Error: (unknown) (@test-methyvim.R#22)  ──────────────────────────────────
-      'names' attribute [8] must be the same length as the vector [1]
+      ── ERROR (test-methyvim.R:22:1): (code run outside of `test_that()`) ───────────
+      Error: 'names' attribute [8] must be the same length as the vector [1]
       Backtrace:
-       1. base::suppressWarnings(...)
-       3. methyvim::methyvim(...)
-       5. base::`colnames<-`(...)
+          █
+       1. ├─base::suppressWarnings(...) test-methyvim.R:22:0
+       2. │ └─base::withCallingHandlers(...)
+       3. └─methyvim::methyvim(...)
+       4.   ├─base::`colnames<-`(...)
+       5.   └─base::`colnames<-`(...)
+      
+      ── Warning (test-set_parallel.R:9:3): registers BiocParallel::DoparParam by defa
+      Strategy 'multiprocess' is deprecated in future (>= 1.20.0). Instead, explicitly specify either 'multisession' or 'multicore'. In the current R session, 'multiprocess' equals 'multicore'.
       
       ══ testthat results  ═══════════════════════════════════════════════════════════
-      [ OK: 34 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 1 ]
-      1. Error: (unknown) (@test-methyvim.R#22) 
+      Warning (test-cluster_sites.R:4:1): (code run outside of `test_that()`)
+      ERROR (test-methyvim.R:22:1): (code run outside of `test_that()`)
+      Warning (test-set_parallel.R:9:3): registers BiocParallel::DoparParam by default for parallel=TRUE
       
-      Error: testthat unit tests failed
+      [ FAIL 1 | WARN 2 | SKIP 0 | PASS 34 ]
+      Error: Test failures
       Execution halted
-    ```
-
-*   checking re-building of vignette outputs ... WARNING
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘using_methyvim.Rmd’ using rmarkdown
-    Warning in grDevices::png(f) :
-      unable to open connection to X11 display ''
-    Quitting from lines 165-168 (using_methyvim.Rmd) 
-    Error: processing vignette 'using_methyvim.Rmd' failed with diagnostics:
-    argument is of length zero
-    --- failed re-building ‘using_methyvim.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘using_methyvim.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
     ```
 
 *   checking Rd cross-references ... NOTE
@@ -170,11 +72,11 @@ Run `revdep_details(, "methyvim")` for more info
 
 <details>
 
-* Version: 1.0.16
+* Version: 1.1.0
 * GitHub: https://github.com/ShixiangWang/sigminer
 * Source code: https://github.com/cran/sigminer
-* Date/Publication: 2020-09-12 14:30:02 UTC
-* Number of recursive dependencies: 191
+* Date/Publication: 2020-11-11 07:40:06 UTC
+* Number of recursive dependencies: 197
 
 Run `revdep_details(, "sigminer")` for more info
 
@@ -184,45 +86,26 @@ Run `revdep_details(, "sigminer")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is  6.4Mb
+      installed size is  6.8Mb
       sub-directories of 1Mb or more:
-        extdata   3.5Mb
+        extdata   3.9Mb
     ```
 
 # sRACIPE
 
 <details>
 
-* Version: 1.4.0
+* Version: 1.6.0
 * GitHub: https://github.com/vivekkohar/sRACIPE
 * Source code: https://github.com/cran/sRACIPE
-* Date/Publication: 2020-04-27
-* Number of recursive dependencies: 101
+* Date/Publication: 2020-10-27
+* Number of recursive dependencies: 106
 
 Run `revdep_details(, "sRACIPE")` for more info
 
 </details>
 
 ## In both
-
-*   checking re-building of vignette outputs ... WARNING
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘sRACIPE.Rmd’ using rmarkdown
-    Warning in grDevices::png(f) :
-      unable to open connection to X11 display ''
-    Quitting from lines 18-19 (sRACIPE.Rmd) 
-    Error: processing vignette 'sRACIPE.Rmd' failed with diagnostics:
-    argument is of length zero
-    --- failed re-building ‘sRACIPE.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘sRACIPE.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
-    ```
 
 *   checking R code for possible problems ... NOTE
     ```
