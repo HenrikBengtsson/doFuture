@@ -1,14 +1,17 @@
 Package: doFuture
 =================
 
-Version: 0.11.0-9000 [2020-12-11]
+Version: 0.11.0-9000 [2020-12-16]
 
- * ...
+NEW FEATURES:
+
+ * Add option 'doFuture.rng.onMisuse' which can be used to temporarily override
+   option 'future.rng.onMisuse' when the doFuture adaptor is running.
  
 
 Version: 0.11.0 [2020-12-11]
 
-NEW FEATURE:
+NEW FEATURES:
 
  * foreach() argument '.options.snow = list(preschedule = <logical>)' is now
    acknowledged as a fallback to analogous argument '.options.multicore' -
