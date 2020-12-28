@@ -7,11 +7,21 @@ message("*** registerDoFuture() ...")
 
 message("doSEQ() %dopar% information:")
 registerDoSEQ()
-message(getDoParName())
-message(getDoParVersion())
-message(getDoParWorkers())
+message("getDoParName(): ", sQuote(getDoParName()))
+message("getDoParVersion(): ", sQuote(getDoParVersion()))
+message("getDoParWorkers(): ", sQuote(getDoParWorkers()))
 
-registerDoFuture()
+oldDoPar <- registerDoFuture()
+message("Previously registered foreach backend:")
+utils::str(oldDoPar)
+
+stopifnot(
+  "fun"  %in% names(oldDoPar),
+  "data" %in% names(oldDoPar),
+  "info" %in% names(oldDoPar),
+  is.function(oldDoPar$fun)
+)
+
 message("doFuture() %dopar% information:")
 
 for (strategy in strategies) {
