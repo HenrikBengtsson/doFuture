@@ -21,6 +21,7 @@ Pre
 SGE
 Slurm
 abc
+adaptor
 Adaptor
 batchjobs
 BatchJobs
@@ -82,3 +83,5 @@ VignetteTangle
 Vorobiev
 noexport
 mtcars
+onMisuse
+rng
