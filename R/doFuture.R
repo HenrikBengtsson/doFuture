@@ -324,6 +324,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
             warning(cond)
             invokeRestart("muffleWarning")
           } else if (inherits(cond, "error")) {
+            workarounds <- getOption("doFuture.workarounds")
+            if ("BiocParallel.DoParam.errors" %in% workarounds) {
+              cond$message <- sprintf('task %d failed - "%s"',
+                                      kk, conditionMessage(cond))
+            }
             stop(cond)
           }
         }

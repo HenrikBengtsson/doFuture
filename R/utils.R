@@ -98,6 +98,11 @@ future_version <- local({
 })
 
 
+trim <- function(s) {
+  sub("[\t\n\f\r ]+$", "", sub("^[\t\n\f\r ]+", "", s))
+}
+
+
 ## isFALSE() is available in R (>= 3.5.0)
 if (!exists("isFALSE", mode = "function")) {
   isFALSE <- function(x) {

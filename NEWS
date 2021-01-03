@@ -1,7 +1,7 @@
 Package: doFuture
 =================
 
-Version: 0.11.0-9000 [2020-12-28]
+Version: 0.11.0-9000 [2021-01-02]
 
 NEW FEATURES:
 
@@ -10,7 +10,14 @@ NEW FEATURES:
    
  * Add option 'doFuture.rng.onMisuse' which can be used to temporarily override
    option 'future.rng.onMisuse' when the doFuture adaptor is running.
- 
+
+ * Add option 'doFuture.workarounds', which can be set by environment variable
+   'R_DOFUTURE_WORKAROUNDS' when the package is loaded.
+
+ * Adding "BiocParallel.DoParam.errors" to option 'doFuture.workarounds' will
+   prefix RngFutureError messages with "task <index> failed - " in order for
+   such errors to be recognized by the BiocParallel DoParam backend.
+
 
 Version: 0.11.0 [2020-12-11]
 
