@@ -215,12 +215,12 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
       "doRNG" %in% loadedNamespaces()) {
     ## Taken care of by the doRNG package
     seed <- NULL
-  } else if (all(c("%dopar%", "BPPARAM", "BPREDO") %in% names(envir))) {
-    if (inherits(envir[["BPPARAM"]], "DoparParam") &&
-        is.list(envir[["BPREDO"]])) {
-      ## Taken care of by the BiocParalle package
-      seed <- NULL
-    }
+  } else if (all(c("%dopar%", "BPPARAM", "BPREDO") %in% names(envir)) &&
+             "BiocParallel" %in% loadedNamespaces() &&
+             inherits(envir[["BPPARAM"]], "DoparParam") &&
+             is.list(envir[["BPREDO"]])) {
+    ## Taken care of by the BiocParallel package
+    seed <- NULL
   }
 
   ## Are there RNG-check settings specific for doFuture?
