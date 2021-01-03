@@ -7,7 +7,10 @@ NEW FEATURES:
 
  * Now registerDoFuture() returns the previously set foreach backend, making it
    possible to reset the the foreach backend to the previous settings.
-   
+
+ * Now doFuture recognizes when it is called via the BiocParallel package in
+   which case it skips the check whether or not RNG was used by mistake.
+ 
  * Add option 'doFuture.rng.onMisuse' which can be used to temporarily override
    option 'future.rng.onMisuse' when the doFuture adaptor is running.
 

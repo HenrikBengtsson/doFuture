@@ -209,11 +209,18 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## if the RNG state is updated without having request to use parallel RNG.
   seed <- FALSE
 
-  ## SPECIAL CASE: If parallel RNG is taken care of by the doRNG package,
-  ## then disable this check.
+  ## SPECIAL CASES: If parallel RNG is taken care of by another package
+  ## such as doRNG or BiocParallel package, then disable this check.
   if (".doRNG.stream" %in% obj[["argnames"]] &&
       "doRNG" %in% loadedNamespaces()) {
+    ## Taken care of by the doRNG package
     seed <- NULL
+  } else if (all(c("%dopar%", "BPPARAM", "BPREDO") %in% names(envir))) {
+    if (inherits(envir[["BPPARAM"]], "DoparParam") &&
+        is.list(envir[["BPREDO"]])) {
+      ## Taken care of by the BiocParalle package
+      seed <- NULL
+    }
   }
 
   ## Are there RNG-check settings specific for doFuture?
