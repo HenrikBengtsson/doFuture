@@ -162,10 +162,6 @@ test_strategies <- function() {
     strategies <- future:::supportedStrategies()
     strategies <- setdiff(strategies, c("multiprocess", "lazy", "eager"))
   }
-  if (any(grepl("batchjobs_", strategies))) {
-    install_missing_packages("future.BatchJobs")
-    library("future.BatchJobs")
-  }
   if (any(grepl("batchtools_", strategies))) {
     install_missing_packages("future.batchtools")
     library("future.batchtools")

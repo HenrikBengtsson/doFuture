@@ -25,10 +25,9 @@ tweak_plyr <- function() {
 tweak_plyr()
 
 ## Exclude a few tests that takes very long time to run:
-## (1) example(raply) runs 100's of tasks that each parallelizes only
-##     few subtasks. Doing so using  batchjobs_local and
-##     batchtools_local futures will take quite some time, because of
-##     the overhead of creating BatchJobs / batchtools jobs.
+## (1) example(raply) runs 100's of tasks that each parallelizes only few
+##     subtasks. Doing so using batchtools_local futures will take quite
+##     some time, because of the overhead of creating batchtools jobs.
 excl <- "raply"
 ## (2) example(rdply) is as above (but only over 20 iterations).
 excl <- c(excl, "rdply")
