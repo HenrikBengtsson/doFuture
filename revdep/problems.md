@@ -40,7 +40,15 @@ Run `revdep_details(, "methyvim")` for more info
 *   checking tests ...
     ```
     ...
-      ── ERROR (test-methyvim.R:22:1): (code run outside of `test_that()`) ───────────
+      Backtrace:
+       1. methyvim:::set_parallel(parallel = TRUE) test-set_parallel.R:9:2
+       2. future::plan(future::multiprocess)
+       3. future:::plan_set(...)
+       4. future:::warn_about_multiprocess(newStack)
+       5. base::.Deprecated(...)
+      
+      ══ Failed tests ════════════════════════════════════════════════════════════════
+      ── Error (test-methyvim.R:22:1): (code run outside of `test_that()`) ───────────
       Error: 'names' attribute [8] must be the same length as the vector [1]
       Backtrace:
           █
@@ -49,14 +57,6 @@ Run `revdep_details(, "methyvim")` for more info
        3. └─methyvim::methyvim(...)
        4.   ├─base::`colnames<-`(...)
        5.   └─base::`colnames<-`(...)
-      
-      ── Warning (test-set_parallel.R:9:3): registers BiocParallel::DoparParam by defa
-      Strategy 'multiprocess' is deprecated in future (>= 1.20.0). Instead, explicitly specify either 'multisession' or 'multicore'. In the current R session, 'multiprocess' equals 'multicore'.
-      
-      ══ testthat results  ═══════════════════════════════════════════════════════════
-      Warning (test-cluster_sites.R:4:1): (code run outside of `test_that()`)
-      ERROR (test-methyvim.R:22:1): (code run outside of `test_that()`)
-      Warning (test-set_parallel.R:9:3): registers BiocParallel::DoparParam by default for parallel=TRUE
       
       [ FAIL 1 | WARN 2 | SKIP 0 | PASS 34 ]
       Error: Test failures
@@ -76,7 +76,7 @@ Run `revdep_details(, "methyvim")` for more info
 * GitHub: https://github.com/ShixiangWang/sigminer
 * Source code: https://github.com/cran/sigminer
 * Date/Publication: 2020-11-11 07:40:06 UTC
-* Number of recursive dependencies: 197
+* Number of recursive dependencies: 198
 
 Run `revdep_details(, "sigminer")` for more info
 

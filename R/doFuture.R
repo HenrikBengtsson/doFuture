@@ -209,12 +209,28 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## if the RNG state is updated without having request to use parallel RNG.
   seed <- FALSE
 
-  ## SPECIAL CASE: If parallel RNG is taken care of by the doRNG package,
-  ## then disable this check.
+  ## SPECIAL CASES: If parallel RNG is taken care of by another package
+  ## such as doRNG or BiocParallel package, then disable this check.
   if (".doRNG.stream" %in% obj[["argnames"]] &&
       "doRNG" %in% loadedNamespaces()) {
+    ## Taken care of by the doRNG package
+    seed <- NULL
+  } else if (all(c("%dopar%", "BPPARAM", "BPREDO") %in% names(envir)) &&
+             "BiocParallel" %in% loadedNamespaces() &&
+             inherits(envir[["BPPARAM"]], "DoparParam") &&
+             is.list(envir[["BPREDO"]])) {
+    ## Taken care of by the BiocParallel package
     seed <- NULL
   }
+
+  ## Are there RNG-check settings specific for doFuture?
+  onMisuse <- getOption("doFuture.rng.onMisuse", NULL)
+  if (!is.null(onMisuse)) {
+    oldOnMisuse <- getOption("future.rng.onMisuse")
+    options(future.rng.onMisuse = onMisuse)
+    on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
+  }
+
 
   labels <- sprintf("doFuture-%s", seq_len(nchunks))
 
@@ -315,6 +331,11 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
             warning(cond)
             invokeRestart("muffleWarning")
           } else if (inherits(cond, "error")) {
+            workarounds <- getOption("doFuture.workarounds")
+            if ("BiocParallel.DoParam.errors" %in% workarounds) {
+              cond$message <- sprintf('task %d failed - "%s"',
+                                      kk, conditionMessage(cond))
+            }
             stop(cond)
           }
         }
