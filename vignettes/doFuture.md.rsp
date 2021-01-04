@@ -59,7 +59,7 @@ evaluation on the compute nodes.
 ```r
 library("doFuture")
 registerDoFuture()
-plan(future.batchtools::batchjobs_slurm)
+plan(future.batchtools::batchtools_slurm)
 
 cutoff <- 0.10
 y <- foreach(x = mtcars, .export = c("cutoff")) %dopar% {

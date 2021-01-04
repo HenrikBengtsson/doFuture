@@ -35,7 +35,7 @@ build_script:
   - travis-tool.sh install_r foreach future iterators
   - travis-tool.sh install_r doRNG markdown R.rsp
   - travis-tool.sh install_bioc BiocParallel
-  - travis-tool.sh install_r plyr future.BatchJobs future.batchtools
+  - travis-tool.sh install_r plyr future.batchtools
   
 test_script:
   - travis-tool.sh run_tests
