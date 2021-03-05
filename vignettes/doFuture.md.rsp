@@ -356,5 +356,3 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 [future.callr]: https://cran.r-project.org/package=future.callr
 [future.batchtools]: https://cran.r-project.org/package=future.batchtools
 [plyr]: https://cran.r-project.org/package=plyr
----
-Copyright Henrik Bengtsson, 2016-2020
