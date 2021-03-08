@@ -46,3 +46,6 @@ Rplots.pdf$
 #----------------------------
 [.]future
 
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
