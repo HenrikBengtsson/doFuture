@@ -4,7 +4,41 @@
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
-doFuture <- function(obj, expr, envir, data) {   #nolint
+doFuture <- local({
+  tmpl_dummy_globals <- bquote_compile({
+    .(dummy_globals)
+    .(name) <- NULL
+  })
+
+  tmpl_expr <- bquote_compile({
+    ## Tell foreach to keep using futures also in nested calls
+    doFuture::registerDoFuture()
+
+    lapply(seq_along(...future.x_ii), FUN = function(jj) {
+      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
+      .(dummy_globals)
+      ...future.env <- environment()          #nolint
+      local({
+        for (name in names(...future.x_jj)) {
+          assign(name, ...future.x_jj[[name]],
+                 envir = ...future.env, inherits = FALSE)
+        }
+      })
+      tryCatch(.(expr), error = identity)
+    })
+  })
+
+  tmpl_expr_options <- bquote_compile({
+    ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
+    if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
+      oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
+      on.exit(options(oopts), add = TRUE)
+    }
+    .(expr)
+  })
+
+
+function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
   
@@ -40,30 +74,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   dummy_globals <- NULL
   for (kk in seq_along(argnames)) {
     name <- as.symbol(argnames[kk])  #nolint
-    if (kk == 1L) {
-      dummy_globals <- bquote(.(name) <- NULL)
-    } else {
-      dummy_globals <- bquote({ .(dummy_globals); .(name) <- NULL })
-    }
+    dummy_globals <- bquote_apply(tmpl_dummy_globals)
   }
 
-  expr <- bquote({
-    ## Tell foreach to keep using futures also in nested calls
-    doFuture::registerDoFuture()
-
-    lapply(seq_along(...future.x_ii), FUN = function(jj) {
-      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
-      .(dummy_globals)
-      ...future.env <- environment()          #nolint
-      local({
-        for (name in names(...future.x_jj)) {
-          assign(name, ...future.x_jj[[name]],
-                 envir = ...future.env, inherits = FALSE)
-        }
-      })
-      tryCatch(.(expr), error = identity)
-    })
-  })
+  expr <- bquote_apply(tmpl_expr)
 
   rm(list = "dummy_globals") ## Not needed anymore
 
@@ -183,14 +197,7 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
     ## Adjust expression 'expr' such that the non-adjusted maxSize is used
     ## within each future
-    expr <- bquote({
-      ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
-      if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
-        oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
-        on.exit(options(oopts), add = TRUE)
-      }
-      .(expr)
-    })
+    expr <- bquote_apply(tmpl_expr_options)
 
     if (debug) {
       mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
@@ -420,3 +427,4 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   res
 } ## doFuture()
+})
