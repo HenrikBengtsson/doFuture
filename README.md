@@ -9,8 +9,7 @@
 
 </div>
 
-
-# doFuture: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
+# doFuture: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package 
 
 ## Introduction
 The [future] package provides a generic API for using futures in R.
