@@ -143,7 +143,7 @@
             
       
       <small class="dont-index">Source: <a href="https://github.com/HenrikBengtsson/doFuture/blob/master/vignettes/doFuture.md.rsp" class="external-link"><code>vignettes/doFuture.md.rsp</code></a></small>
-      <div class="hidden name"><code>doFuture.Rmd</code></div>
+      <div class="hidden name"><code>doFuture.md.rsp</code></div>
 
     </div>
 
@@ -156,7 +156,7 @@
 <p>The <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> package provides a <code>%dopar%</code> adapter for the <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> package that works with <em>any</em> type of future. The doFuture package is cross platform just as the future package.</p>
 <p>Below is an example showing how to make <code>%dopar%</code> work with <em>multisession</em> futures. A multisession future will be evaluated in parallel using background R process.</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">"doFuture"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
 
@@ -171,7 +171,7 @@
 <a href="#futures-bring-foreach-to-the-hpc-cluster" class="anchor"></a>Futures bring foreach to the HPC cluster</h2>
 <p>To do the same on high-performance computing (HPC) cluster, the <a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a> package can be used. Assuming batchtools has been configured correctly, then following foreach iterations will be submitted to the HPC job scheduler and distributed for evaluation on the compute nodes.</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">"doFuture"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">plan</span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future.batchtools/man/batchtools_template.html" class="external-link">batchtools_slurm</a></span><span class="op">)</span>
 
@@ -186,7 +186,7 @@
 <a href="#futures-for-plyr" class="anchor"></a>Futures for plyr</h2>
 <p>The <a href="https://cran.r-project.org/package=plyr" class="external-link">plyr</a> package uses <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> as a parallel backend. This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers. For example,</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">"doFuture"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="http://had.co.nz/plyr" class="external-link">"plyr"</a></span><span class="op">)</span>
@@ -210,7 +210,7 @@
 <a href="#futures-and-biocparallel" class="anchor"></a>Futures and BiocParallel</h2>
 <p>The <a href="https://bioconductor.org/packages/release/bioc/html/BiocParallel.html" class="external-link">BiocParallel</a> package supports any <code>%dopar%</code> adapter as a parallel backend. This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a>, BiocParallel supports any type of future. For example,</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">"doFuture"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/Bioconductor/BiocParallel" class="external-link">"BiocParallel"</a></span><span class="op">)</span>
@@ -257,7 +257,7 @@
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">my_mean</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>In contrast, when using the <code>%dopar%</code> adapter of doFuture, all of the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> machinery comes in to play including automatic handling of global variables, e.g.</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">"doFuture"</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">plan</span><span class="op">(</span><span class="va">multisession</span>, workers <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
 
@@ -308,7 +308,7 @@ registerDoSEQ()
 </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 plan(sequential)
 </a></code></pre>
@@ -322,7 +322,7 @@ registerDoMC()
 </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 plan(multicore)
 </a></code></pre>
@@ -336,7 +336,7 @@ registerDoParallel()
 </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 plan(multisession)  ## on MS Windows
 plan(multicore)     ## on Linux, Solaris, and macOS
@@ -348,7 +348,7 @@ plan(multicore)     ## on Linux, Solaris, and macOS
 N/A
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 plan(future.callr::callr)
 </a></code></pre>
@@ -360,7 +360,7 @@ plan(future.callr::callr)
 cl </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 cl </a></code></pre>
 </td>
@@ -371,7 +371,7 @@ cl </a></code></pre>
 cl </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 cl </a></code></pre>
 </td>
@@ -382,7 +382,7 @@ cl </a></code></pre>
 cl </a></code></pre>
 </td>
 <td>
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 cl </a></code></pre>
 </td>
@@ -393,7 +393,7 @@ N/A
 </td>
 <td>
 High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
-<pre><code class="r"><a href="https://github.com/HenrikBengtsson/doFuture" class="external-link">library("doFuture")
+<pre><code class="r"><a href="https://doFuture.futureverse.org">library("doFuture")
 registerDoFuture()
 plan(future.batchtools::batchtools_sge)
 </a></code></pre>
