@@ -21,7 +21,7 @@ Description: Provides a '%dopar%' adapter such that any type of futures can
     be used as backends for the 'foreach' framework.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
-URL: https://github.com/HenrikBengtsson/doFuture
+URL: https://doFuture.futureverse.org, https://github.com/HenrikBengtsson/doFuture
 BugReports: https://github.com/HenrikBengtsson/doFuture/issues
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
