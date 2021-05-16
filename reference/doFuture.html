@@ -62,8 +62,6 @@ be used for asynchronous (parallel/distributed) or synchronous
 
 
 
-
-
 <!-- mathjax -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script>
@@ -85,18 +83,9 @@ be used for asynchronous (parallel/distributed) or synchronous
 </script>
 
 
-<!-- dependencies from examples -->
-
-
-  
-
-  
-
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    
-
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -117,13 +106,19 @@ be used for asynchronous (parallel/distributed) or synchronous
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../articles/doFuture.html">Get started</a>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
+</li>
+<li>
+  <a href="../articles/doFuture.html">Get started</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -169,6 +164,9 @@ be used for asynchronous (parallel/distributed) or synchronous
     </li>
     <li>
       <a href="https://listenv.futureverse.org">listenv</a>
+    </li>
+    <li>
+      <a href="https://marshal.futureverse.org">marshal</a>
     </li>
     <li>
       <a href="https://parallelly.futureverse.org">parallelly</a>
@@ -239,7 +237,7 @@ use <code><a href='registerDoFuture.html'>registerDoFuture()</a></code> to regis
 <code>%dopar%</code> adapter (no need to ever use <code>%do%</code>).
 After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
-<code><a href='https://future.futureverse.org/reference/plan.html'>future::plan()</a></code>.  For example:</p><ul>
+<code><a href='https://rdrr.io/pkg/future/man/plan.html'>future::plan()</a></code>.  For example:</p><ul>
 <li><p><code>plan(multisession)</code>:
 multiple R processes on the local machine.</p></li>
 <li><p><code>plan(cluster, workers = c("n1", "n2", "n2", "n3"))</code>:
@@ -327,7 +325,7 @@ The default value is <code>scheduling = 1.0</code>.</p>
 <p>The name of <code>foreach()</code> argument <code>.options.future</code> follows the naming
 conventions of the <span class="pkg">doMC</span>, <span class="pkg">doSNOW</span>, and <span class="pkg">doParallel</span> packages,
 <em>This argument should not be mistaken for the <span style="R">R</span>
-<a href='https://future.futureverse.org/reference/future.options.html'>options of the future package</a></em>.</p>
+<a href='https://rdrr.io/pkg/future/man/future.options.html'>options of the future package</a></em>.</p>
 <p>For backward-compatibility reasons with existing foreach code, one may
 also use arguments <code>.options.multicore = list(preschedule = &lt;logical&gt;)</code> and
 <code>.options.snow = list(preschedule = &lt;logical&gt;)</code> when using <span class="pkg">doFuture</span>.
@@ -347,7 +345,7 @@ when it comes to chunking.</p>
 for generating proper random numbers in parallel. This is a deliberate
 design choice based on how the foreach ecosystem is set up.  For valid
 parallel RNG, it is recommended to use the <span class="pkg">doRNG</span> package, where
-the <code><a href='https://rdrr.io/pkg/doRNG/man/grapes-dorng-grapes.html'>%dorng%</a></code> operator is used in place
+the <code>%dorng%</code> operator is used in place
 of <code><a href='https://rdrr.io/pkg/foreach/man/foreach.html'>%dopar%</a></code>.
 Note that <span class="pkg">doRNG</span> is designed to work with any type of foreach
 adapter including <span class="pkg">doFuture</span>.</p>
@@ -384,8 +382,8 @@ adapter including <span class="pkg">doFuture</span>.</p>
 
 
 <span class='co'>## Example 3 - Simulation with parallel RNG</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://renozao.github.io/doRNG'>doRNG</a></span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading required package: rngtools</span></div><div class='input'>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>doRNG</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in library(doRNG): there is no package called ‘doRNG’</span></div><div class='input'>
 <span class='va'>my_stat</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span>
   <span class='fu'><a href='https://rdrr.io/r/stats/median.html'>median</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>
 <span class='op'>}</span>
@@ -402,34 +400,17 @@ adapter including <span class="pkg">doFuture</span>.</p>
 <span class='co'>## Reproducible results when using the same RNG seed</span>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>0xBEEF</span><span class='op'>)</span>
 <span class='va'>y1</span> <span class='op'>&lt;-</span> <span class='fu'>my_experiment</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='error'>Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}: could not find function "%dorng%"</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/Random.html'>set.seed</a></span><span class='op'>(</span><span class='fl'>0xBEEF</span><span class='op'>)</span>
 <span class='va'>y2</span> <span class='op'>&lt;-</span> <span class='fu'>my_experiment</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='error'>Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}: could not find function "%dorng%"</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>y2</span>, <span class='va'>y1</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>## But only then</span>
 <span class='va'>y3</span> <span class='op'>&lt;-</span> <span class='fu'>my_experiment</span><span class='op'>(</span>n <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>y3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; List of 3
-#&gt;  $ :List of 3
-#&gt;   ..$ mu   : num 1.26
-#&gt;   ..$ sigma: num NA
-#&gt;   ..$ own  : num 1.26
-#&gt;  $ :List of 3
-#&gt;   ..$ mu   : num 1.33
-#&gt;   ..$ sigma: num 1.58
-#&gt;   ..$ own  : num 1.33
-#&gt;  $ :List of 3
-#&gt;   ..$ mu   : num -0.247
-#&gt;   ..$ sigma: num 1.99
-#&gt;   ..$ own  : num -0.993
-#&gt;  - attr(*, "rng")=List of 3
-#&gt;   ..$ : int [1:7] 10407 -557965149 646670728 1535601129 -1782995818 -140875233 -2010542636
-#&gt;   ..$ : int [1:7] 10407 1322665455 228081586 690246064 292190646 -1209002294 -964069472
-#&gt;   ..$ : int [1:7] 10407 1930909627 1980809480 -419043334 1761816562 811800279 -442022187
-#&gt;  - attr(*, "doRNG_version")= chr "1.7.4"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>y3</span>, <span class='va'>y1</span><span class='op'>)</span><span class='op'>)</span>
-
+</div><div class='output co'>#&gt; <span class='error'>Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}: could not find function "%dorng%"</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>y3</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;  num [1:100, 1:100] 95.32 -8.51 10.85 -7.89 4.81 ...</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>y3</span>, <span class='va'>y1</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): !identical(y3, y1) is not TRUE</span></div><div class='input'>
 <span class='co'># }</span>
 
 <span class='co'># \dontshow{</span>
@@ -448,11 +429,11 @@ adapter including <span class="pkg">doFuture</span>.</p>
 
       <footer>
       <div class="copyright">
-  <p><p>Developed by Henrik Bengtsson.</p></p>
+  <p>Developed by Henrik Bengtsson.</p>
 </div>
 
 <div class="pkgdown">
-  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p> and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9001.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1 and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9002.</p>
 </div>
 
       </footer>
@@ -478,8 +459,6 @@ adapter including <span class="pkg">doFuture</span>.</p>
 </script>
 
 
-
-  
 
   </body>
 </html>
