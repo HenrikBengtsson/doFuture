@@ -237,7 +237,7 @@ use <code><a href='registerDoFuture.html'>registerDoFuture()</a></code> to regis
 <code>%dopar%</code> adapter (no need to ever use <code>%do%</code>).
 After this, how and where the computations are performed is controlled
 solely by the future strategy set, which in controlled by
-<code><a href='https://rdrr.io/pkg/future/man/plan.html'>future::plan()</a></code>.  For example:</p><ul>
+<code><a href='https://future.futureverse.org/reference/plan.html'>future::plan()</a></code>.  For example:</p><ul>
 <li><p><code>plan(multisession)</code>:
 multiple R processes on the local machine.</p></li>
 <li><p><code>plan(cluster, workers = c("n1", "n2", "n2", "n3"))</code>:
@@ -325,7 +325,7 @@ The default value is <code>scheduling = 1.0</code>.</p>
 <p>The name of <code>foreach()</code> argument <code>.options.future</code> follows the naming
 conventions of the <span class="pkg">doMC</span>, <span class="pkg">doSNOW</span>, and <span class="pkg">doParallel</span> packages,
 <em>This argument should not be mistaken for the <span style="R">R</span>
-<a href='https://rdrr.io/pkg/future/man/future.options.html'>options of the future package</a></em>.</p>
+<a href='https://future.futureverse.org/reference/future.options.html'>options of the future package</a></em>.</p>
 <p>For backward-compatibility reasons with existing foreach code, one may
 also use arguments <code>.options.multicore = list(preschedule = &lt;logical&gt;)</code> and
 <code>.options.snow = list(preschedule = &lt;logical&gt;)</code> when using <span class="pkg">doFuture</span>.
