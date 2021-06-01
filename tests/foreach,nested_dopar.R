@@ -3,6 +3,14 @@ source("incl/start.R")
 strategies <- future:::supportedStrategies()
 strategies <- setdiff(strategies, "multiprocess")
 
+options(future.debug = FALSE)
+options(doFuture.debug = FALSE)
+
+plan_nested <- "sequential"
+if (packageVersion("future") <= "1.21.0") {
+  plan_nested <- getOption("future.plan", "sequential")
+}
+
 message("*** doFuture - nested %dopar% ...")
 
 registerDoFuture()
@@ -54,6 +62,7 @@ for (strategy1 in strategies) {
         ## future.plan can be either a string or a future function
         default <- getOption("future.plan", "sequential")
         if (is.function(default)) default <- class(default)
+        message("Option 'future.plan': ", sQuote(default))
         stopifnot(inherits(plan_list, default))
 
         plan_b <- future::plan("list")
@@ -88,8 +97,7 @@ for (strategy1 in strategies) {
             x_aa_bb$b == b,
             inherits(x_aa_bb$plan_a[[1]], strategy2),
             inherits(x_aa_bb$plan_b[[1]], "future"),
-            inherits(x_aa_bb$plan_b[[1]],
-                     getOption("future.plan", "sequential"))
+            inherits(x_aa_bb$plan_b[[1]], plan_nested)
           )
         }
       }
