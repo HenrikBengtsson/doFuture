@@ -321,33 +321,48 @@ function(obj, expr, envir, data) {   #nolint
     withCallingHandlers({
       resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
     }, RngFutureCondition = function(cond) {
-      f <- attr(cond, "future")
-  
-      ## Not one of our future?
-      if (!isFALSE(f$seed)) return()
+      ## One of "our" futures?
+      idx <- NULL
       
-      ## One of our futures?
-      for (kk in seq_along(fs)) {
-        if (identical(fs[[kk]], f)) {
-          ## Adjust message to give instructions relevant to this package
-          label <- f$label
-          if (is.null(label)) label <- "<none>"
-          message <- sprintf("UNRELIABLE VALUE: One of the foreach() iterations (%s) unexpectedly generated random numbers without declaring so. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, use '%%dorng%%' from the 'doRNG' package instead of '%%dopar%%'. This ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-CMRG method. To disable this check, set option 'future.rng.onMisuse' to \"ignore\".", sQuote(label))
-          cond$message <- message
-          if (inherits(cond, "warning")) {
-            warning(cond)
-            invokeRestart("muffleWarning")
-          } else if (inherits(cond, "error")) {
-            workarounds <- getOption("doFuture.workarounds")
-            if ("BiocParallel.DoParam.errors" %in% workarounds) {
-              cond$message <- sprintf('task %d failed - "%s"',
-                                      kk, conditionMessage(cond))
-            }
-            stop(cond)
-          }
+      ## Compare future UUIDs or whole futures?
+      uuid <- attr(cond, "uuid")
+      if (!is.null(uuid)) {
+        ## (a) Future UUIDs are available
+        for (kk in seq_along(fs)) {
+          if (identical(fs[[kk]]$uuid, uuid)) idx <- kk
+        }
+      } else {        
+        ## (b) Future UUIDs are not available, use Future object?
+        f <- attr(cond, "future")
+        if (is.null(f)) return()
+        ## Nothing to do?
+        if (!isFALSE(f$seed)) return()  ## shouldn't really happen
+        for (kk in seq_along(fs)) {
+          if (identical(fs[[kk]], f)) idx <- kk
         }
       }
-    })
+      
+      ## Nothing more to do, i.e. not one of our futures?
+      if (is.null(idx)) return()
+
+      ## Adjust message to give instructions relevant to this package
+      f <- fs[[idx]]
+      label <- f$label
+      if (is.null(label)) label <- "<none>"
+      message <- sprintf("UNRELIABLE VALUE: One of the foreach() iterations (%s) unexpectedly generated random numbers without declaring so. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, use '%%dorng%%' from the 'doRNG' package instead of '%%dopar%%'. This ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-CMRG method. To disable this check, set option 'future.rng.onMisuse' to \"ignore\".", sQuote(label))
+      cond$message <- message
+      if (inherits(cond, "warning")) {
+        warning(cond)
+        invokeRestart("muffleWarning")
+      } else if (inherits(cond, "error")) {
+        workarounds <- getOption("doFuture.workarounds")
+        if ("BiocParallel.DoParam.errors" %in% workarounds) {
+          cond$message <- sprintf('task %d failed - "%s"',
+                                  kk, conditionMessage(cond))
+        }
+        stop(cond)
+      }
+    }) ## withCallingHandlers()
   } else {
     resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
   }
