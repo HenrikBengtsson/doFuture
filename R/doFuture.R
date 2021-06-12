@@ -369,7 +369,11 @@ function(obj, expr, envir, data) {   #nolint
 
   ## Gather values
   if (debug) mdebug("- collecting values of futures")
-  results <- lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)
+  results <- local({
+    oopts <- options(future.rng.onMisuse.keepFuture = FALSE)
+    on.exit(options(oopts))
+    lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)
+  })
   rm(list = "fs")
   stop_if_not(length(results) == nchunks)
 
