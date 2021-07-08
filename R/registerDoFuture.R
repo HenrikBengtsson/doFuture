@@ -3,7 +3,7 @@
 #' Register the [doFuture] parallel adapter to be used by
 #' the \pkg{foreach} package.
 #'
-#' @return Nothing
+#' @return Invisibly returns the previously registered foreach backend.
 #'
 #' @section For package developers:
 #' Please refrain from modifying the foreach backend inside your packages /

@@ -7,7 +7,7 @@
 registerDoFuture()
 }
 \value{
-Nothing
+Invisibly returns the previously registered foreach backend.
 }
 \description{
 Register the \link{doFuture} parallel adapter to be used by
