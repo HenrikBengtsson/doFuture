@@ -8,28 +8,34 @@ jobs:
 
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.label }}
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'devel'  }
-          - {os: windows-latest, r: 'release'}
-          - {os: macOS-latest,   r: 'devel'  }
-          - {os: macOS-latest,   r: 'release'}
-          - {os: ubuntu-20.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-20.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-20.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-20.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-20.04,   r: '3.3',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+#          - {os: windows-latest, r: 'devel'   }
+          - {os: windows-latest, r: 'release' }
+          - {os: macOS-latest,   r: 'devel'   }
+          - {os: macOS-latest,   r: 'release' }
+          - {os: ubuntu-20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest" }
+          - {os: ubuntu-20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", future_plan: 'multisession', label: 'w/ multisession' }
+          - {os: ubuntu-20.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest" }
+          - {os: ubuntu-20.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest" }
+          - {os: ubuntu-20.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest" }
+          - {os: ubuntu-20.04,   r: '3.3',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest" }
 
     env:
-      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
-      R_FUTURE_RNG_ONMISUSE: error
-      RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      RSPM: ${{ matrix.config.rspm }}
+      R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+      ## R CMD check
+      _R_CHECK_LENGTH_1_CONDITION_: true
+      _R_CHECK_LENGTH_1_LOGIC2_: true
+      _R_CHECK_MATRIX_DATA_: true
+      _R_CHECK_CRAN_INCOMING_: false
+      ## Specific to futures
+      R_FUTURE_PLAN: ${{ matrix.config.future_plan }}
 
     steps:
       - uses: actions/checkout@v2
@@ -68,7 +74,6 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-          install.packages(".", repos=NULL, type="source")  ## needed by parallel workers
         shell: Rscript {0}
 
       - name: Session info
@@ -80,7 +85,7 @@ jobs:
 
       - name: Check
         env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          _R_CHECK_CRAN_INCOMING_: false
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
@@ -90,21 +95,3 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
-
-      - name: Test coverage - Install dependencies
-        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'release'
-        run: |
-            sudo apt-get install --yes libcurl4-openssl-dev
-
-      - name: Test coverage
-        if: matrix.config.os == 'ubuntu-20.04' && matrix.config.r == 'release'
-        run: |
-          ## 0. Workaround: 'curl' from RSPM fails to load; install from CRAN
-          install.packages("curl", repos="https://cloud.r-project.org")
-          ## 1. Get 'Repository Upload Token' from Codecov:
-          ##    https://app.codecov.io/gh/<org>/<repo>/settings
-          ## 2. Set 'CODECOV_TOKEN' in GitHub Secrets:
-          ##    https://github.com/<org>/<repo>/settings/environments/
-          install.packages("covr")
-          covr::codecov(token="${{secrets.CODECOV_TOKEN}}")
-        shell: Rscript {0}
