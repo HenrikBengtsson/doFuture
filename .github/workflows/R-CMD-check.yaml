@@ -20,8 +20,8 @@ jobs:
           - {os: macOS-latest,   r: 'release' }
           - {os: ubuntu-20.04,   r: 'release' }
           - {os: ubuntu-20.04,   r: 'release', future_plan: 'multisession', label: 'w/ multisession' }
-          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.batchtools::batchtools_local', label: 'w/ batchtools_local' }
-          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.callr::callr', label: 'w/ callr' }
+#          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.batchtools::batchtools_local', label: 'w/ batchtools_local' }
+#          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.callr::callr', label: 'w/ callr' }
           - {os: ubuntu-20.04,   r: 'oldrel' }
           - {os: ubuntu-20.04,   r: '3.5'    }
           - {os: ubuntu-20.04,   r: '3.4'    }
