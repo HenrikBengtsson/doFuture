@@ -80,7 +80,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/HenrikBengtsson/doFuture.tests.extra.git
           R CMD build --no-build-vignettes --no-manual doFuture.tests.extra
-          R CMD check --no-codoc --no-examples --no-install --no-manual --ignore-vignettes --as-cran doFuture.tests.extra_*.tar.gz
+          R CMD check --no-codoc --no-examples --no-manual --ignore-vignettes --as-cran doFuture.tests.extra_*.tar.gz
 
       - name: Upload check results
         if: failure()
