@@ -26,7 +26,7 @@ jobs:
       _R_CHECK_MATRIX_DATA_: true
       _R_CHECK_CRAN_INCOMING_: false
       ## Specific to futures
-      R_FUTURE_RNG_ONMISUSE: error
+#      R_FUTURE_RNG_ONMISUSE: error
       
     steps:
       - uses: actions/checkout@v2
