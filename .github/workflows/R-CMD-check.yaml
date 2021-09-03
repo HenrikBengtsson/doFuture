@@ -19,6 +19,7 @@ jobs:
           - {os: macOS-latest,   r: 'devel'   }
           - {os: macOS-latest,   r: 'release' }
           - {os: ubuntu-20.04,   r: 'release' }
+          - {os: ubuntu-20.04,   r: 'release', future_plan: 'multicore', label: 'w/ multicore' }
           - {os: ubuntu-20.04,   r: 'release', future_plan: 'multisession', label: 'w/ multisession' }
 #          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.batchtools::batchtools_local', label: 'w/ batchtools_local' }
 #          - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.callr::callr', label: 'w/ callr' }
