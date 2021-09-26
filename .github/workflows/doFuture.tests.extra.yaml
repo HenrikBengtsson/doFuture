@@ -14,9 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { r: "release", strategies: sequential   }
-          - { r: "release", strategies: multicore    }
-          - { r: "release", strategies: multisession }
+          - { r: "release", strategies: sequential                            }
+          - { r: "release", strategies: multicore                             }
+          - { r: "release", strategies: multisession                          }
+          - { r: "release", strategies: "future.callr::callr"                 }
+          - { r: "release", strategies: "future.batchtools::batchtools_local" }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
