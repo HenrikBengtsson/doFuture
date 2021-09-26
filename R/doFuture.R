@@ -233,9 +233,13 @@ function(obj, expr, envir, data) {   #nolint
   ## Are there RNG-check settings specific for doFuture?
   onMisuse <- getOption("doFuture.rng.onMisuse", NULL)
   if (!is.null(onMisuse)) {
-    oldOnMisuse <- getOption("future.rng.onMisuse")
-    options(future.rng.onMisuse = onMisuse)
-    on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
+    if (onMisuse == "ignore") {
+      seed <- NULL
+    } else {
+      oldOnMisuse <- getOption("future.rng.onMisuse")
+      options(future.rng.onMisuse = onMisuse)
+      on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
+    }
   }
 
 
