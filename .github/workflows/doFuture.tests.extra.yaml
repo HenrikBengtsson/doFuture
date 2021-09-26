@@ -8,13 +8,15 @@ jobs:
 
     runs-on: ubuntu-20.04
 
-    name: ${{ matrix.config.r }}
+    name: ${{ matrix.config.r }} (${{ matrix.config.strategies }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - { r: "release" }
+          - { r: "release", strategies: sequential   }
+          - { r: "release", strategies: multicore    }
+          - { r: "release", strategies: multisession }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -27,6 +29,7 @@ jobs:
       _R_CHECK_CRAN_INCOMING_: false
       ## Specific to futures
 #      R_FUTURE_RNG_ONMISUSE: error
+      _R_CHECK_FUTURE_STRATEGIES_: ${{ matrix.config.strategies }}
       
     steps:
       - uses: actions/checkout@v2
