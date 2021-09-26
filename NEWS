@@ -6,6 +6,13 @@ Version: 0.12.0-9001 [2021-09-26]
 PERFORMANCE:
 
  * options(doFuture.rng.onMisuse = "ignore") is now a tad faster than before.
+
+MISCELLANEOUS:
+
+ * Moved all internal opt-in package tests that test registerDoFuture() with
+   popular packages (e.g. BiocParallel, foreach, plyr, caret, glmnet, NSP, and
+   TSP) relying on 'foreach' to a separate 'doFuture.tests.extras' package.
+   This reduced the size of the package tarball from 140 kB to 40 kB.
  
 
 Version: 0.12.0 [2021-01-02]
