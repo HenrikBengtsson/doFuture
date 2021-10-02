@@ -7,9 +7,6 @@ options(future.debug = FALSE)
 options(doFuture.debug = FALSE)
 
 plan_nested <- "sequential"
-if (packageVersion("future") <= "1.21.0") {
-  plan_nested <- getOption("future.plan", "sequential")
-}
 
 message("*** doFuture - nested %dopar% ...")
 
