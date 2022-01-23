@@ -202,8 +202,8 @@ function(obj, expr, envir, data) {   #nolint
     if (debug) {
       mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
       mdebugf(" - Number of chunks: %d", nchunks)
-      mdebugf(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
-      mdebugf(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
+      mdebugf(" - globals.maxSize (original): %.0f bytes", globals.maxSize.default)
+      mdebugf(" - globals.maxSize (adjusted): %.0f bytes", globals.maxSize.adjusted)
       mdebug("- R expression (adjusted):")
       mprint(expr)
     }
