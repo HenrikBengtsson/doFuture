@@ -43,10 +43,14 @@ for (strategy1 in strategies) {
     ## * checking for detritus in the temp directory ... NOTE
     ## from 'R CMD check --as-cran' when running on MS Windows.
     message("- shut down nested workers")
-    dummy <- foreach(a = as) %dopar% future::plan("sequential")
+    dummy <- foreach(a = as) %dopar% {
+      future::plan("sequential")
+      gc()
+    }
 
     future::plan("sequential")
-
+    gc()
+    
     ## Cleanup in order make sure none of these variables exist as
     ## proxies for missing globals of the name names
     rm(list = c("as", "bs", "x"))
