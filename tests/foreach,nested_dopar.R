@@ -69,15 +69,8 @@ for (strategy1 in strategies) {
           inherits(plan_b[[1]], default)
         )
 
-        res <- list(a = a, plan_a = plan_a,
-                    b = b, plan_b = plan_b)
-
-        ## WORKAROUND: Shut down *nested* parallel workers here to avoid
-        ## * checking for detritus in the temp directory ... NOTE
-        ## from R CMD check --as-cran.
-        plan(sequential)
-        
-        res                    
+        list(a = a, plan_a = plan_a,
+             b = b, plan_b = plan_b)
       }
       message("foreach() - level 2 ... DONE")
 
@@ -107,9 +100,19 @@ for (strategy1 in strategies) {
       }
     })
 
+    ## WORKAROUND: Manually shut down *nested* parallel workers to avoid
+    ## * checking for detritus in the temp directory ... NOTE
+    ## from 'R CMD check --as-cran' when running on MS Windows.
+    message("- shut down nested workers")
+    dummy <- foreach(a = as) %dopar% {
+      future::plan("sequential")
+      gc()
+    }
+
     ## Cleanup in order make sure none of these variables exist as
     ## proxies for missing globals of the name names
     rm(list = c("as", "bs", "x"))
+
     message(sprintf("- plan(list('%s', '%s')) ... DONE", strategy1, strategy2))
   }
 }
