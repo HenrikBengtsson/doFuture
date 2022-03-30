@@ -104,18 +104,7 @@ for (strategy1 in strategies) {
     ## * checking for detritus in the temp directory ... NOTE
     ## from 'R CMD check --as-cran' when running on MS Windows.
     message("- shut down nested workers")
-    dummy <- foreach(a = as) %dopar% {
-      ## AD HOC: Identify any PSOCK cluster and close it
-      p <- future::plan("next")
-      if (inherits(p, "cluster")) {
-        f <- future::future(NULL)
-        v <- future::value(f)
-        if (inherits(f$workers, "cluster")) parallel::stopCluster(f$workers)
-        f <- NULL
-      }
-      future::plan("sequential")
-      gc()
-    }
+    dummy <- foreach(a = as) %dopar% future::plan("sequential")
 
     future::plan("sequential")
     
