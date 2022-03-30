@@ -56,16 +56,7 @@ for (strategy1 in strategies) {
       gc()
     }
 
-    ## AD HOC: Identify any PSOCK cluster and close it
-    p <- future::plan("next")
-    if (inherits(p, "cluster")) {
-      f <- future::future(NULL)
-      v <- future::value(f)
-      if (inherits(f$workers, "cluster")) parallel::stopCluster(f$workers)
-      f <- NULL
-    }
     future::plan("sequential")
-    gc()
 
     ## Cleanup in order make sure none of these variables exist as
     ## proxies for missing globals of the name names
