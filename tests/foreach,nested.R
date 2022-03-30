@@ -49,6 +49,8 @@ for (strategy1 in strategies) {
     ## from 'R CMD check --as-cran' when running on MS Windows.
     message("- shut down nested workers")
     dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% adHocStopPlanCluster()
+    plan(strategy1)
+    dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% adHocStopPlanCluster()
     adHocStopPlanCluster()
     
     message(sprintf("- plan(list('%s', '%s')) ... DONE", strategy1, strategy2))
