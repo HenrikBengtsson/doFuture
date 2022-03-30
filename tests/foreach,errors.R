@@ -22,6 +22,9 @@ for (strategy in strategies) {
   stopifnot(inherits(res, "error"),
             grepl("Index error", conditionMessage(res)))
 
+  # Shutdown current plan
+  plan(sequential)
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 

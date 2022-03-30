@@ -24,6 +24,9 @@ for (strategy in strategies) {
     stopifnot(all.equal(res, res0))
   }
 
+  # Shutdown current plan
+  plan(sequential)
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
