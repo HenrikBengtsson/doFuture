@@ -69,8 +69,14 @@ for (strategy1 in strategies) {
           inherits(plan_b[[1]], default)
 	)
 
-        list(a = a, plan_a = plan_a,
-             b = b, plan_b = plan_b)
+        res <- list(a = a, plan_a = plan_a,
+                    b = b, plan_b = plan_b)
+
+        ## WORKAROUND: Shut down *nested* parallel workers here to avoid
+        ## * checking for detritus in the temp directory ... NOTE
+        ## from R CMD check --as-cran.
+        plan(sequential)
+        res                    
       }
       message("foreach() - level 2 ... DONE")
 
