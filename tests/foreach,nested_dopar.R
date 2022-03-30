@@ -103,15 +103,13 @@ for (strategy1 in strategies) {
     ## proxies for missing globals of the name names
     rm(list = c("as", "bs", "x"))
 
-    ## WORKAROUND: Manually shut down *nested* parallel workers to avoid
+    ## WORKAROUND: Shut down *nested* parallel workers as an attempt to avoid
     ## * checking for detritus in the temp directory ... NOTE
-    ## from 'R CMD check --as-cran' when running on MS Windows.
+    ## from 'R CMD check --as-cran' when running on MS Windows. This looks
+    ## like a bug in R, cf. https://bugs.r-project.org/show_bug.cgi?id=18133    
     message("- shut down nested workers")
-    dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% adHocStopPlanCluster()
-    adHocStopPlanCluster()
-    plan(strategy1)
-    dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% adHocStopPlanCluster()
-    adHocStopPlanCluster()
+    dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% plan("sequential")
+    plan("sequential")
     
     message(sprintf("- plan(list('%s', '%s')) ... DONE", strategy1, strategy2))
   }
