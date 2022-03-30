@@ -54,7 +54,7 @@ for (strategy1 in strategies) {
       y <- foreach(b = bs, .export = c("a", "plan_a")) %dopar% {
         plan_list <- future::plan("next")
         message(capture.output(print(plan_list)))
-	
+
         stopifnot(inherits(plan_list, "future"))
         ## future.plan can be either a string or a future function
         default <- getOption("future.plan", "sequential")
@@ -65,9 +65,9 @@ for (strategy1 in strategies) {
         plan_b <- future::plan("list")
         str(plan_b)
         stopifnot(
-	  inherits(plan_b[[1]], "future"),
+          inherits(plan_b[[1]], "future"),
           inherits(plan_b[[1]], default)
-	)
+        )
 
         res <- list(a = a, plan_a = plan_a,
                     b = b, plan_b = plan_b)
@@ -76,6 +76,7 @@ for (strategy1 in strategies) {
         ## * checking for detritus in the temp directory ... NOTE
         ## from R CMD check --as-cran.
         plan(sequential)
+        
         res                    
       }
       message("foreach() - level 2 ... DONE")
