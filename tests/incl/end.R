@@ -15,7 +15,12 @@ if (!isTRUE(diff)) {
   print(cons1)
   cat("Difference:\n")
   print(diff)
-  stop("[INTERNAL ERROR] Detected stray connections after finishing test")
+  msg <- ("[INTERNAL] Detected stray connections after finishing test")
+  if (nzchar(Sys.getenv("R_FUTURE_PLAN"))) {
+    warning(msg)
+  } else {
+    stop(msg)
+  }
 }
 
 rm(list = c(setdiff(ls(), ovars)))
