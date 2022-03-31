@@ -1,6 +1,6 @@
 source("incl/start.R")
 
-## WORKAROUND: To avoid `R CMD check --as-cran` on MS Windows from triggering:
+## WORKAROUND: To avoid `R CMD check --as-cran` on MS Windows triggering:
 ##
 ## * checking for detritus in the temp directory ... NOTE
 ##   Found the following files/directories:
