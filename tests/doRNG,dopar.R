@@ -50,6 +50,9 @@ if (require("doRNG")) {
     r2_2 <- foreach(i = 1:4, .options.RNG = 456) %dopar% { runif(1) }
     stopifnot(identical(r1_2, r2_2), !identical(r1_2, r1))
 
+    # Shutdown current plan
+    plan(sequential)
+
     message(sprintf("- plan('%s') ... DONE", strategy))
   } ## for (strategy ...)
 

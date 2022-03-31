@@ -65,6 +65,8 @@ for (type in types) {
     print(res)
     stopifnot(inherits(res, "FutureError"))
   }
+  parallel::stopCluster(cl)
+  cl <- NULL
   
   cl <- setupClusterWithoutPkgs(type)  
   if (all(attr(cl, "withs")) && !all(attr(cl, "withouts"))) {
@@ -83,7 +85,6 @@ for (type in types) {
     print(res)
     stopifnot(inherits(res, "FutureError"))
   }
-  
   parallel::stopCluster(cl)
   cl <- NULL
   

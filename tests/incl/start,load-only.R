@@ -6,6 +6,11 @@ oopts <- options(warn = 1L,
                  doFuture.debug = TRUE)
 oplan <- future::plan()
 
+## Record connected *after* the first future has been created,
+## because the default plan might be a PSOCK cluster
+future::value(future::future(NULL))
+cons0 <- showConnections(all = FALSE)
+
 future::plan(future::sequential)
 doFuture::registerDoFuture()
 
