@@ -4,7 +4,7 @@ on 2022-03-30
 
 I've verified this submission have no negative impact on any of the 20 reverse package dependencies available on CRAN and Bioconductor.
 
-Thank you
+Thanks in advance
 
 
 ## Notes not sent to CRAN
@@ -16,10 +16,10 @@ The package has been verified using `R CMD check --as-cran` on:
 | R version     | GitHub | R-hub    | mac/win-builder |
 | ------------- | ------ | -------- | --------------- |
 | 3.4.x         | L      |          |                 |
-| 3.5.x         | L      |          |                 |
-| 4.0.x         | L      | L        |                 |
-| 4.1.x         | L M W  | L M M1 W | M1 W!           |
-| devel         | L M W  | L        |    W!           |
+| 3.6.x         | L      |          |                 |
+| 4.0.x         | L M W  | L        |                 |
+| 4.1.x         | L M W  | L M M1 W | M1 W            |
+| devel         |   M W  | L        |    W            |
 
 *Legend: OS: L = Linux, M = macOS, M1 = macOS M1, W = Windows*
 
@@ -39,37 +39,37 @@ gives
 ```
 ── doFuture 0.12.1: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-2a7120eadb184eac91343260fc8c4f3a
+  Build ID:   doFuture_0.12.1.tar.gz-a52026c4f5cd4fa8ab54b76673d00a45
   Platform:   Debian Linux, R-devel, clang, ISO-8859-15 locale
-  Submitted:  10m 25.4s ago
-  Build time: 5m 39.9s
+  Submitted:  7m 40.9s ago
+  Build time: 5m 27.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ── doFuture 0.12.1: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-7669fa8df0f4445f8133bb52748378c3
+  Build ID:   doFuture_0.12.1.tar.gz-37ebcc48c08e418380e59f7f4cc42117
   Platform:   Debian Linux, R-patched, GCC
-  Submitted:  10m 25.4s ago
-  Build time: 4m 56.4s
+  Submitted:  7m 40.9s ago
+  Build time: 4m 39.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ── doFuture 0.12.1: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-cdc736f7946b4eb7bf63e1b88e570b60
+  Build ID:   doFuture_0.12.1.tar.gz-c5c0c6428afa4defad9eb5a201750530
   Platform:   CentOS 8, stock R from EPEL
-  Submitted:  10m 25.4s ago
-  Build time: 4m 8.2s
+  Submitted:  7m 40.9s ago
+  Build time: 3m 59.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ── doFuture 0.12.1: WARNING
 
-  Build ID:   doFuture_0.12.1.tar.gz-e6b16b96c6f54f7b9b93c83cc1e31389
+  Build ID:   doFuture_0.12.1.tar.gz-b39d28581da94b72ad89740ba51397b5
   Platform:   macOS 10.13.6 High Sierra, R-release, CRAN's setup
-  Submitted:  10m 25.4s ago
-  Build time: 2m 28.7s
+  Submitted:  7m 40.9s ago
+  Build time: 2m 33.1s
 
 ❯ checking whether package ‘doFuture’ can be installed ... WARNING
   Found the following significant warnings:
@@ -80,19 +80,19 @@ gives
 
 ── doFuture 0.12.1: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-1f8a025b18bc4588935b42e30345fb33
+  Build ID:   doFuture_0.12.1.tar.gz-b7e4ed47e59d4cbbb21f6b523597f693
   Platform:   Apple Silicon (M1), macOS 11.6 Big Sur, R-release
-  Submitted:  10m 25.4s ago
-  Build time: 2m 13.5s
+  Submitted:  7m 40.9s ago
+  Build time: 2m 12.8s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 ── doFuture 0.12.1: WARNING
 
-  Build ID:   doFuture_0.12.1.tar.gz-e218d361d37a40f6a4184bdefa76bf87
+  Build ID:   doFuture_0.12.1.tar.gz-d37b3e0ba91b466e92b4360059c5054d
   Platform:   Windows Server 2008 R2 SP1, R-release, 32/64 bit
-  Submitted:  10m 25.4s ago
-  Build time: 3m 51.6s
+  Submitted:  7m 40.9s ago
+  Build time: 3m 43.8s
 
 ❯ checking whether package 'doFuture' can be installed ... WARNING
   Found the following significant warnings:
