@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.0-9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.1</span>
       </span>
     </div>
 
@@ -71,7 +71,7 @@
   </a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Packages
      
     <span class="caret"></span>
@@ -187,7 +187,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://future.batchtools.futureverse.org/reference/batchtools_template.html" class="external-link">batchtools_slurm</a></span><span class="op">)</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va">batchtools_slurm</span><span class="op">)</span>
 
 <span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fl">0.10</span>
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mtcars</span>, .export <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cutoff"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></span> <span class="op">{</span>
@@ -355,7 +355,7 @@ N/A
 <td>
 <pre><code class="r"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.callr</span><span class="fu">::</span><span class="va"><a href="https://future.callr.futureverse.org/reference/callr.html" class="external-link">callr</a></span><span class="op">)</span></code></pre>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.callr</span><span class="fu">::</span><span class="va">callr</span><span class="op">)</span></code></pre>
 </td>
 </tr>
 <tr style="vertical-align: center;">
@@ -399,14 +399,14 @@ N/A
 High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
 <pre><code class="r"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://future.batchtools.futureverse.org/reference/batchtools_template.html" class="external-link">batchtools_sge</a></span><span class="op">)</span></code></pre>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va">batchtools_sge</span><span class="op">)</span></code></pre>
 </td>
 </tr>
 <tr style="vertical-align: center;">
 <td>
 <pre><code class="r"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doRedis"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/doRedis/man/registerDoRedis.html" class="external-link">registerDoRedis</a></span><span class="op">(</span><span class="st">"jobs"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/doRedis/man/startLocalWorkers.html" class="external-link">startLocalWorkers</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>, queue <span class="op">=</span> <span class="st">"jobs"</span><span class="op">)</span></code></pre>
+<span class="fu">registerDoRedis</span><span class="op">(</span><span class="st">"jobs"</span><span class="op">)</span>
+<span class="fu">startLocalWorkers</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>, queue <span class="op">=</span> <span class="st">"jobs"</span><span class="op">)</span></code></pre>
 </td>
 <td>
 N/A. There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis" class="external-link">doRedis</a> package.

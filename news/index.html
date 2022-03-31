@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.0-9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.1</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   </a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Packages
      
     <span class="caret"></span>
@@ -123,13 +123,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.12.0-9001" id="dofuture-0120-9001">doFuture 0.12.0-9001<a class="anchor" aria-label="anchor" href="#dofuture-0120-9001"></a></h2>
+<h2 class="page-header" data-toc-text="0.12.1" id="dofuture-0121">doFuture 0.12.1<small>2022-03-31</small><a class="anchor" aria-label="anchor" href="#dofuture-0121"></a></h2>
 <div class="section level4">
-<h4 id="performance-0-12-0-9001">Performance<a class="anchor" aria-label="anchor" href="#performance-0-12-0-9001"></a></h4>
+<h4 id="performance-0-12-1">Performance<a class="anchor" aria-label="anchor" href="#performance-0-12-1"></a></h4>
 <ul><li>options(doFuture.rng.onMisuse = “ignore”) is now a tad faster than before.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="miscellaneous-0-12-0-9001">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-12-0-9001"></a></h4>
+<h4 id="miscellaneous-0-12-1">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-12-1"></a></h4>
 <ul><li>Moved all internal opt-in package tests that test registerDoFuture() with popular packages (e.g. BiocParallel, foreach, plyr, caret, glmnet, NSP, and TSP) relying on ‘foreach’ to a separate ‘doFuture.tests.extras’ package. This reduced the size of the package tarball from 140 kB to 40 kB.</li>
 </ul></div>
 </div>
