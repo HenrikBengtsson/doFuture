@@ -5,7 +5,6 @@ future::plan("sequential")
 options(oopts)
 future::plan(oplan)
 foreach::registerDoSEQ()
-rm(list = c(setdiff(ls(), ovars)))
 
 cons1 <- showConnections(all = FALSE)
 diff <- all.equal(cons1, cons0)
@@ -18,6 +17,8 @@ if (!isTRUE(diff)) {
   print(diff)
   stop("[INTERNAL ERROR] Detected stray connections after finishing test")
 }
+
+rm(list = c(setdiff(ls(), ovars)))
 
 print(sessionInfo())
 
