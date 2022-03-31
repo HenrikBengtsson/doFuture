@@ -47,6 +47,9 @@ for (strategy in strategies) {
   str(y)
   stopifnot((strategy %in% c(c("cluster", "multisession")) && inherits(y, "simpleError")) || identical(y, y_truth))
 
+  # Shutdown current plan
+  plan(sequential)
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
@@ -79,6 +82,9 @@ for (strategy in strategies) {
   str(y)
   stopifnot(all.equal(y, y_truth))
 
+  # Shutdown current plan
+  plan(sequential)
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
@@ -107,11 +113,15 @@ str(z0)
 for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
+  
   message("- foreach(f = X, ...) - 'f' containing globals ...")
   ## From https://github.com/HenrikBengtsson/future.apply/issues/12
   z1 <- foreach(f = F, g = G) %do% list(f(), g())
   str(z1)
   stopifnot(identical(z1, z0))
+
+  # Shutdown current plan
+  plan(sequential)
 } ## for (strategy ...)
 
 message("*** doFuture - automatically finding globals in 'args_list' ... DONE")

@@ -36,6 +36,9 @@ if (require("doRNG")) {
     str(list(s1_2 = s1_2, s2_2 = s2_2))
     stopifnot(identical(s1, s1_2), identical(s2, s2_2))
 
+    # Shutdown current plan
+    plan(sequential)
+    
     message(sprintf("- plan('%s') ... DONE", strategy))
   } ## for (strategy ...)
 

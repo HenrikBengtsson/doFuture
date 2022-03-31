@@ -4,7 +4,41 @@
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
-doFuture <- function(obj, expr, envir, data) {   #nolint
+doFuture <- local({
+  tmpl_dummy_globals <- bquote_compile({
+    .(dummy_globals)
+    .(name) <- NULL
+  })
+
+  tmpl_expr <- bquote_compile({
+    ## Tell foreach to keep using futures also in nested calls
+    doFuture::registerDoFuture()
+
+    lapply(seq_along(...future.x_ii), FUN = function(jj) {
+      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
+      .(dummy_globals)
+      ...future.env <- environment()          #nolint
+      local({
+        for (name in names(...future.x_jj)) {
+          assign(name, ...future.x_jj[[name]],
+                 envir = ...future.env, inherits = FALSE)
+        }
+      })
+      tryCatch(.(expr), error = identity)
+    })
+  })
+
+  tmpl_expr_options <- bquote_compile({
+    ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
+    if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
+      oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
+      on.exit(options(oopts), add = TRUE)
+    }
+    .(expr)
+  })
+
+
+function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
   
@@ -40,30 +74,10 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   dummy_globals <- NULL
   for (kk in seq_along(argnames)) {
     name <- as.symbol(argnames[kk])  #nolint
-    if (kk == 1L) {
-      dummy_globals <- bquote(.(name) <- NULL)
-    } else {
-      dummy_globals <- bquote({ .(dummy_globals); .(name) <- NULL })
-    }
+    dummy_globals <- bquote_apply(tmpl_dummy_globals)
   }
 
-  expr <- bquote({
-    ## Tell foreach to keep using futures also in nested calls
-    doFuture::registerDoFuture()
-
-    lapply(seq_along(...future.x_ii), FUN = function(jj) {
-      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
-      .(dummy_globals)
-      ...future.env <- environment()          #nolint
-      local({
-        for (name in names(...future.x_jj)) {
-          assign(name, ...future.x_jj[[name]],
-                 envir = ...future.env, inherits = FALSE)
-        }
-      })
-      tryCatch(.(expr), error = identity)
-    })
-  })
+  expr <- bquote_apply(tmpl_expr)
 
   rm(list = "dummy_globals") ## Not needed anymore
 
@@ -183,20 +197,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
     ## Adjust expression 'expr' such that the non-adjusted maxSize is used
     ## within each future
-    expr <- bquote({
-      ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
-      if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
-        oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
-        on.exit(options(oopts), add = TRUE)
-      }
-      .(expr)
-    })
+    expr <- bquote_apply(tmpl_expr_options)
 
     if (debug) {
       mdebug("Rescaling option 'future.globals.maxSize' to account for the number of elements processed per chunk:")
       mdebugf(" - Number of chunks: %d", nchunks)
-      mdebugf(" - globals.maxSize (original): %g bytes", globals.maxSize.default)
-      mdebugf(" - globals.maxSize (adjusted): %g bytes", globals.maxSize.adjusted)
+      mdebugf(" - globals.maxSize (original): %.0f bytes", globals.maxSize.default)
+      mdebugf(" - globals.maxSize (adjusted): %.0f bytes", globals.maxSize.adjusted)
       mdebug("- R expression (adjusted):")
       mprint(expr)
     }
@@ -226,9 +233,13 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
   ## Are there RNG-check settings specific for doFuture?
   onMisuse <- getOption("doFuture.rng.onMisuse", NULL)
   if (!is.null(onMisuse)) {
-    oldOnMisuse <- getOption("future.rng.onMisuse")
-    options(future.rng.onMisuse = onMisuse)
-    on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
+    if (onMisuse == "ignore") {
+      seed <- NULL
+    } else {
+      oldOnMisuse <- getOption("future.rng.onMisuse")
+      options(future.rng.onMisuse = onMisuse)
+      on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
+    }
   }
 
 
@@ -314,40 +325,59 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
     withCallingHandlers({
       resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
     }, RngFutureCondition = function(cond) {
-      f <- attr(cond, "future")
-  
-      ## Not one of our future?
-      if (!isFALSE(f$seed)) return()
+      ## One of "our" futures?
+      idx <- NULL
       
-      ## One of our futures?
-      for (kk in seq_along(fs)) {
-        if (identical(fs[[kk]], f)) {
-          ## Adjust message to give instructions relevant to this package
-          label <- f$label
-          if (is.null(label)) label <- "<none>"
-          message <- sprintf("UNRELIABLE VALUE: One of the foreach() iterations (%s) unexpectedly generated random numbers without declaring so. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, use '%%dorng%%' from the 'doRNG' package instead of '%%dopar%%'. This ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-CMRG method. To disable this check, set option 'future.rng.onMisuse' to \"ignore\".", sQuote(label))
-          cond$message <- message
-          if (inherits(cond, "warning")) {
-            warning(cond)
-            invokeRestart("muffleWarning")
-          } else if (inherits(cond, "error")) {
-            workarounds <- getOption("doFuture.workarounds")
-            if ("BiocParallel.DoParam.errors" %in% workarounds) {
-              cond$message <- sprintf('task %d failed - "%s"',
-                                      kk, conditionMessage(cond))
-            }
-            stop(cond)
-          }
+      ## Compare future UUIDs or whole futures?
+      uuid <- attr(cond, "uuid")
+      if (!is.null(uuid)) {
+        ## (a) Future UUIDs are available
+        for (kk in seq_along(fs)) {
+          if (identical(fs[[kk]]$uuid, uuid)) idx <- kk
+        }
+      } else {        
+        ## (b) Future UUIDs are not available, use Future object?
+        f <- attr(cond, "future")
+        if (is.null(f)) return()
+        ## Nothing to do?
+        if (!isFALSE(f$seed)) return()  ## shouldn't really happen
+        for (kk in seq_along(fs)) {
+          if (identical(fs[[kk]], f)) idx <- kk
         }
       }
-    })
+      
+      ## Nothing more to do, i.e. not one of our futures?
+      if (is.null(idx)) return()
+
+      ## Adjust message to give instructions relevant to this package
+      f <- fs[[idx]]
+      label <- f$label
+      if (is.null(label)) label <- "<none>"
+      message <- sprintf("UNRELIABLE VALUE: One of the foreach() iterations (%s) unexpectedly generated random numbers without declaring so. There is a risk that those random numbers are not statistically sound and the overall results might be invalid. To fix this, use '%%dorng%%' from the 'doRNG' package instead of '%%dopar%%'. This ensures that proper, parallel-safe random numbers are produced via the L'Ecuyer-CMRG method. To disable this check, set option 'doFuture.rng.onMisuse' to \"ignore\".", sQuote(label))
+      cond$message <- message
+      if (inherits(cond, "warning")) {
+        warning(cond)
+        invokeRestart("muffleWarning")
+      } else if (inherits(cond, "error")) {
+        workarounds <- getOption("doFuture.workarounds")
+        if ("BiocParallel.DoParam.errors" %in% workarounds) {
+          cond$message <- sprintf('task %d failed - "%s"',
+                                  kk, conditionMessage(cond))
+        }
+        stop(cond)
+      }
+    }) ## withCallingHandlers()
   } else {
     resolve(fs, result = TRUE, stdout = TRUE, signal = TRUE)
   }
 
   ## Gather values
   if (debug) mdebug("- collecting values of futures")
-  results <- lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)
+  results <- local({
+    oopts <- options(future.rng.onMisuse.keepFuture = FALSE)
+    on.exit(options(oopts))
+    lapply(fs, FUN = value, stdout = FALSE, signal = FALSE)
+  })
   rm(list = "fs")
   stop_if_not(length(results) == nchunks)
 
@@ -420,3 +450,4 @@ doFuture <- function(obj, expr, envir, data) {   #nolint
 
   res
 } ## doFuture()
+})

@@ -133,6 +133,8 @@ res <- tryCatch({
 print(res)
 stopifnot(inherits(res, "error"))
 
+# Shutdown current plan
+plan(sequential)
 
 message("*** options ... DONE")
 

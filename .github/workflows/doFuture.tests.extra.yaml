@@ -1,51 +1,38 @@
 on: [push, pull_request]
 
-name: R-CMD-check
+name: doFuture_tests_extra
 
 jobs:
   R-CMD-check:
     if: "! contains(github.event.head_commit.message, '[ci skip]')"    
 
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ubuntu-20.04
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.label }}
+    name: ${{ matrix.config.r }} (${{ matrix.config.strategies }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'devel'    }
-          - {os: windows-latest, r: 'release'  }
-          - {os: windows-latest, r: 'oldrel'   }
-          - {os: macOS-latest,   r: 'devel'    }
-          - {os: macOS-latest,   r: 'release'  }
-          - {os: macOS-latest,   r: 'oldrel'   }
-#         - {os: ubuntu-20.04,   r: 'devel'    }
-          - {os: ubuntu-20.04,   r: 'release'  }
-          - {os: ubuntu-20.04,   r: 'release', future_plan: 'multicore', label: 'w/ multicore' }
-          - {os: ubuntu-20.04,   r: 'release', future_plan: 'multisession', label: 'w/ multisession' }
-#         - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.batchtools::batchtools_local', label: 'w/ batchtools_local' }
-#         - {os: ubuntu-20.04,   r: 'release', future_plan: 'future.callr::callr', label: 'w/ callr' }
-          - {os: ubuntu-20.04,   r: 'oldrel'   }
-          - {os: ubuntu-20.04,   r: 'oldrel-1' }
-          - {os: ubuntu-20.04,   r: 'oldrel-2' }
-          - {os: ubuntu-20.04,   r: '3.4'      }
+          - { r: "release", strategies: sequential                            }
+          - { r: "release", strategies: multicore                             }
+          - { r: "release", strategies: multisession                          }
+          - { r: "release", strategies: "future.callr::callr"                 }
+          - { r: "release", strategies: "future.batchtools::batchtools_local" }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       RSPM: https://packagemanager.rstudio.com/cran/__linux__/focal/latest
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       ## R CMD check
-      _R_CHECK_CRAN_INCOMING_: false
       _R_CHECK_LENGTH_1_CONDITION_: true
       _R_CHECK_LENGTH_1_LOGIC2_: true
       _R_CHECK_MATRIX_DATA_: true
-      _R_CHECK_SUGGESTS_ONLY_: true
-      _R_CHECK_THINGS_IN_TEMP_DIR_: true
+      _R_CHECK_CRAN_INCOMING_: false
       ## Specific to futures
-      R_FUTURE_RNG_ONMISUSE: error
-      R_FUTURE_PLAN: ${{ matrix.config.future_plan }}
-
+#      R_FUTURE_RNG_ONMISUSE: error
+      _R_CHECK_FUTURE_STRATEGIES_: ${{ matrix.config.strategies }}
+      
     steps:
       - uses: actions/checkout@v2
 
@@ -70,7 +57,7 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install system dependencies
+      - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
@@ -81,10 +68,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          install.packages(c("rcmdcheck", "BiocManager"))
+          ## We have to manually install dependencies on Bioconductor 
+          BiocManager::install("BiocParallel")
+          ## Dependencies of dependencies that are on Bioconductor 
+          BiocManager::install(c("Biobase"))
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_cran("rcmdcheck")
-          install.packages(".", repos = NULL, type = "source") ## needed for parallel tests
-          lapply(c("future.batchtools", "future.callr"), FUN = function(pkg) if (grepl(pkg, "${{ matrix.config.future_plan }}")) install.packages(pkg))
+          install.packages(".", repos=NULL, type="source")  ## needed by parallel workers
+          remotes::install_github("HenrikBengtsson/doFuture.tests.extra", dependencies=TRUE)
         shell: Rscript {0}
 
       - name: Session info
@@ -95,14 +86,14 @@ jobs:
         shell: Rscript {0}
 
       - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "note", check_dir = "check")
-        shell: Rscript {0}
+        run: |
+          git clone --depth 1 https://github.com/HenrikBengtsson/doFuture.tests.extra.git
+          R CMD build --no-build-vignettes --no-manual doFuture.tests.extra
+          R CMD check --no-codoc --no-examples --no-manual --ignore-vignettes --as-cran doFuture.tests.extra_*.tar.gz
 
       - name: Upload check results
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          name: ${{ runner.os }}-r${{ matrix.config.r }}-doFuture.tests.extra-results
           path: check

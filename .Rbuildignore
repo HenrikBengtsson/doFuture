@@ -9,6 +9,9 @@ INSTALL[.]md
 OVERVIEW[.]md
 README[.]md
 CONDUCT[.]md
+CONTRIBUTING[.]md
+^docs
+^pkgdown
 
 #----------------------------
 # Travis-CI et al.
@@ -44,6 +47,8 @@ Rplots.pdf$
 #----------------------------
 # Package specific
 #----------------------------
-^[.]BatchJobs[.]R$
 [.]future
 
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

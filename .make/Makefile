@@ -67,7 +67,6 @@ R_CHECK_OUTDIR := $(R_OUTDIR)/$(PKG_NAME).Rcheck
 _R_CHECK_CRAN_INCOMING_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_CRAN_INCOMING_', 'FALSE'))")
 _R_CHECK_XREFS_REPOSITORIES_ = $(shell if test "$(_R_CHECK_CRAN_INCOMING_)" = "TRUE"; then echo ""; else echo "invalidURL"; fi)
 _R_CHECK_FULL_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_FULL_', ''))")
-_R_CHECK_TESTSETS_ = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('_R_CHECK_TESTSETS_', 'caret,foreach,glmnet,NMF,plyr,TSP'))")
 R_CHECK_OPTS = --as-cran --timings $(shell if test "$(_R_CHECK_USE_VALGRIND_)" = "TRUE"; then echo "--use-valgrind"; fi)
 R_RD4PDF = $(shell $(R_SCRIPT) -e "if (getRversion() < 3) cat('times,hyper')")
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
@@ -131,7 +130,6 @@ debug:
 	@echo _R_CHECK_CRAN_INCOMING_=\'$(_R_CHECK_CRAN_INCOMING_)\'
 	@echo _R_CHECK_XREFS_REPOSITORIES_=\'$(_R_CHECK_XREFS_REPOSITORIES_)\'
 	@echo _R_CHECK_FULL_=\'$(_R_CHECK_FULL_)\'
-	@echo _R_CHECK_TESTSETS_=\'$(_R_CHECK_TESTSETS_)\'
 	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
 	@echo R_RD4PDF=\'$(R_RD4PDF)\'
 	@echo
@@ -256,7 +254,6 @@ $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	export _R_CHECK_FORCE_SUGGESTS_=0;\
 	export R_RD4PDF=$(R_RD4PDF);\
 	export _R_CHECK_FULL_=$(_R_CHECK_FULL_);\
-	export _R_CHECK_TESTSETS_=$(_R_CHECK_TESTSETS_);\
 	$(R) --no-init-file CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
@@ -289,7 +286,7 @@ check_Rex:
 
 
 covr:
-	$(R_SCRIPT) -e "source('.covr.R'); covr::shine(covr)"
+	$(R_SCRIPT) -e "c <- covr::package_coverage(quiet = FALSE); saveRDS(c, '.covr.rds'); print(c); covr::report(c)"
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -426,9 +423,6 @@ win-builder-devel: $(R_OUTDIR)/$(PKG_TARBALL)
 win-builder-release: $(R_OUTDIR)/$(PKG_TARBALL)
 	curl -v -T $? ftp://anonymous@$(WIN_BUILDER)/R-release/
 
-win-builder-oldrelease: $(R_OUTDIR)/$(PKG_TARBALL)
-	curl -v -T $? ftp://anonymous@$(WIN_BUILDER)/R-oldrelease/
-
 win-builder: win-builder-devel win-builder-release
 
 
@@ -466,8 +460,8 @@ Makefile: $(FILES_MAKEFILE)
 .make/appveyor.yml.rsp:
 	$(R_SCRIPT) -e "R.utils::downloadFile('https://raw.githubusercontent.com/HenrikBengtsson/r-package-files/master/.make/appveyor.yml.rsp', path='.make/')"
 
-.make/README.md.rsp:
-	$(R_SCRIPT) -e "R.utils::downloadFile('https://raw.githubusercontent.com/HenrikBengtsson/r-package-files/master/.make/README.md.rsp', path='.make/')"
+.make/%.md.rsp:
+	$(R_SCRIPT) -e "R.utils::downloadFile('https://raw.githubusercontent.com/HenrikBengtsson/r-package-files/master/$@', path='.make/')"
 
 .covr.R:
 	$(R_SCRIPT) -e "R.utils::downloadFile('https://raw.githubusercontent.com/HenrikBengtsson/covr-utils/master/.covr.R')"
@@ -490,6 +484,9 @@ refresh: clean
 README.md: .make/README.md.rsp
 	$(R_SCRIPT) -e "R.rsp::rfile('$<', postprocess=FALSE)"
 
+CONTRIBUTING.md: .make/CONTRIBUTING.md.rsp
+	$(R_SCRIPT) -e "R.rsp::rfile('$<', postprocess=FALSE)"
+
 .travis.yml: .make/.travis.yml.rsp
 	$(R_SCRIPT) -e "R.rsp::rfile('$<', postprocess=FALSE)"
 
@@ -497,3 +494,10 @@ appveyor.yml: .make/appveyor.yml.rsp
 	$(R_SCRIPT) -e "R.rsp::rfile('$<', postprocess=FALSE)"
 
 config: .travis.yml appveyor.yml README.md
+
+## Include any other Makefile.*, if they exists
+INCLUDES := $(wildcard .make/Makefile.*)
+ifneq ($(strip $(INCLUDES)),)
+  include $(INCLUDES)
+endif
+

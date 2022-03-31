@@ -85,3 +85,6 @@ noexport
 mtcars
 onMisuse
 rng
+DoParam
+RngFutureError
+md

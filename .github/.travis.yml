@@ -14,7 +14,6 @@ r_check_args: --as-cran
 latex: false
 
 r_packages:
-  - future.BatchJobs
   - future.batchtools
 
 bioc_packages:
@@ -45,7 +44,6 @@ jobs:
       r: devel
       r_packages:
         - doRNG
-        - future.BatchJobs
         - future.batchtools
         - plyr
     - os: linux
@@ -65,7 +63,6 @@ jobs:
       r: devel
       r_packages:
         - doRNG
-        - future.BatchJobs
         - future.batchtools
         - plyr
       r_check_args: --timings
@@ -112,7 +109,7 @@ jobs:
       env:
         - NB='w/ foreach' ## Just a label
         - _R_CHECK_TESTSETS_=foreach
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchtools_local
         - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
@@ -121,7 +118,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - NMF
         - cluster
@@ -131,7 +127,7 @@ jobs:
       env:
         - NB='w/ NMF' ## Just a label
         - _R_CHECK_TESTSETS_=NMF
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchtools_local
         - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
@@ -140,7 +136,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - TSP
         - cluster
@@ -154,7 +149,7 @@ jobs:
       env:
         - NB='w/ TSP' ## Just a label
         - _R_CHECK_TESTSETS_=TSP
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchtools_local
         - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
       script:
         - R CMD build .
@@ -163,7 +158,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - glmnet
         - cluster
@@ -176,7 +170,7 @@ jobs:
       env:
         - NB='w/ glmnet' ## Just a label
         - _R_CHECK_TESTSETS_=glmnet
-        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchjobs_local,batchtools_local
+        - _R_CHECK_FUTURE_STRATEGIES_=sequential,multicore,multisession,batchtools_local
         - R_FUTURE_RNG_ONMISUSE=error
       script:
         - R CMD build .
@@ -185,7 +179,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
@@ -201,7 +194,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
@@ -217,23 +209,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - plyr
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ plyr & future.BatchJobs' ## Just a label
-        - _R_CHECK_TESTSETS_=plyr
-        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
-        - R_FUTURE_RNG_ONMISUSE=error
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,plyr,examples.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
         - future.batchtools
         - plyr
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
@@ -264,7 +239,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - caret
         - class
@@ -315,7 +289,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
         - future.batchtools
         - caret
         - class
@@ -366,58 +339,6 @@ jobs:
     - os: linux
       r: release
       r_packages:
-        - future.BatchJobs
-        - future.batchtools
-        - caret
-        - class
-        - foreign
-        - lattice
-        - MASS
-        - Matrix
-        - nlme
-        - nnet
-        - rpart
-        - survival
-        - BradleyTerry2
-        - e1071
-        - earth
-        - fastICA
-        - gam
-        - ipred
-        - kernlab
-        - klaR
-        - ellipse
-        - mda
-        - mgcv
-        - mlbench
-        - MLmetrics
-        - party
-        - pls
-        - pROC
-        - proxy
-        - randomForest
-        - RANN
-        - spls
-        - subselect
-        - pamr
-        - Cubist
-        - pls
-        - recipes
-        - mboost
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
-      env:
-        - NB='w/ caret & BatchJobs' ## Just a label
-        - _R_CHECK_TESTSETS_=caret
-        - _R_CHECK_FUTURE_STRATEGIES_=batchjobs_local
-        - R_FUTURE_RNG_ONMISUSE=warning ## "error" not possible; has RNG mistake
-      script:
-        - R CMD build .
-        - R CMD INSTALL --no-docs doFuture_*.tar.gz
-        - Rscript -e 'if (!grepl("[ci cache]", Sys.getenv("TRAVIS_COMMIT_MESSAGE"), fixed = TRUE)) source("tests/zzz_opt-in,caret,examples.R", chdir = TRUE, echo = TRUE)'
-    - os: linux
-      r: release
-      r_packages:
-        - future.BatchJobs
         - future.batchtools
         - caret
         - class

@@ -35,6 +35,9 @@ for (strategy in strategies) {
   message(nbr_of_workers <- getDoParWorkers())
   stopifnot(nbr_of_workers == nbrOfWorkers())
 
+  # Shutdown current plan
+  plan(sequential)
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
