@@ -16,9 +16,9 @@ The package has been verified using `R CMD check --as-cran` on:
 | R version     | GitHub | R-hub    | mac/win-builder |
 | ------------- | ------ | -------- | --------------- |
 | 3.4.x         | L      |          |                 |
-| 3.6.x         | L      |          |                 |
-| 4.0.x         | L M W  | L        |                 |
-| 4.1.x         | L M W  | L M M1 W | M1 W            |
+| 4.0.x         | L      |          |                 |
+| 4.1.x         | L M W  |          |                 |
+| 4.2.x         | L M W  | L M M1 W | M1 W            |
 | devel         |   M W  | L        |    W            |
 
 *Legend: OS: L = Linux, M = macOS, M1 = macOS M1, W = Windows*
@@ -37,65 +37,67 @@ print(res)
 gives
 
 ```
-── doFuture 0.12.1: OK
+── doFuture 0.12.1-9000: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-a52026c4f5cd4fa8ab54b76673d00a45
+  Build ID:   doFuture_0.12.1-9000.tar.gz-302d64436d2d4e14a7d39df20d9e1c0d
   Platform:   Debian Linux, R-devel, clang, ISO-8859-15 locale
-  Submitted:  7m 40.9s ago
-  Build time: 5m 27.5s
+  Submitted:  6m 28s ago
+  Build time: 5m 24.2s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-── doFuture 0.12.1: OK
+── doFuture 0.12.1-9000: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-37ebcc48c08e418380e59f7f4cc42117
+  Build ID:   doFuture_0.12.1-9000.tar.gz-7bc324ae9aac47f9afa0a623c48de998
   Platform:   Debian Linux, R-patched, GCC
-  Submitted:  7m 40.9s ago
+  Submitted:  6m 28s ago
   Build time: 4m 39.5s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-── doFuture 0.12.1: OK
+── doFuture 0.12.1-9000: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-c5c0c6428afa4defad9eb5a201750530
+  Build ID:   doFuture_0.12.1-9000.tar.gz-97d60d93d28e44e3a6a7b50c327e2d52
   Platform:   CentOS 8, stock R from EPEL
-  Submitted:  7m 40.9s ago
-  Build time: 3m 59.5s
+  Submitted:  6m 28s ago
+  Build time: 3m 49.4s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-── doFuture 0.12.1: WARNING
+── doFuture 0.12.1-9000: WARNING
 
-  Build ID:   doFuture_0.12.1.tar.gz-b39d28581da94b72ad89740ba51397b5
+  Build ID:   doFuture_0.12.1-9000.tar.gz-39ae1203542f427fb72fcc7c48ca3d9a
   Platform:   macOS 10.13.6 High Sierra, R-release, CRAN's setup
-  Submitted:  7m 40.9s ago
-  Build time: 2m 33.1s
+  Submitted:  6m 28s ago
+  Build time: 2m 27.9s
 
 ❯ checking whether package ‘doFuture’ can be installed ... WARNING
   Found the following significant warnings:
   Warning: package 'foreach' was built under R version 4.1.3
-  Warning: package 'future' was built under R version 4.1.3
+  See 'C:/Users/USERgWxYhQuaeJ/doFuture.Rcheck/00install.out' for details.
 
 0 errors ✔ | 1 warning ✖ | 0 notes ✔
 
-── doFuture 0.12.1: OK
+── doFuture 0.12.1-9000: OK
 
-  Build ID:   doFuture_0.12.1.tar.gz-b7e4ed47e59d4cbbb21f6b523597f693
+  Build ID:   doFuture_0.12.1-9000.tar.gz-746098d9a1d342048a7a097fecab8af1
   Platform:   Apple Silicon (M1), macOS 11.6 Big Sur, R-release
-  Submitted:  7m 40.9s ago
-  Build time: 2m 12.8s
+  Submitted:  6m 28s ago
+  Build time: 1m 27.7s
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-── doFuture 0.12.1: WARNING
+── doFuture 0.12.1-9000: WARNING
 
-  Build ID:   doFuture_0.12.1.tar.gz-d37b3e0ba91b466e92b4360059c5054d
+  Build ID:   doFuture_0.12.1-9000.tar.gz-4ffbb71b8d864e12998bf98a4c049b9a
   Platform:   Windows Server 2008 R2 SP1, R-release, 32/64 bit
-  Submitted:  7m 40.9s ago
-  Build time: 3m 43.8s
+  Submitted:  6m 28.1s ago
+  Build time: 3m 49.3s
 
 ❯ checking whether package 'doFuture' can be installed ... WARNING
   Found the following significant warnings:
   Warning: package 'foreach' was built under R version 4.1.3
-  Warning: package 'future' was built under R version 4.1.3
+  See 'C:/Users/USERgWxYhQuaeJ/doFuture.Rcheck/00install.out' for details.
+
+0 errors ✔ | 1 warning ✖ | 0 notes ✔
 ```
