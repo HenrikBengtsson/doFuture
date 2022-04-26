@@ -1,8 +1,8 @@
-# CRAN submission doFuture 0.12.1
+# CRAN submission doFuture 0.12.2
 
-on 2022-03-30
+on 2022-04-25
 
-I've verified this submission have no negative impact on any of the 20 reverse package dependencies available on CRAN and Bioconductor.
+I've verified this submission has no negative impact on any of the 23 reverse package dependencies available on CRAN and Bioconductor.
 
 Thanks in advance
 
