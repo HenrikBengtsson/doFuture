@@ -12,17 +12,7 @@ CONDUCT[.]md
 CONTRIBUTING[.]md
 ^docs
 ^pkgdown
-
-#----------------------------
-# Travis-CI et al.
-#----------------------------
-^[.]travis[.]yml$
-^travis-tool[.]sh$
-^pkg-build[.]sh$
-^appveyor[.]yml$
-^covr-utils.R$
-^[.]covr[.]R$
-^[.]covr[.]rds$
+^_pkgdown\.yml$
 
 #----------------------------
 # R related
@@ -36,19 +26,6 @@ Rplots.pdf$
 ^incl
 ^NAMESPACE,.*[.]txt$
 ^nohup.*$
-^[.]R
-^[.]benchmark
-^[.]devel
-^[.]test
-^[.]check
+^[.]Rdump/
 ^revdep/*
 ^.*[.]tar[.]gz$
-
-#----------------------------
-# Package specific
-#----------------------------
-[.]future
-
-^_pkgdown\.yml$
-^docs$
-^pkgdown$
