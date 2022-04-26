@@ -27,7 +27,7 @@ be used for asynchronous (parallel/distributed) or synchronous
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.1-9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9000</span>
       </span>
     </div>
 
@@ -259,7 +259,7 @@ when it comes to chunking.</p>
 for generating proper random numbers in parallel. This is a deliberate
 design choice based on how the foreach ecosystem is set up.  For valid
 parallel RNG, it is recommended to use the <span class="pkg">doRNG</span> package, where
-the <code><a href="https://rdrr.io/pkg/doRNG/man/grapes-dorng-grapes.html" class="external-link">%dorng%</a></code> operator is used in place
+the <code>%dorng%</code> operator is used in place
 of <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></code>.
 Note that <span class="pkg">doRNG</span> is designed to work with any type of foreach
 adapter including <span class="pkg">doFuture</span>.</p>
@@ -299,7 +299,7 @@ adapter including <span class="pkg">doFuture</span>.</p>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Example 3 - Simulation with parallel RNG</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://renozao.github.io/doRNG" class="external-link">doRNG</a></span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rngtools</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in library(doRNG):</span> there is no package called ‘doRNG’</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">my_stat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
@@ -308,7 +308,7 @@ adapter including <span class="pkg">doFuture</span>.</p>
 <span class="r-in"><span class="va">my_experiment</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">mu</span> <span class="op">=</span> <span class="fl">0.0</span>, <span class="va">sigma</span> <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in">  <span class="co">## Important: use %dorng% whenever random numbers</span></span>
 <span class="r-in">  <span class="co">##            are involved in parallel evaluation</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/doRNG/man/grapes-dorng-grapes.html" class="external-link">%dorng%</a></span> <span class="op">{</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="op">%dorng%</span> <span class="op">{</span></span>
 <span class="r-in">    <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">i</span>, mean <span class="op">=</span> <span class="va">mu</span>, sd <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span></span>
 <span class="r-in">    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, own <span class="op">=</span> <span class="fu">my_stat</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in">  <span class="op">}</span></span>
@@ -317,34 +317,21 @@ adapter including <span class="pkg">doFuture</span>.</p>
 <span class="r-in"><span class="co">## Reproducible results when using the same RNG seed</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">0xBEEF</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">y1</span> <span class="op">&lt;-</span> <span class="fu">my_experiment</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}:</span> could not find function "%dorng%"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">0xBEEF</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">y2</span> <span class="op">&lt;-</span> <span class="fu">my_experiment</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}:</span> could not find function "%dorng%"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">y2</span>, <span class="va">y1</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## But only then</span></span>
 <span class="r-in"><span class="va">y3</span> <span class="op">&lt;-</span> <span class="fu">my_experiment</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in foreach(i = 1:n) %dorng% {    x &lt;- rnorm(i, mean = mu, sd = sigma)    list(mu = mean(x), sigma = sd(x), own = my_stat(x))}:</span> could not find function "%dorng%"</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">y3</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> List of 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mu   : num 1.26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sigma: num NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ own  : num 1.26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mu   : num 1.33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sigma: num 1.58</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ own  : num 1.33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ :List of 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ mu   : num -0.247</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ sigma: num 1.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ own  : num -0.993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "rng")=List of 3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : int [1:7] 10407 -557965149 646670728 1535601129 -1782995818 -140875233 -2010542636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : int [1:7] 10407 1322665455 228081586 690246064 292190646 -1209002294 -964069472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ : int [1:7] 10407 1930909627 1980809480 -419043334 1761816562 811800279 -442022187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "doRNG_version")= chr "1.7.4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  num [1:100, 1:100] 137.23 11.3 -4.49 -6.9 -13.04 ...</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">y3</span>, <span class="va">y1</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(expr, envir, enclos):</span> !identical(y3, y1) is not TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># }</span></span>
 <span class="r-in"></span>
@@ -366,7 +353,7 @@ adapter including <span class="pkg">doFuture</span>.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2 and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9003.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3</p> and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9004.</p>
 </div>
 
       </footer></div>

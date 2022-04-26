@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.1-9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9000</span>
       </span>
     </div>
 
@@ -153,7 +153,8 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>A Foreach Parallel Adaptor using Futures</h1>
-                        <h4 data-toc-skip class="author">Henrik Bengtsson</h4>
+                        <h4 data-toc-skip class="author">Henrik
+Bengtsson</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/HenrikBengtsson/doFuture/blob/HEAD/vignettes/doFuture.md.rsp" class="external-link"><code>vignettes/doFuture.md.rsp</code></a></small>
@@ -166,9 +167,24 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <a href="https://cran.r-project.org/package=future" class="external-link">future</a> package provides a generic API for using futures in R. A future is a simple yet powerful mechanism to evaluate an R expression and retrieve its value at some point in time. Futures can be resolved in many different ways depending on which strategy is used. There are various types of synchronous and asynchronous futures to choose from in the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> package. Additional futures are implemented in other packages. For instance, the <a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a> package provides futures for <em>any</em> type of backend that the <a href="https://cran.r-project.org/package=batchtools" class="external-link">batchtools</a> package supports. For an introduction to futures in R, please consult the vignettes of the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> package.</p>
-<p>The <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> package provides a <code>%dopar%</code> adapter for the <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> package that works with <em>any</em> type of future. The doFuture package is cross platform just as the future package.</p>
-<p>Below is an example showing how to make <code>%dopar%</code> work with <em>multisession</em> futures. A multisession future will be evaluated in parallel using background R process.</p>
+<p>The <a href="https://cran.r-project.org/package=future" class="external-link">future</a>
+package provides a generic API for using futures in R. A future is a
+simple yet powerful mechanism to evaluate an R expression and retrieve
+its value at some point in time. Futures can be resolved in many
+different ways depending on which strategy is used. There are various
+types of synchronous and asynchronous futures to choose from in the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> package.
+Additional futures are implemented in other packages. For instance, the
+<a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a>
+package provides futures for <em>any</em> type of backend that the <a href="https://cran.r-project.org/package=batchtools" class="external-link">batchtools</a>
+package supports. For an introduction to futures in R, please consult
+the vignettes of the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> package.</p>
+<p>The <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> package
+provides a <code>%dopar%</code> adapter for the <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> package
+that works with <em>any</em> type of future. The doFuture package is
+cross platform just as the future package.</p>
+<p>Below is an example showing how to make <code>%dopar%</code> work
+with <em>multisession</em> futures. A multisession future will be
+evaluated in parallel using background R process.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
@@ -183,11 +199,14 @@
 <div class="section level2">
 <h2 id="futures-bring-foreach-to-the-hpc-cluster">Futures bring foreach to the HPC cluster<a class="anchor" aria-label="anchor" href="#futures-bring-foreach-to-the-hpc-cluster"></a>
 </h2>
-<p>To do the same on high-performance computing (HPC) cluster, the <a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a> package can be used. Assuming batchtools has been configured correctly, then following foreach iterations will be submitted to the HPC job scheduler and distributed for evaluation on the compute nodes.</p>
+<p>To do the same on high-performance computing (HPC) cluster, the <a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a>
+package can be used. Assuming batchtools has been configured correctly,
+then following foreach iterations will be submitted to the HPC job
+scheduler and distributed for evaluation on the compute nodes.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va">batchtools_slurm</span><span class="op">)</span>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future.batchtools/man/batchtools_template.html" class="external-link">batchtools_slurm</a></span><span class="op">)</span>
 
 <span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fl">0.10</span>
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mtcars</span>, .export <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cutoff"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></span> <span class="op">{</span>
@@ -198,7 +217,12 @@
 <div class="section level2">
 <h2 id="futures-for-plyr">Futures for plyr<a class="anchor" aria-label="anchor" href="#futures-for-plyr"></a>
 </h2>
-<p>The <a href="https://cran.r-project.org/package=plyr" class="external-link">plyr</a> package uses <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> as a parallel backend. This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers. For example,</p>
+<p>The <a href="https://cran.r-project.org/package=plyr" class="external-link">plyr</a>
+package uses <a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a> as a
+parallel backend. This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> any type
+of futures can be used for asynchronous (and synchronous) plyr
+processing including multicore, multisession, MPI, ad hoc clusters and
+HPC job schedulers. For example,</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
@@ -222,7 +246,10 @@
 <div class="section level2">
 <h2 id="futures-and-biocparallel">Futures and BiocParallel<a class="anchor" aria-label="anchor" href="#futures-and-biocparallel"></a>
 </h2>
-<p>The <a href="https://bioconductor.org/packages/release/bioc/html/BiocParallel.html" class="external-link">BiocParallel</a> package supports any <code>%dopar%</code> adapter as a parallel backend. This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a>, BiocParallel supports any type of future. For example,</p>
+<p>The <a href="https://bioconductor.org/packages/release/bioc/html/BiocParallel.html" class="external-link">BiocParallel</a>
+package supports any <code>%dopar%</code> adapter as a parallel backend.
+This means that with <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a>,
+BiocParallel supports any type of future. For example,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
@@ -236,7 +263,12 @@
 <div class="section level2">
 <h2 id="dofuture-takes-care-of-exports-and-packages-automatically">doFuture takes care of exports and packages automatically<a class="anchor" aria-label="anchor" href="#dofuture-takes-care-of-exports-and-packages-automatically"></a>
 </h2>
-<p>The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases. Specifically, if <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> is called from within a function, you do need to export globals explicitly. For example, although globals <code>my</code> and <code>sigma</code> are properly exported when we do</p>
+<p>The foreach package itself has some support for automated handling of
+globals but unfortunately it does not work in all cases. Specifically,
+if <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> is called from within a function, you do need
+to export globals explicitly. For example, although globals
+<code>my</code> and <code>sigma</code> are properly exported when we
+do</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">"doParallel"</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
@@ -246,7 +278,8 @@
   <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, trim <span class="op">=</span> <span class="va">cutoff</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></code></pre></div>
-<p>it falls short as soon as we try to do the same from within a function;</p>
+<p>it falls short as soon as we try to do the same from within a
+function;</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></span> <span class="op">{</span>
@@ -269,7 +302,10 @@
 <span class="op">}</span>
 
 <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu">my_mean</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>In contrast, when using the <code>%dopar%</code> adapter of doFuture, all of the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> machinery comes in to play including automatic handling of global variables, e.g.</p>
+<p>In contrast, when using the <code>%dopar%</code> adapter of doFuture,
+all of the <a href="https://cran.r-project.org/package=future" class="external-link">future</a> machinery
+comes in to play including automatic handling of global variables,
+e.g.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
@@ -285,7 +321,9 @@
 
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">my_mean</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>will indeed work.</p>
-<p>Another advantage with doFuture is that, contrary to doParallel, packages that need to be attached are also automatically taken care of, e.g.</p>
+<p>Another advantage with doFuture is that, contrary to doParallel,
+packages that need to be attached are also automatically taken care of,
+e.g.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"tools"</span><span class="op">)</span>
@@ -299,12 +337,28 @@
 <span class="va">ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"abc.txt"</span>, <span class="st">"def.log"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%dopar%</a></span> <span class="fu"><a href="https://rdrr.io/r/tools/fileutils.html" class="external-link">file_ext</a></span><span class="op">(</span><span class="va">file</span><span class="op">)</span>
 <span class="co">## Error in file_ext(file) : </span>
 <span class="co">##   task 1 failed - "could not find function "file_ext""</span></code></pre></div>
-<p>Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend. Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API. The doFuture framework can help you identify what should go into the <code>.export</code> argument. By setting <code>options(doFuture.foreach.export = ".export-and-automatic-with-warning")</code>, doFuture will in warn if it finds globals not listed in <code>.export</code> and produce an informative warning message suggesting that those should be added. To assert that argument <code>.export</code> is correct, test the code with <code>options(doFuture.foreach.export = ".export")</code>, which will disable automatic identification of globals such that only the globals specified by the <code>.export</code> argument is used.</p>
+<p>Having said all this, in order to write foreach code that works
+everywhere, it is better to be conservative and not assume that all end
+users will use a doFuture backend. Because of this, it is still
+recommended to explicitly specify all objects that need to be export
+whenever using the foreach API. The doFuture framework can help you
+identify what should go into the <code>.export</code> argument. By
+setting
+<code>options(doFuture.foreach.export = ".export-and-automatic-with-warning")</code>,
+doFuture will in warn if it finds globals not listed in
+<code>.export</code> and produce an informative warning message
+suggesting that those should be added. To assert that argument
+<code>.export</code> is correct, test the code with
+<code>options(doFuture.foreach.export = ".export")</code>, which will
+disable automatic identification of globals such that only the globals
+specified by the <code>.export</code> argument is used.</p>
 </div>
 <div class="section level2">
 <h2 id="dofuture-replaces-existing-donnn-packages">doFuture replaces existing doNnn packages<a class="anchor" aria-label="anchor" href="#dofuture-replaces-existing-donnn-packages"></a>
 </h2>
-<p>Due to the generic nature of futures, the <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> package provides the same functionality as many of the existing doNnn packages combined, e.g. <a href="https://cran.r-project.org/package=doMC" class="external-link">doMC</a>, <a href="https://cran.r-project.org/package=doParallel" class="external-link">doParallel</a>, <a href="https://cran.r-project.org/package=doMPI" class="external-link">doMPI</a>, and <a href="https://cran.r-project.org/package=doSNOW" class="external-link">doSNOW</a>.</p>
+<p>Due to the generic nature of futures, the <a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a> package
+provides the same functionality as many of the existing doNnn packages
+combined, e.g. <a href="https://cran.r-project.org/package=doMC" class="external-link">doMC</a>, <a href="https://cran.r-project.org/package=doParallel" class="external-link">doParallel</a>, <a href="https://cran.r-project.org/package=doMPI" class="external-link">doMPI</a>, and <a href="https://cran.r-project.org/package=doSNOW" class="external-link">doSNOW</a>.</p>
 <table style="width: 100%;" class="table">
 <tr>
 <th>
@@ -396,10 +450,11 @@ N/A
 N/A
 </td>
 <td>
-High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
+High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE /
+PBS.
 <pre><code class="r"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span>
 <span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va">batchtools_sge</span><span class="op">)</span></code></pre>
+<span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/future.batchtools/man/batchtools_template.html" class="external-link">batchtools_sge</a></span><span class="op">)</span></code></pre>
 </td>
 </tr>
 <tr style="vertical-align: center;">
@@ -409,7 +464,10 @@ High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
 <span class="fu">startLocalWorkers</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>, queue <span class="op">=</span> <span class="st">"jobs"</span><span class="op">)</span></code></pre>
 </td>
 <td>
-N/A. There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis" class="external-link">doRedis</a> package.
+N/A. There is currently no known Redis-based future backend and
+therefore no known doFuture alternative to the
+<a href="https://cran.r-project.org/package=doRedis" class="external-link">doRedis</a>
+package.
 </td>
 </tr>
 <table class="table">
@@ -430,7 +488,7 @@ N/A. There is currently no known Redis-based future backend and therefore no kno
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2 and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9003.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3</p> and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9004.</p>
 </div>
 
       </footer><script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
