@@ -26,6 +26,6 @@ Rplots.pdf$
 ^incl
 ^NAMESPACE,.*[.]txt$
 ^nohup.*$
-^[.]Rdump/
+[.]Rdump/
 ^revdep/*
 ^.*[.]tar[.]gz$
