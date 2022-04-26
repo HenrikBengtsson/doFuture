@@ -175,6 +175,15 @@ function(obj, expr, envir, data) {   #nolint
   conditions <- obj[["options"]][["future"]][["conditions"]]
   if (is.null(conditions)) conditions <- eval(formals(Future)$conditions)
 
+  ## Drop captured standard output and conditions as soon as they have
+  ## been relayed?
+  if (isTRUE(stdout)) {
+    stdout <- structure(stdout, drop = TRUE)
+  }
+  if (length(conditions) > 0) {
+    conditions <- structure(conditions, drop = TRUE)
+  }
+
 
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)

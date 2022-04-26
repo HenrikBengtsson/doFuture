@@ -1,6 +1,14 @@
 Package: doFuture
 =================
 
+Version: 0.12.2 [2022-04-25]
+
+PERFORMANCE:
+
+ * Now captured standard output and conditions are deleted as soon as
+   they have been relayed. This requires future (>= 1.25.0).
+
+
 Version: 0.12.1 [2022-03-30]
 
 PERFORMANCE:

@@ -61,11 +61,11 @@ Run `revdep_details(, "momentuHMM")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is  9.2Mb
+      installed size is  9.1Mb
       sub-directories of 1Mb or more:
         R      1.2Mb
         doc    1.7Mb
-        libs   5.7Mb
+        libs   5.6Mb
     ```
 
 # remiod
@@ -112,7 +112,7 @@ Run `revdep_details(, "sentopics")` for more info
       sub-directories of 1Mb or more:
         data   1.2Mb
         doc    7.4Mb
-        libs   4.7Mb
+        libs   4.8Mb
     ```
 
 *   checking Rd cross-references ... NOTE
@@ -208,6 +208,30 @@ Run `revdep_details(, "sRACIPE")` for more info
     Undefined global functions or variables:
       %dopar% configurationTmp foreach outFileGETmp outFileICTmp
       outFileParamsTmp plan registerDoFuture
+    ```
+
+# ssdtools
+
+<details>
+
+* Version: 1.0.1
+* GitHub: https://github.com/bcgov/ssdtools
+* Source code: https://github.com/cran/ssdtools
+* Date/Publication: 2022-04-10 21:40:02 UTC
+* Number of recursive dependencies: 141
+
+Run `revdep_details(, "ssdtools")` for more info
+
+</details>
+
+## In both
+
+*   checking installed package size ... NOTE
+    ```
+      installed size is 17.6Mb
+      sub-directories of 1Mb or more:
+        doc    1.2Mb
+        libs  15.1Mb
     ```
 
 # updog
