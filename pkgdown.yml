@@ -3,7 +3,7 @@ pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   doFuture: doFuture.html
-last_built: 2022-04-26T14:51Z
+last_built: 2022-06-02T05:46Z
 urls:
   reference: https://doFuture.futureverse.org/reference
   article: https://doFuture.futureverse.org/articles
