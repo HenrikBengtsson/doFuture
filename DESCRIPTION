@@ -1,10 +1,11 @@
 Package: doFuture
-Version: 0.12.2-9000
+Version: 0.12.2-9501
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     foreach (>= 1.5.0),
     future (>= 1.22.1)
 Imports:
+    future.mapreduce,
     globals,
     iterators,
     parallel,
@@ -15,6 +16,8 @@ Suggests:
     R.rsp
 VignetteBuilder:
     R.rsp
+Remotes:
+    HenrikBengtsson/future.mapreduce@develop
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
 Description: Provides a '%dopar%' adapter such that any type of futures can

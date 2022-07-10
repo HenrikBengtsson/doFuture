@@ -1,6 +1,7 @@
 #' @importFrom foreach getErrorIndex getErrorValue getResult makeAccum
 #' @importFrom iterators iter
 #' @importFrom future future resolve value Future FutureError getGlobalsAndPackages
+#' @importFrom future.mapreduce make_chunks
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
@@ -158,10 +159,10 @@ function(obj, expr, envir, data) {   #nolint
   ## (d) Otherwise, the default is to preschedule ("chunk")
   if (is.null(scheduling) && is.null(scheduling)) scheduling <- 1.0
 
-  chunks <- makeChunks(nbrOfElements = length(args_list),
-                       nbrOfWorkers = nbrOfWorkers(),
-                       future.scheduling = scheduling,
-                       future.chunk.size = chunk.size)
+  chunks <- make_chunks(length(args_list),
+                        nworkers = nbrOfWorkers(),
+                        scheduling = scheduling,
+                        chunk_size = chunk.size)
   if (debug) mdebugf("Number of chunks: %d", length(chunks))
 
 
