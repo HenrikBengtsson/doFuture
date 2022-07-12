@@ -145,6 +145,8 @@ function(obj, expr, envir, data) {   #nolint
     if (is.null(preschedule)) {
       preschedule <- obj[["options"]][["snow"]][["preschedule"]]
     }
+
+    ## If 'preschedule', then 'scheduling' ...
     if (!is.null(preschedule)) {
       preschedule <- as.logical(preschedule)
       stop_if_not(length(preschedule) == 1L, !is.na(preschedule))
@@ -153,16 +155,17 @@ function(obj, expr, envir, data) {   #nolint
       } else {
         scheduling <- Inf
       }
+    } else {
+      ## ... otherwise, the default is to preschedule ("chunk")
+      scheduling <- 1.0
     }
   }
-
-  ## (d) Otherwise, the default is to preschedule ("chunk")
-  if (is.null(scheduling) && is.null(scheduling)) scheduling <- 1.0
 
   chunks <- make_chunks(length(args_list),
                         nworkers = nbrOfWorkers(),
                         scheduling = scheduling,
                         chunk_size = chunk.size)
+
   if (debug) mdebugf("Number of chunks: %d", length(chunks))
 
 
