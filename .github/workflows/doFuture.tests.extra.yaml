@@ -31,7 +31,9 @@ jobs:
       _R_CHECK_LENGTH_1_LOGIC2_: true
       _R_CHECK_MATRIX_DATA_: true
       _R_CHECK_CRAN_INCOMING_: false
-      ## Specific to futures
+      ## Specific to 'rcmdcheck'
+      RCMDCHECK_ERROR_ON: warning
+      ## Specific to Futureverse
 #      R_FUTURE_RNG_ONMISUSE: error
       _R_CHECK_FUTURE_STRATEGIES_: ${{ matrix.config.strategies }}
       
