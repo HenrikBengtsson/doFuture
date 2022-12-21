@@ -3,7 +3,7 @@ Version: 0.12.2-9501
 Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
 Depends:
     foreach (>= 1.5.0),
-    future (>= 1.22.1)
+    future (>= 1.28.0)
 Imports:
     future.mapreduce,
     globals,
@@ -26,5 +26,5 @@ License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://doFuture.futureverse.org, https://github.com/HenrikBengtsson/doFuture
 BugReports: https://github.com/HenrikBengtsson/doFuture/issues
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
