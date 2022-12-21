@@ -23,7 +23,7 @@
  * Moved all internal opt-in package tests that test
    `registerDoFuture()` with popular packages (e.g. **BiocParallel**,
    **foreach**, **plyr**, **caret**, **glmnet**, **NSP**, and **TSP**)
-   relying on **foreach** to a separate `doFuture.tests.extras`
+   relying on **foreach** to a separate **doFuture.tests.extra**
    package.  This reduced the size of the package tarball from 140 kB
    to 40 kB.
  
@@ -275,7 +275,7 @@
 ## Random Number Generation
 
  * Package now suggests **doRNG** (>= 1.6.6), which fixes several bugs
- in **doRNG** (>= 1.6) previously suggested.
+   in **doRNG** (>= 1.6) previously suggested.
    
 ## Software Quality
 
