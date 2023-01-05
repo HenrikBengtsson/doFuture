@@ -59,7 +59,7 @@ Process via a TORQUE / PBS scheduler job queue.
 
 This builds on top of the queuing framework that the \pkg{batchtools}
 package provides. For more details on backend configuration, please see
-the \pkg{future.Batchtools} and \pkg{batchtools} packages.
+the \pkg{future.batchtools} and \pkg{batchtools} packages.
 }
 
 \section{Global variables and packages}{
