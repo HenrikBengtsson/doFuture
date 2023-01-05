@@ -1,7 +1,18 @@
-# Version 0.12.2-9000 [2022-04-26]
+# Version (development version)
 
- * ...
- 
+## New Features
+
+ * Add `%dofuture%`, which works like `%dopar%`, but will always use
+   the **future** framework for parallelization, which makes it more
+   aligned with how sibling packages **future.apply** and **furrr**
+   work.  When using `%dofuture%`, the **future** framework is used to
+   identify globals and packages, and to generate random numbers.
+   With `%dofuture%`, there is no longer a need to use
+   `registerDoFuture()` or the **doRNG** package and its `%dorng%`
+   operator.  In addition to being more convenient, another reason for
+   introducing `%dofuture%` is to avoid known limitations in
+   `%dopar%`.
+
 
 # Version 0.12.2 [2022-04-25]
 
