@@ -12,7 +12,7 @@ future::value(future::future(NULL))
 cons0 <- showConnections(all = FALSE)
 
 future::plan(future::sequential)
-doFuture::registerDoFuture()
+oldDoPar <- doFuture:::.getDoPar()
 
 mdebug <- doFuture:::mdebug
 mprint <- doFuture:::mprint

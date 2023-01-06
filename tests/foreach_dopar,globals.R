@@ -5,6 +5,8 @@ strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture - explicitly exported globals ...")
 
+registerDoFuture()
+
 message("- Globals manually specified as named list - also with '...' ...")
 
 x <- 1:3

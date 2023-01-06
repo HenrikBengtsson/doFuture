@@ -5,6 +5,8 @@ strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture - reproducibility ...")
 
+registerDoFuture()
+
 res0 <- NULL
 
 for (strategy in strategies) {
