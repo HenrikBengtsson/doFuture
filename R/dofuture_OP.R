@@ -452,6 +452,25 @@ t elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)",
   rm(list = "values")
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 7. Error handling
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## throw an error or return the combined results
+  ## NOTE: This is adopted from foreach:::doSEQ()
+  error_handling <- obj$errorHandling
+  if (debug) {
+    mdebugf("- processing errors (handler = %s)", sQuote(error_handling))
+  }
+  error_value <- getErrorValue(it)
+  if (identical(error_handling, "stop") && !is.null(error_value)) {
+    error_index <- getErrorIndex(it)
+    msg <- sprintf('task %d failed - "%s"', error_index,
+                   conditionMessage(error_value))
+    stop(simpleError(msg, call = expr))
+  }
+  rm(list = c("expr"))
+
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 8. Final results
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- extracting results")
