@@ -5,6 +5,7 @@ Depends:
     foreach (>= 1.5.0),
     future (>= 1.28.0)
 Imports:
+    future.apply,
     globals,
     iterators,
     parallel,

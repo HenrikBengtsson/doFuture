@@ -36,42 +36,26 @@
 #' @importFrom parallel splitIndices
 #' @importFrom utils head
 #' @importFrom globals globalsByName
-doFuture2 <- local({
-  tmpl_dummy_globals <- bquote_compile({
-    .(dummy_globals)
-    .(name) <- NULL
-  })
-
-  tmpl_expr <- bquote_compile({
-    lapply(seq_along(...future.x_ii), FUN = function(jj) {
-      ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
-      .(dummy_globals)
-      ...future.env <- environment()          #nolint
-      local({
-        for (name in names(...future.x_jj)) {
-          assign(name, ...future.x_jj[[name]],
-                 envir = ...future.env, inherits = FALSE)
-        }
-      })
-      tryCatch(.(expr), error = identity)
-    })
-  })
-
-  tmpl_expr_options <- bquote_compile({
-    ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
-    if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
-      oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
-      on.exit(options(oopts), add = TRUE)
-    }
-    .(expr)
-  })
-
-function(obj, expr, envir, data) {   #nolint
+#  ## Just a dummy import to please 'R CMD check'
+#' @importFrom future.apply future_lapply
+doFuture2 <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
   
   debug <- getOption("doFuture.debug", FALSE)
   if (debug) mdebug("doFuture2() ...")
+
+  make_function <- function(argnames, body, envir = parent.frame()) {
+    FUN <- function() NULL
+    empty_formal <- alist(a =)
+    args <- rep(empty_formal, times = length(argnames))
+    names(args) <- argnames
+    attr(expr, "srcref") <- NULL
+    body(FUN) <- expr
+    formals(FUN) <- args
+    environment(FUN) <- envir
+    FUN
+  }
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 1. Input from foreach
@@ -88,70 +72,6 @@ function(obj, expr, envir, data) {   #nolint
   }
   options <- options[["future"]]
 
-  ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
-  argnames <- it$argnames
-  argnames <- argnames[nzchar(argnames)]
-
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## 2. The future expression to use
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## The iterator arguments in 'argnames' should be exported as globals, which
-  ## they also are as part of the 'globals = globals_ii' list that is passed
-  ## to each future() call.  However, getGlobalsAndPackages(..., globals = TRUE)
-  ## below requires that they are found.  If not, an error is produced.
-  ## As a workaround, we will inject them as dummy variables in the expression
-  ## inspected, making them look like local variables.
-  if (debug) {
-    mdebugf("- dummy globals (as locals): [%d] %s",
-           length(argnames), paste(sQuote(argnames), collapse = ", "))
-  }
-  dummy_globals <- NULL
-  for (kk in seq_along(argnames)) {
-    name <- as.symbol(argnames[kk])  #nolint
-    dummy_globals <- bquote_apply(tmpl_dummy_globals)
-  }
-
-  expr <- bquote_apply(tmpl_expr)
-
-  rm(list = "dummy_globals") ## Not needed anymore
-
-  if (debug) {
-    mdebug("- R expression: <hidden>")
-#    mprint(expr)
-  }
-
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## 3. Indentify globals and packages
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (debug) mdebug("- identifying globals and packages ...")
-
-  globals <- structure(TRUE,
-    add = unique(obj[["export"]]),
-    ignore = unique(c(obj[["noexport"]], argnames))
-  )
-  gp <- getGlobalsAndPackages(expr, envir = envir, globals = globals)
-  globals <- gp$globals
-  packages <- unique(c(gp$packages, obj[["packages"]]))
-  expr <- gp$expr
-  scanForGlobals <- TRUE
-  rm(list = c("gp"))
-  
-  ## Have the future backend/framework handle also the required 'doFuture'
-  ## package.  That way we will get a more informative error message in
-  ## case it is missing.
-  packages <- c("doFuture", packages)
-  
-  if (debug) {
-    mdebug("- R expression: <hidden>")
-#    mprint(expr)
-    mdebugf("  - globals: [%d] %s", length(globals),
-           paste(sQuote(names(globals)), collapse = ", "))
-    mstr(globals)
-    mdebugf("  - packages: [%d] %s", length(packages),
-           paste(sQuote(packages), collapse = ", "))
-  
-    mdebug("- identifying globals and packages ... DONE")
-  }
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
@@ -163,11 +83,14 @@ function(obj, expr, envir, data) {   #nolint
   ## (b) .options.future = list(scheduling = <numeric>)
   ##      cf. future_lapply(..., future.scheduling)
   scheduling <- options[["scheduling"]]
+  
+  if (is.null(chunk.size) && is.null(scheduling)) {
+    scheduling <- 1.0
+  }
+  
 
-  ## (c) If neither is set ...
-  if (is.null(chunk.size) && is.null(scheduling)) scheduling <- 1.0
-
-  chunks <- makeChunks(nbrOfElements = length(args_list),
+  nX <- length(args_list)
+  chunks <- makeChunks(nbrOfElements = nX,
                        nbrOfWorkers = nbrOfWorkers(),
                        future.scheduling = scheduling,
                        future.chunk.size = chunk.size)
@@ -179,16 +102,19 @@ function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Relay standard output or conditions?
   stdout <- options[["stdout"]]
-  if (is.null(stdout)) stdout <- eval(formals(Future)$stdout)
-
+  if (is.null(stdout)) {
+    stdout <- eval(formals(future)$stdout)
+  }
+  
   conditions <- options[["conditions"]]
-  if (is.null(conditions)) conditions <- eval(formals(Future)$conditions)
+  if (is.null(conditions)) {
+    conditions <- eval(formals(future)$conditions)
+  }
 
   ## Drop captured standard output and conditions as soon as they have
   ## been relayed?
   if (isTRUE(stdout)) stdout <- structure(stdout, drop = TRUE)
   if (length(conditions) > 0) conditions <- structure(conditions, drop = TRUE)
-
 
   nchunks <- length(chunks)
   fs <- vector("list", length = nchunks)
@@ -225,9 +151,38 @@ function(obj, expr, envir, data) {   #nolint
     globals.maxSize.adjusted <- NULL
   }
 
-  ## Random Number Generation
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Reproducible RNG (for sequential and parallel processing)
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   seed <- options[["seed"]]
-  if (is.null(seed)) seed <- eval(formals(Future)$seed)
+  if (is.null(seed)) {
+    seed <- eval(formals(future)$seed)
+  }
+  if (debug) mdebugf("seed = %s", deparse(seed))
+
+  make_rng_seeds <- import_future.apply("make_rng_seeds")
+  seeds <- make_rng_seeds(nX, seed = seed)
+  if (debug) {
+    mstr(seeds)
+  }
+
+  ## Future expression (with or without setting the RNG state) and
+  ## pass possibly tweaked 'seed' to future()
+  if (is.null(seeds)) {
+    stop_if_not(is.null(seed) || isFALSE(seed))
+  } else {
+    next_random_seed <- import_future.apply("next_random_seed")
+    set_random_seed <- import_future.apply("set_random_seed")
+    ## If RNG seeds are used (given or generated), make sure to reset
+    ## the RNG state afterward
+    oseed <- next_random_seed()    
+    on.exit(set_random_seed(oseed))
+    ## As seed=FALSE but without the RNG check
+    seed <- NULL
+  }
+  if (debug) mdebugf("seed = %s", deparse(seed))
+  
 
   ## Are there RNG-check settings specific for doFuture?
   onMisuse <- getOption("doFuture.rng.onMisuse", NULL)
@@ -240,7 +195,98 @@ function(obj, expr, envir, data) {   #nolint
       on.exit(options(future.rng.onMisuse = oldOnMisuse), add = TRUE)
     }
   }
+  if (debug) mdebugf("seed = %s", deparse(seed))
 
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 2. Construct the 'FUN' function
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## WORKAROUND: foreach::times() passes an empty string in 'argnames'
+  argnames <- it$argnames
+  argnames <- argnames[nzchar(argnames)]
+  if (debug) {
+    mdebugf("- foreach iterator arguments: [%d] %s",
+           length(argnames), paste(sQuote(argnames), collapse = ", "))
+  }
+  
+  ## The iterator arguments in 'argnames' should be exported as globals, which
+  ## they also are as part of the 'globals = globals_ii' list that is passed
+  ## to each future() call.  However, getGlobalsAndPackages(..., globals = TRUE)
+  ## below requires that they are found.  If not, an error is produced.
+  ## As a workaround, we will inject them as dummy variables in the expression
+  ## inspected, making them look like local variables.
+  if (debug) {
+    mdebugf("- dummy globals (as locals): [%d] %s",
+           length(argnames), paste(sQuote(argnames), collapse = ", "))
+  }
+  dummy_globals <- NULL
+  for (kk in seq_along(argnames)) {
+    name <- as.symbol(argnames[kk])  #nolint
+    dummy_globals <- bquote_apply(tmpl_dummy_globals)
+  }
+
+  ## With or without RNG?
+  expr <- bquote_apply(
+    if (is.null(seeds)) {
+      tmpl_expr
+    } else {
+      tmpl_expr_with_rng
+    }
+  )
+  
+  rm(list = "dummy_globals") ## Not needed anymore
+
+  if (debug) {
+    mdebug("- R expression:")
+    mprint(expr)
+  }
+
+  ## The iterator arguments in 'argnames' should be passed as regular
+  ## arguments to the 'FUN' function part of the future_lapply() call.
+  FUN <- make_function(argnames, body = expr, envir = envir)
+  if (debug) {
+    mprint(FUN)
+  }
+    
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 3. Identify globals and packages
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (debug) mdebug("- identifying globals and packages ...")
+
+  gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
+                                       export = obj$export,
+                                       noexport = c(obj$noexport, argnames),
+                                       packages = obj$packages,
+                                       debug = debug)
+
+  expr <- gp$expr
+  globals <- gp$globals
+  packages <- gp$packages
+  scanForGlobals <- gp$scanForGlobals
+  rm(list = "gp")
+
+  ## Have the future backend/framework handle also the required 'doFuture'
+  ## package.  That way we will get a more informative error message in
+  ## case it is missing.
+  packages <- c("doFuture", packages)
+  
+  if (debug) {
+    mdebug("  - R expression:")
+    mprint(expr)
+    mdebugf("  - globals: [%d] %s", length(globals),
+           paste(sQuote(names(globals)), collapse = ", "))
+    mstr(globals)
+    mdebugf("  - packages: [%d] %s", length(packages),
+           paste(sQuote(packages), collapse = ", "))
+  
+    mdebug("- identifying globals and packages ... DONE")
+  }
+
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## Creating futures
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   labels <- sprintf("doFuture2-%s", seq_len(nchunks))
 
   if (debug) mdebugf("Launching %d futures (chunks) ...", nchunks)
@@ -253,7 +299,7 @@ function(obj, expr, envir, data) {   #nolint
     packages_ii <- packages
     args_list_ii <- args_list[chunk]
     globals_ii[["...future.x_ii"]] <- args_list_ii
-    
+
     if (scanForGlobals) {
       if (debug) mdebugf(" - Finding globals in 'args_list' chunk #%d ...", ii)
       ## Search for globals in 'args_list_ii':
@@ -263,12 +309,8 @@ function(obj, expr, envir, data) {   #nolint
       gp <- NULL
 
       if (debug) {
-        t <- hpaste(sQuote(names(globals_X)))
-        if (length(t) == 0) t <- ""
-        mdebugf("   - globals: [n=%d] %s", length(globals_X), t)
-        t <- hpaste(sQuote(packages_X))
-        if (length(t) == 0) t <- ""
-        mdebugf("   - packages: [n=%d] %s", length(packages_X), t)
+        mdebugf("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
+        mdebugf("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
       }
     
       ## Export also globals found in 'args_list_ii'
@@ -296,21 +338,32 @@ function(obj, expr, envir, data) {   #nolint
       globals_ii <- c(globals_ii, ...future.globals.maxSize = globals.maxSize)
     }
 
-    if (debug) mdebugf("- Creating future ...")
-    fs[[ii]] <- future(expr, substitute = FALSE, envir = envir,
-                       globals = globals_ii, packages = packages_ii,
-                       seed = seed,
-                       stdout = stdout, conditions = conditions,
-		       label = labels[ii])
-    if (debug) mprint(fs[[ii]])
-    if (debug) mdebugf("- Creating future ... done")
+    ## Using RNG seeds or not?
+    if (is.null(seeds)) {
+      if (debug) mdebug(" - seeds: <none>")
+    } else {
+      if (debug) mdebugf(" - seeds: [n=%d] <seeds>", length(chunk))
+      globals_ii[["...future.seeds_ii"]] <- seeds[chunk]
+      stop_if_not(length(seeds[chunk]) > 0, is.list(seeds[chunk]))
+    }
+
+    fs[[ii]] <- future(
+      expr, substitute = FALSE,
+      envir = envir,
+      globals = globals_ii,
+      packages = packages_ii,
+      seed = seed,
+      stdout = stdout,
+      conditions = conditions,
+      label = labels[ii]
+    )
 
     ## Not needed anymore
     rm(list = c("chunk", "globals_ii", "packages_ii"))
 
     if (debug) mdebugf("Chunk #%d of %d ... DONE", ii, nchunks)
   } ## for (ii ...)
-  rm(list = c("globals", "packages", "labels"))
+  rm(list = c("globals", "packages", "labels", "seeds"))
   if (debug) mdebugf("Launching %d futures (chunks) ... DONE", nchunks)
   stop_if_not(length(fs) == nchunks)
 
@@ -479,7 +532,7 @@ t elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)",
   if (debug) mdebug("doFuture2() ... DONE")
 
   res
-}}) ## doFuture2()
+} ## doFuture2()
 
 
 seq_to_intervals <- function(idx, ...) {
@@ -572,3 +625,51 @@ seq_to_human <- function(idx, tau=1L, delimiter="-", collapse=", ", ...) {
 
   paste(s, collapse=collapse)
 }
+
+
+tmpl_dummy_globals <- bquote_compile({
+  .(dummy_globals)
+  .(name) <- NULL
+})
+
+tmpl_expr <- bquote_compile({
+  lapply(seq_along(...future.x_ii), FUN = function(jj) {
+    ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
+    .(dummy_globals)
+    ...future.env <- environment()          #nolint
+    local({
+      for (name in names(...future.x_jj)) {
+        assign(name, ...future.x_jj[[name]],
+               envir = ...future.env, inherits = FALSE)
+      }
+    })
+    tryCatch(.(expr), error = identity)
+  })
+})
+
+
+tmpl_expr_with_rng <- bquote_compile({
+  lapply(seq_along(...future.x_ii), FUN = function(jj) {
+    ...future.x_jj <- ...future.x_ii[[jj]]  #nolint
+    .(dummy_globals)
+    ...future.env <- environment()          #nolint
+    local({
+      for (name in names(...future.x_jj)) {
+        assign(name, ...future.x_jj[[name]],
+               envir = ...future.env, inherits = FALSE)
+      }
+    })
+    assign(".Random.seed", ...future.seeds_ii[[jj]], envir = globalenv(), inherits = FALSE)
+    tryCatch(.(expr), error = identity)
+  })
+})
+
+
+tmpl_expr_options <- bquote_compile({
+  ...future.globals.maxSize.org <- getOption("future.globals.maxSize")
+  if (!identical(...future.globals.maxSize.org, ...future.globals.maxSize)) {
+    oopts <- options(future.globals.maxSize = ...future.globals.maxSize)
+    on.exit(options(oopts), add = TRUE)
+  }
+  .(expr)
+})
