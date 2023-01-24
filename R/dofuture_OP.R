@@ -80,10 +80,6 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
     stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
   }
   
-  if (!isTRUE(obj$combineInfo$in.order)) {
-    stop("foreach() does not support argument '.inorder' when using %dofuture%")
-  }
-
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
