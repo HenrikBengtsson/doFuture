@@ -30,7 +30,7 @@ rm(list = "x")
 
 ## ... but this would give a "globals-not-found" error in
 ## doFuture (<= 0.4.0) because 'j' was interpreted as global variable
-x <- foreach(i = 1, .packages = "foreach") %dofuture% {
+x <- foreach(i = 1, .options.future = list(packages = "foreach")) %dofuture% {
   foreach(j = 1) %dofuture% { j }
 }
 str(x)
@@ -50,8 +50,7 @@ for (strategy1 in strategies) {
     stopifnot(!exists("a", inherits = FALSE), !exists("b", inherits = FALSE))
 
     message("foreach() - level 1 ...")
-    x <- foreach(a = as, .export = c("bs", "strategy2"),
-                 .packages = "foreach") %dofuture% {
+    x <- foreach(a = as, .options.future = list(globals = c("bs", "strategy2"), packages = "foreach")) %dofuture% {
       plan_list <- future::plan("next")
       stopifnot(inherits(plan_list, strategy2))
       plan_a <- future::plan("list")
@@ -59,7 +58,7 @@ for (strategy1 in strategies) {
       stopifnot(inherits(plan_a[[1]], strategy2))
 
       message("foreach() - level 2 ...")
-      y <- foreach(b = bs, .export = c("a", "plan_a")) %dofuture% {
+      y <- foreach(b = bs, .options.future = list(globals = c("a", "plan_a"))) %dofuture% {
         plan_list <- future::plan("next")
         message(capture.output(print(plan_list)))
 

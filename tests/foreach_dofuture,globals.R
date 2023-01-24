@@ -25,7 +25,7 @@ for (strategy in strategies) {
 
   ## (b) explicit and with '...'
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("x", "...")) %dofuture% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("x", "..."))) %dofuture% { x[c(i, ...)] }
   }
   y <- sub(x, 2:3)
   str(y)
@@ -33,7 +33,7 @@ for (strategy in strategies) {
 
   ## (c) with '...', but not last
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("...", "x")) %dofuture% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("...", "x"))) %dofuture% { x[c(i, ...)] }
   }
   y <- sub(x, 2:3)
   str(y)
@@ -41,7 +41,7 @@ for (strategy in strategies) {
   
   ## (d) explicit, but forgotten '...'
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("x")) %dofuture% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("x"))) %dofuture% { x[c(i, ...)] }
   }
   y <- tryCatch(sub(x, 2:3), error = identity)
   str(y)

@@ -72,6 +72,14 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   }
   options <- options[["future"]]
 
+  if (!is.null(obj$export)) {
+    stop("foreach() does not support argument '.export' when using %dofuture%. Use .options.future = list(globals = structure(..., add = ...)) instead")
+  } else if (!is.null(obj$noexport)) {
+    stop("foreach() does not support argument '.noexport' when using %dofuture%. Use .options.future = list(globals = structure(..., ignore = ...)) instead")
+  } else if (!is.null(obj$packages)) {
+    stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
+  }
+
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
@@ -254,22 +262,46 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (debug) mdebug("- identifying globals and packages ...")
 
-  gp <- getGlobalsAndPackages_doFuture(expr, envir = envir,
-                                       export = obj$export,
-                                       noexport = c(obj$noexport, argnames),
-                                       packages = obj$packages,
-                                       debug = debug)
+  globals <- options[["globals"]]
+  if (is.null(globals)) globals <- TRUE
+  
+  packages <- options[["packages"]]
+  
+  ## Environment from where to search for globals
+  globals_envir <- new.env(parent = envir)
+  assign("...future.x_ii", 42, envir = globals_envir, inherits = FALSE)
 
-  expr <- gp$expr
+  add <- attr(globals, "add", exact = TRUE)
+  add <- c(add, "...future.x_ii")
+
+  ignore <- attr(globals, "ignore", exact = TRUE)
+  ignore <- c(ignore, argnames)
+
+  if (is.character(globals)) {
+     globals <- setdiff(unique(c(globals, add)), ignore)
+  } else {
+    attr(globals, "add") <- add
+    attr(globals, "ignore") <- ignore
+  }
+
+  mstr(globals)
+  gp <- getGlobalsAndPackages(expr, envir = globals_envir, globals = globals, packages = packages)
   globals <- gp$globals
-  packages <- gp$packages
-  scanForGlobals <- gp$scanForGlobals
+  packages <- unique(c(gp$packages, packages))
+  expr <- gp$expr
+  rm(list = c("gp", "globals_envir")) ## Not needed anymore
+  mstr(globals)
+  
+  ## Also make sure we've got our in-house '...future.x_ii' covered.
+  stop_if_not("...future.x_ii" %in% names(globals),
+            !any(duplicated(names(globals))),
+            !any(duplicated(packages)))
   rm(list = "gp")
 
   ## Have the future backend/framework handle also the required 'doFuture'
   ## package.  That way we will get a more informative error message in
   ## case it is missing.
-  packages <- c("doFuture", packages)
+  packages <- unique(c("doFuture", packages))
   
   if (debug) {
     mdebug("  - R expression:")
@@ -300,37 +332,35 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
     args_list_ii <- args_list[chunk]
     globals_ii[["...future.x_ii"]] <- args_list_ii
 
-    if (scanForGlobals) {
-      if (debug) mdebugf(" - Finding globals in 'args_list' chunk #%d ...", ii)
-      ## Search for globals in 'args_list_ii':
-      gp <- getGlobalsAndPackages(args_list_ii, envir = envir, globals = TRUE)
-      globals_X <- gp$globals
-      packages_X <- gp$packages
-      gp <- NULL
+    if (debug) mdebugf(" - Finding globals in 'args_list' chunk #%d ...", ii)
+    ## Search for globals in 'args_list_ii':
+    gp <- getGlobalsAndPackages(args_list_ii, envir = envir, globals = TRUE)
+    globals_X <- gp$globals
+    packages_X <- gp$packages
+    gp <- NULL
 
-      if (debug) {
-        mdebugf("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
-        mdebugf("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
-      }
-    
-      ## Export also globals found in 'args_list_ii'
-      if (length(globals_X) > 0L) {
-        reserved <- intersect(c("...future.FUN", "...future.x_ii"), names(globals_X))
-        if (length(reserved) > 0) {
-          stop("Detected globals in 'args_list' using reserved variables names: ",
-               paste(sQuote(reserved), collapse = ", "))
-        }
-        globals_ii <- unique(c(globals_ii, globals_X))
-
-        ## Packages needed due to globals in 'args_list_ii'?
-        if (length(packages_X) > 0L)
-          packages_ii <- unique(c(packages_ii, packages_X))
-      }
-      
-      rm(list = c("globals_X", "packages_X"))
-      
-      if (debug) mdebugf(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
+    if (debug) {
+      mdebugf("   + globals found in 'args_list' for chunk #%d: [%d] %s", chunk, length(globals_X), hpaste(sQuote(names(globals_X))))
+      mdebugf("   + needed namespaces for 'args_list' for chunk #%d: [%d] %s", chunk, length(packages_X), hpaste(sQuote(packages_X)))
     }
+  
+    ## Export also globals found in 'args_list_ii'
+    if (length(globals_X) > 0L) {
+      reserved <- intersect(c("...future.FUN", "...future.x_ii"), names(globals_X))
+      if (length(reserved) > 0) {
+        stop("Detected globals in 'args_list' using reserved variables names: ",
+             paste(sQuote(reserved), collapse = ", "))
+      }
+      globals_ii <- unique(c(globals_ii, globals_X))
+
+      ## Packages needed due to globals in 'args_list_ii'?
+      if (length(packages_X) > 0L)
+        packages_ii <- unique(c(packages_ii, packages_X))
+    }
+    
+    rm(list = c("globals_X", "packages_X"))
+    
+    if (debug) mdebugf(" - Finding globals in 'args_list' for chunk #%d ... DONE", ii)
 
     rm(list = "args_list_ii")
     
