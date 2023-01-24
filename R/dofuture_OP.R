@@ -80,7 +80,7 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
     stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
   }
   
-  if (!is.null(obj$combineInfo$in.order)) {
+  if (!isTRUE(obj$combineInfo$in.order)) {
     stop("foreach() does not support argument '.inorder' when using %dofuture%")
   }
 
