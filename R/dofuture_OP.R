@@ -79,6 +79,10 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   } else if (!is.null(obj$packages)) {
     stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
   }
+  
+  if (!is.null(obj$combineInfo$in.order)) {
+    stop("foreach() does not support argument '.inorder' when using %dofuture%")
+  }
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,7 +300,6 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   stop_if_not("...future.x_ii" %in% names(globals),
             !any(duplicated(names(globals))),
             !any(duplicated(packages)))
-  rm(list = "gp")
 
   ## Have the future backend/framework handle also the required 'doFuture'
   ## package.  That way we will get a more informative error message in
@@ -521,9 +524,6 @@ t elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)",
   ## NOTE: This is adopted from foreach:::doSEQ()
   if (debug) {
     mdebug("- accumulating results")
-#    mprint(accumulator)
-#    it <- environment(accumulator)$it
-#    mprint(it)
   }
   tryCatch({
     accumulator(results2, tags = seq_along(results2))
