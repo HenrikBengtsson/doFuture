@@ -109,7 +109,7 @@ x <- bplapply(mtcars, mean, trim = cutoff)
 
 ## doFuture takes care of exports and packages automatically
 
-The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `my` and `sigma` are properly exported when we do
+The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although global `cutoff` is properly exported when we do
 ```r
 library("doParallel")
 registerDoParallel(parallel::makeCluster(2))
@@ -120,7 +120,7 @@ y <- foreach(x = mtcars) %dopar% {
 }
 names(y) <- colnames(mtcars)
 ```
-it falls short as soon as we try to do the same from within a function;
+it falls short as soon as we try to do the same from within a function:
 ```r
 my_mean <- function() {
   y <- foreach(x = mtcars) %dopar% {

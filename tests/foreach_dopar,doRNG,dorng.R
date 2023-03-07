@@ -1,7 +1,6 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
 
 ## Adopted from demo("doRNG", package = "doRNG")
 if (require("doRNG")) {

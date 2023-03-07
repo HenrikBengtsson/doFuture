@@ -1,7 +1,6 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture() - error handling w/ 'stop' ...")
 
