@@ -12,7 +12,6 @@ source("incl/start.R")
 if (.Platform$OS.type == "windows") Sys.setenv(TMPDIR = tempdir())
 
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
 
 options(future.debug = FALSE)
 options(doFuture.debug = FALSE)
