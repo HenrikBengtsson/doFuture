@@ -1,27 +1,29 @@
 
 
 <div id="badges"><!-- pkgdown markup -->
-<a href="https://CRAN.R-project.org/web/checks/check_results_doFuture.html"><img border="0" src="https://www.r-pkg.org/badges/version/doFuture" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/doFuture/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/doFuture/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>    <a href="https://codecov.io/gh/HenrikBengtsson/doFuture"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> <a href="https://github.com/HenrikBengtsson/future/actions/workflows/doFuture.tests.extra.yaml"><img border="0" src="https://github.com/HenrikBengtsson/doFuture/actions/workflows/doFuture.tests.extra.yaml/badge.svg" alt="doFuture.tests.extra checks"/></a>
+<a href="https://CRAN.R-project.org/web/checks/check_results_doFuture.html"><img border="0" src="https://www.r-pkg.org/badges/version/doFuture" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/doFuture/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/doFuture/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>     <a href="https://app.codecov.io/gh/HenrikBengtsson/doFuture"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
 </div>
 
 # doFuture: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package 
 
 ## Introduction
-The [future] package provides a generic API for using futures in R.
-A future is a simple yet powerful mechanism to evaluate an R expression
-and retrieve its value at some point in time.  Futures can be resolved
-in many different ways depending on which strategy is used.
-There are various types of synchronous and asynchronous futures to
-choose from in the [future] package.
-Additional futures are implemented in other packages.
-For instance, the [future.batchtools] package provides futures for
-_any_ type of backend that the [batchtools] package supports.
-For an introduction to futures in R, please consult the
-vignettes of the [future] package.
 
-The [doFuture] package provides a `%dopar%` adapter for the [foreach]
-package that works with _any_ type of future.
-The doFuture package is cross platform just as the future package.
+The **[future]** package provides a generic API for using futures in
+R.  A future is a simple yet powerful mechanism to evaluate an R
+expression and retrieve its value at some point in time.  Futures can
+be resolved in many different ways depending on which strategy is
+used.  There are various types of synchronous and asynchronous futures
+to choose from in the **[future]** package.  Additional future
+backends are implemented in other packages.  For instance, the
+**[future.batchtools]** package provides futures for _any_ type of
+backend that the **[batchtools]** package supports.  For an
+introduction to futures in R, please consult the vignettes of the
+**[future]** package.
+
+The **[doFuture]** package provides a `%dopar%` adapter for the
+**[foreach]** package that works with _any_ type of future backend.
+The **doFuture** package is cross platform just as the **future**
+package.
 
 Below is an example showing how to make `%dopar%` work with
 _multisession_ futures.  A multisession future will be evaluated in
@@ -40,11 +42,13 @@ names(y) <- colnames(mtcars)
 ```
 
 ## Futures bring foreach to the HPC cluster
+
 To do the same on high-performance computing (HPC) cluster, the
-[future.batchtools] package can be used.  Assuming batchtools has
-been configured correctly, then following foreach iterations will
-be submitted to the HPC job scheduler and distributed for
-evaluation on the compute nodes.
+**[future.batchtools]** package can be used.  Assuming batchtools has
+been configured correctly, then following foreach iterations will be
+submitted to the HPC job scheduler and distributed for evaluation on
+the compute nodes.
+
 ```r
 library("doFuture")
 registerDoFuture()
@@ -59,7 +63,13 @@ names(y) <- colnames(mtcars)
 
 
 ## Futures for plyr
-The [plyr] package uses [foreach] as a parallel backend.  This means that with [doFuture] any type of futures can be used for asynchronous (and synchronous) plyr processing including multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.  For example,
+
+The **[plyr]** package uses **[foreach]** as a parallel backend.  This
+means that with **[doFuture]** any type of futures can be used for
+asynchronous (and synchronous) **plyr** processing including
+multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.
+For example,
+
 ```r
 library("doFuture")
 registerDoFuture()
@@ -83,7 +93,11 @@ y <- llply(mtcars, mean, trim = cutoff, .parallel = TRUE)
 
 
 ## Futures and BiocParallel
-The [BiocParallel] package supports any `%dopar%` adapter as a parallel backend.  This means that with [doFuture], BiocParallel supports any type of future.  For example,
+
+The **[BiocParallel]** package supports any `%dopar%` adapter as a
+parallel backend.  This means that with **[doFuture]**,
+**BiocParallel** supports any type of future.  For example,
+
 ```r
 library("doFuture")
 registerDoFuture()
@@ -98,7 +112,12 @@ x <- bplapply(mtcars, mean, trim = cutoff)
 
 ## doFuture takes care of exports and packages automatically
 
-The foreach package itself has some support for automated handling of globals but unfortunately it does not work in all cases.  Specifically, if `foreach()` is called from within a function, you do need to export globals explicitly.  For example, although globals `my` and `sigma` are properly exported when we do
+The **foreach** package itself has some support for automated handling
+of globals but unfortunately it does not work in all cases.
+Specifically, if `foreach()` is called from within a function, you do
+need to export globals explicitly.  For example, although global
+`cutoff` is properly exported when we do
+
 ```r
 library("doParallel")
 registerDoParallel(parallel::makeCluster(2))
@@ -109,7 +128,10 @@ y <- foreach(x = mtcars) %dopar% {
 }
 names(y) <- colnames(mtcars)
 ```
-it falls short as soon as we try to do the same from within a function;
+
+it falls short as soon as we try to do the same from within a
+function:
+
 ```r
 my_mean <- function() {
   y <- foreach(x = mtcars) %dopar% {
@@ -124,6 +146,7 @@ x <- my_mean()
 ```
 
 The solution is to explicitly export global variables, e.g.
+
 ```r
 my_mean <- function() {
   y <- foreach(x = mtcars, .export = "cutoff") %dopar% {
@@ -136,7 +159,10 @@ my_mean <- function() {
 y <- my_mean()
 ```
 
-In contrast, when using the `%dopar%` adapter of doFuture, all of the [future] machinery comes in to play including automatic handling of global variables, e.g.
+In contrast, when using the `%dopar%` adapter of **doFuture**, all of
+the **[future]** machinery comes in to play including automatic
+handling of global variables, e.g.
+
 ```r
 library("doFuture")
 registerDoFuture()
@@ -155,7 +181,10 @@ x <- my_mean()
 
 will indeed work.
 
-Another advantage with doFuture is that, contrary to doParallel, packages that need to be attached are also automatically taken care of, e.g.
+Another advantage with **doFuture** is that, contrary to
+**doParallel**, packages that need to be attached are also
+automatically taken care of, e.g.
+
 ```r
 registerDoFuture()
 library("tools")
@@ -163,7 +192,9 @@ ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
 unlist(ext)
 ## [1] "txt" "log"
 ```
+
 whereas
+
 ```r
 registerDoParallel(parallel::makeCluster(2))
 library("tools")
@@ -172,14 +203,28 @@ ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
 ##   task 1 failed - "could not find function "file_ext""
 ```
 
-Having said all this, in order to write foreach code that works everywhere, it is better to be conservative and not assume that all end users will use a doFuture backend.  Because of this, it is still recommended to explicitly specify all objects that need to be export whenever using the foreach API.  The doFuture framework can help you identify what should go into the `.export` argument.  By setting `options(doFuture.foreach.export = ".export-and-automatic-with-warning")`, doFuture will in warn if it finds globals not listed in `.export` and produce an informative warning message suggesting that those should be added.  To assert that argument `.export` is correct, test the code with `options(doFuture.foreach.export = ".export")`, which will disable automatic identification of globals such that only the globals specified by the `.export` argument is used.
+Having said all this, in order to write foreach code that works
+everywhere, it is better to be conservative and not assume that all
+end users will use a **doFuture** backend.  Because of this, it is
+still recommended to explicitly specify all objects that need to be
+export whenever using the foreach API.  The **doFuture** framework can
+help you identify what should go into the `.export` argument.  By
+setting `options(doFuture.foreach.export =
+".export-and-automatic-with-warning")`, **doFuture** will in warn if
+it finds globals not listed in `.export` and produce an informative
+warning message suggesting that those should be added.  To assert that
+argument `.export` is correct, test the code with
+`options(doFuture.foreach.export = ".export")`, which will disable
+automatic identification of globals such that only the globals
+specified by the `.export` argument is used.
 
 
 ## doFuture replaces existing doNnn packages
 
-Due to the generic nature of futures, the [doFuture] package
-provides the same functionality as many of the existing doNnn
-packages combined, e.g. [doMC], [doParallel], [doMPI], and [doSNOW].
+Due to the generic nature of futures, the **[doFuture]** package
+provides the same functionality as many of the existing doNnn packages
+combined, e.g. **[doMC]**, **[doParallel]**, **[doMPI]**, and
+**[doSNOW]**.
 
 <table style="width: 100%;">
 <tr>
@@ -313,7 +358,6 @@ plan(future.batchtools::batchtools_sge)
 </tr>
 
 
-
 <tr style="vertical-align: center;">
 <td>
 <pre><code class="r">library("doRedis")
@@ -327,7 +371,6 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 </tr>
 
 <table>
-
 
 
 
