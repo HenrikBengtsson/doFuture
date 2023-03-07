@@ -2,28 +2,163 @@
 % Please edit documentation in R/registerDoFuture.R
 \name{registerDoFuture}
 \alias{registerDoFuture}
-\title{Registers the future \%dopar\% backend}
+\title{Use the Foreach \verb{\%dopar\%} Adapter with Futures}
 \usage{
 registerDoFuture()
 }
 \value{
-Invisibly returns the previously registered foreach backend.
+\code{registerDoFuture()} returns, invisibly, the previously registered
+foreach \verb{\%dopar\%} backend.
 }
 \description{
-Register the \pkg{doFuture} parallel adapter to be used with
-\code{\link{\%dopar\%}} by the \pkg{foreach} package.
+The \code{registerDoFuture()} function makes the
+\code{\link[foreach:\%dopar\%]{\%dopar\%}} operator of the
+\pkg{foreach} package to process foreach iterations via any of
+the future backends supported by the \pkg{future} package, which
+includes various parallel and distributed backends.
+In other words, \emph{if a computational backend is supported via
+the Future API, it'll be automatically available for all functions
+and packages making using the \pkg{foreach} framework.}
+Neither the developer nor the end user has to change any code.
 }
+\section{Parallel backends}{
+
+To use futures with the \pkg{foreach} package and its
+\code{\link[foreach:\%dopar\%]{\%dopar\%}} operator, use
+\code{doFuture::registerDoFuture()} to register \pkg{doFuture} to be
+used as a \verb{\%dopar\%} adapter.  After this, \verb{\%dopar\%} will
+parallelize with whatever \pkg{future} backend is set by
+\code{\link[future:plan]{future::plan()}}.
+
+The built-in \pkg{future} backends are always available, e.g.
+\link[future:sequential]{sequential} (sequential processing),
+\link[future:multicore]{multicore} (forked processes),
+\link[future:multisession]{multisession} (background R sessions),
+and \link[future:cluster]{cluster} (background R sessions on
+local and remote machines).
+For example, \code{plan(multisession)} will make \verb{\%dopar\%}
+parallelize via R processes running in the background on the
+local machine, and
+\code{plan(cluster, workers = c("n1", "n2", "n2", "n3"))} will
+parallelize via R processes running on external machines.
+
+Additional backends are provided by other future-compliant
+packages.  For example, the \pkg{future.batchtools} package
+provides support for high-performance compute (HPC) cluster
+schedulers such as SGE, Slurm, and TORQUE / PBS.
+As an illustration, \code{plan(batchtools_slurm)} will parallelize
+by submitting the foreach iterations as tasks to the Slurm
+scheduler, which in turn will distribute the tasks to one
+or more compute nodes.
+}
+
+\section{Global variables and packages}{
+
+Unless running locally in the global environment (= at the \R prompt),
+the \pkg{foreach} package requires you do specify what global variables
+and packages need to be available and attached in order for the
+"foreach" expression to be evaluated properly.  It is not uncommon to
+get errors on one or missing variables when moving from running a
+\code{res <- foreach() \%dopar\% { ... }} statement on the local machine
+to, say, another machine on the same network.  The solution to the
+problem is to explicitly export those variables by specifying them in
+the \code{.export} argument to \code{\link[foreach:foreach]{foreach::foreach()}},
+e.g. \code{foreach(..., .export = c("mu", "sigma"))}.  Likewise, if the
+expression needs specific packages to be attached, they can be listed
+in argument \code{.packages} of \code{foreach()}.
+
+When using \code{registerDoFuture()}, the above becomes less
+critical, because by default the Future API identifies all globals and
+all packages automatically (via static code inspection).  This is done
+exactly the same way regardless of future backend.
+This automatic identification of globals and packages is illustrated
+by the below example, which does \emph{not} specify
+\code{.export = c("my_stat")}.  This works because the future framework
+detects that function \code{my_stat()} is needed and makes sure it is
+exported.  If you would use, say, \code{cl <- parallel::makeCluster(2)}
+and \code{doParallel::registerDoParallel(cl)}, you would get a run-time
+error on \code{Error in \{ : task 1 failed - \"could not find function "my_stat" ...}.
+
+Having said this, note that, in order for your "foreach" code to work
+everywhere and with other types of foreach adapters as well, you may
+want to make sure that you always specify arguments \code{.export}
+and \code{.packages}.
+}
+
+\section{Load balancing ("chunking")}{
+
+Whether load balancing ("chunking") should take place or not can be
+controlled by specifying either argument
+\verb{.options.future = list(scheduling = <ratio>)} or
+\verb{.options.future = list(chunk.size = <count>)} to \code{foreach()}.
+
+The value \code{chunk.size} specifies the average number of elements
+processed per future ("chunks").
+If \code{+Inf}, then all elements are processed in a single future (one worker).
+If \code{NULL}, then argument \code{future.scheduling} is used.
+
+The value \code{scheduling} specifies the average number of futures
+("chunks") that each worker processes.
+If \code{0.0}, then a single future is used to process all iterations;
+none of the other workers are not used.
+If \code{1.0} or \code{TRUE}, then one future per worker is used.
+If \code{2.0}, then each worker will process two futures (if there are
+enough iterations).
+If \code{+Inf} or \code{FALSE}, then one future per iteration is used.
+The default value is \code{scheduling = 1.0}.
+
+The name of \code{foreach()} argument \code{.options.future} follows the naming
+conventions of the \pkg{doMC}, \pkg{doSNOW}, and \pkg{doParallel} packages,
+\emph{This argument should not be mistaken for the \R
+\link[future:future.options]{options of the future package}}.
+
+For backward-compatibility reasons with existing foreach code, one may
+also use arguments \verb{.options.multicore = list(preschedule = <logical>)} and
+\verb{.options.snow = list(preschedule = <logical>)} when using \pkg{doFuture}.
+\code{.options.multicore = list(preschedule = TRUE)} is equivalent to
+\code{.options.future = list(scheduling = 1.0)} and
+\code{.options.multicore = list(preschedule = FALSE)} is equivalent to
+\code{.options.future = list(scheduling = +Inf)}.
+and analogously for \code{.options.snow}.
+Argument \code{.options.future} takes precedence over argument
+\code{.option.multicore} which takes precedence over argument \code{.option.snow},
+when it comes to chunking.
+}
+
+\section{Random Number Generation (RNG)}{
+
+The doFuture adapter registered by \code{registerDoFuture()} does \emph{not} itself
+provide a framework for generating proper random numbers in parallel.
+This is a deliberate design choice based on how the foreach ecosystem is
+set up and to align it with other foreach adapters, e.g. \strong{doParallel}.
+To generate statistically sound parallel RNG, it is recommended to use
+the \pkg{doRNG} package, where the \code{\link[doRNG:\%dorng\%]{\%dorng\%}}
+operator is used in place of \code{\link[foreach:\%dopar\%]{\%dopar\%}}.
+For example,
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{y <- foreach(i = 1:3) \%dorng\% \{
+  rnorm(1)
+\}
+}\if{html}{\out{</div>}}
+
+This works because \pkg{doRNG} is designed to work with any type of foreach
+\verb{\%dopar\%} adapter including the one provided by \pkg{doFuture}.
+
+If you forget to use \verb{\%dorng\%} instead of \verb{\%dopar\%} when the foreach
+iteration generates random numbers, \pkg{doFuture} will detect the
+mistake and produce an informative warning.
+}
+
 \section{For package developers}{
 
-Please refrain from modifying the foreach backend inside your packages /
-functions, i.e. do not call \code{registerNnn()} in your code.  Instead, leave
-the control on what backend to use to the end user.  This idea is part of
-the core philosophy of the foreach framework.
+Please refrain from modifying the foreach backend inside your package or
+functions, i.e. do not call any \code{registerNnn()} in your code.  Instead,
+leave the control on what backend to use to the end user.  This idea is
+part of the core philosophy of the \pkg{foreach} framework.
 
 However, if you think it necessary to register the \pkg{doFuture} backend
 in a function, please make sure to undo your changes when exiting the
-function.
-This can be done using:
+function. This can be done using:
 
 \preformatted{
   oldDoPar <- registerDoFuture()
@@ -31,7 +166,7 @@ This can be done using:
   [...]
 }
 
-This is important because the end-user might have already registered a
+This is important, because the end-user might have already registered a
 foreach backend elsewhere for other purposes and will most likely not known
 that calling your function will break their setup.
 \emph{Remember, your package and its functions might be used in a greater
@@ -41,10 +176,71 @@ others' toes.}
 }
 
 \examples{
-registerDoFuture()
+\donttest{
+library(doFuture)
+library(iterators)  # iter()
+registerDoFuture()  # (a) tell \%dopar\% to use the future framework
+plan(multisession)  # (b) parallelize futures on the local machine
+
+
+## Example 1
+A <- matrix(rnorm(100^2), nrow = 100)
+B <- t(A)
+
+y1 <- apply(B, MARGIN = 2L, FUN = function(b) {
+  A \%*\% b
+})
+
+y2 <- foreach(b = iter(B, by = "col"), .combine = cbind) \%dopar\% {
+  A \%*\% b
+}
+stopifnot(all.equal(y2, y1))
+
+
+
+## Example 2 - Chunking (4 elements per future [= worker])
+y3 <- foreach(b = iter(B, by = "col"), .combine = cbind,
+              .options.future = list(chunk.size = 10)) \%dopar\% {
+  A \%*\% b
+}
+stopifnot(all.equal(y3, y1))
+
+
+## Example 3 - Simulation with parallel RNG
+library(doRNG)
+
+my_stat <- function(x) {
+  median(x)
+}
+
+my_experiment <- function(n, mu = 0.0, sigma = 1.0) {
+  ## Important: use \%dorng\% whenever random numbers
+  ##            are involved in parallel evaluation
+  foreach(i = 1:n) \%dorng\% {
+    x <- rnorm(i, mean = mu, sd = sigma)
+    list(mu = mean(x), sigma = sd(x), own = my_stat(x))
+  }
+}
+
+## Reproducible results when using the same RNG seed
+set.seed(0xBEEF)
+y1 <- my_experiment(n = 3)
+
+set.seed(0xBEEF)
+y2 <- my_experiment(n = 3)
+
+stopifnot(identical(y2, y1))
+
+## But only then
+y3 <- my_experiment(n = 3)
+str(y3)
+stopifnot(!identical(y3, y1))
 
 }
-\seealso{
-An alternative to \code{\link{\%dopar\%}} and \code{registerDoFuture()} is \code{\link{\%dofuture\%}}.
+
+\dontshow{
+## R CMD check: make sure any open connections are closed afterward
+if (!inherits(plan(), "sequential")) plan(sequential)
+}
 }
 \keyword{utilities}
