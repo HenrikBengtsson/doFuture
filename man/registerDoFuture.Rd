@@ -10,8 +10,8 @@ registerDoFuture()
 Invisibly returns the previously registered foreach backend.
 }
 \description{
-Register the \link{doFuture} parallel adapter to be used by
-the \pkg{foreach} package.
+Register the \pkg{doFuture} parallel adapter to be used with
+\code{\link{\%dopar\%}} by the \pkg{foreach} package.
 }
 \section{For package developers}{
 
@@ -43,5 +43,8 @@ others' toes.}
 \examples{
 registerDoFuture()
 
+}
+\seealso{
+An alternative to \code{\link{\%dopar\%}} and \code{registerDoFuture()} is \code{\link{\%dofuture\%}}.
 }
 \keyword{utilities}

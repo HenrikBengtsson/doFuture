@@ -8,12 +8,12 @@
 #' @return The value of the foreach call.
 #'
 #' @details
-#' This is a replacement for `%dopar%` of the \pkg{foreach} package that
-#' leverages the \pkg{future} framework.
+#' This is a replacement for [`%dopar%`] of the \pkg{foreach} package
+#' that leverages the \pkg{future} framework.
 #'
 #' When using `%dofuture%`:
 #'
-#' * there is no need to use `registerDoFuture()`.
+#' * there is no need to use `registerDoFuture()`
 #' * there is no need to use `%dorng%` of the **doRNG** package
 #'   (but you need to specify `.options.future = list(seed = TRUE)`
 #'    whenever using random numbers in the `expr` expression)

@@ -1,7 +1,7 @@
 #' Registers the future %dopar% backend
 #'
-#' Register the [doFuture] parallel adapter to be used by
-#' the \pkg{foreach} package.
+#' Register the \pkg{doFuture} parallel adapter to be used with
+#' [`%dopar%`] by the \pkg{foreach} package.
 #'
 #' @return Invisibly returns the previously registered foreach backend.
 #'
@@ -32,7 +32,10 @@
 #'
 #' @examples
 #' registerDoFuture()
-#' 
+#'
+#' @seealso
+#' An alternative to [`%dopar%`] and `registerDoFuture()` is [`%dofuture%`].
+#'
 #' @importFrom future nbrOfWorkers
 #' @importFrom foreach setDoPar
 #' @importFrom utils packageVersion

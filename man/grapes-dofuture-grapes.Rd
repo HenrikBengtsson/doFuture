@@ -19,12 +19,12 @@ The value of the foreach call.
 Loop over a Foreach Expression using Futures
 }
 \details{
-This is a replacement for \verb{\%dopar\%} of the \pkg{foreach} package that
-leverages the \pkg{future} framework.
+This is a replacement for \code{\link{\%dopar\%}} of the \pkg{foreach} package
+that leverages the \pkg{future} framework.
 
 When using \verb{\%dofuture\%}:
 \itemize{
-\item there is no need to use \code{registerDoFuture()}.
+\item there is no need to use \code{registerDoFuture()}
 \item there is no need to use \verb{\%dorng\%} of the \strong{doRNG} package
 (but you need to specify \code{.options.future = list(seed = TRUE)}
 whenever using random numbers in the \code{expr} expression)
