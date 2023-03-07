@@ -37,7 +37,7 @@
 #' @importFrom utils head
 #' @importFrom globals globalsByName
 #  ## Just a dummy import to please 'R CMD check'
-#' @importFrom future.apply future_lapply
+#' @import future.apply
 doFuture2 <- function(obj, expr, envir, data) {   #nolint
   stop_if_not(inherits(obj, "foreach"))
   stop_if_not(inherits(envir, "environment"))
