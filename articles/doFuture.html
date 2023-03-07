@@ -315,11 +315,10 @@ doNnn usage
 doFuture alternative
 </th>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/foreach" class="external-link">"foreach"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -327,11 +326,10 @@ doFuture alternative
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doMC"</span><span class="op">)</span></span>
-<span><span class="fu">registerDoMC</span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu">registerDoMC</span><span class="op">(</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -339,11 +337,10 @@ doFuture alternative
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">"doParallel"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -352,7 +349,7 @@ doFuture alternative
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span><span class="op">)</span>     <span class="co">## on Linux, Solaris, and macOS</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 N/A
 </td>
@@ -362,12 +359,11 @@ N/A
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.callr</span><span class="fu">::</span><span class="va"><a href="https://future.callr.futureverse.org/reference/callr.html" class="external-link">callr</a></span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">"doParallel"</a></span><span class="op">)</span></span>
 <span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -376,12 +372,11 @@ N/A
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doMPI"</span><span class="op">)</span></span>
 <span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">startMPIcluster</span><span class="op">(</span>count <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
-<span><span class="fu">registerDoMPI</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu">registerDoMPI</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -390,12 +385,11 @@ N/A
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doSNOW"</span><span class="op">)</span></span>
 <span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
-<span><span class="fu">registerDoSNOW</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span>
-<span></span></code></pre>
+<span><span class="fu">registerDoSNOW</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
@@ -404,7 +398,7 @@ N/A
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 N/A
 </td>
@@ -415,7 +409,7 @@ High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://future.batchtools.futureverse.org/reference/batchtools_template.html" class="external-link">batchtools_sge</a></span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doRedis"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/doRedis/man/registerDoRedis.html" class="external-link">registerDoRedis</a></span><span class="op">(</span><span class="st">"jobs"</span><span class="op">)</span></span>
@@ -425,14 +419,18 @@ High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.
 N/A. There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis" class="external-link">doRedis</a> package.
 </td>
 </tr>
-<table class="table">
-<div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+</table>
+<p>This is text after the table.</p>
+</div>
+  </div>
+
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
         <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
     </nav>
 </div>
 
-
+</div>
 
 
 
@@ -446,7 +444,11 @@ N/A. There is currently no known Redis-based future backend and therefore no kno
 <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7</p> and <a href="https://github.com/HenrikBengtsson/pkgdown.extras/">pkgdown.extras</a> 0.0.0.9005.</p>
 </div>
 
-      </footer><script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
+      </footer>
+</div>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script><script>
   docsearch({
     
     
@@ -462,11 +464,5 @@ N/A. There is currently no known Redis-based future backend and therefore no kno
     }
   });
 </script>
-</table>
-</table>
-</div>
-</div>
-</div>
-</div>
 </body>
 </html>
