@@ -45,7 +45,7 @@ jobs:
       _R_CHECK_SUGGESTS_ONLY_: true
       _R_CHECK_THINGS_IN_TEMP_DIR_: true
       ## Specific to 'rcmdcheck'
-      RCMDCHECK_ERROR_ON: warning
+      RCMDCHECK_ERROR_ON: note
       ## Specific to Futureverse
       R_FUTURE_RNG_ONMISUSE: error
       R_FUTURE_PLAN: ${{ matrix.config.future_plan }}
@@ -99,12 +99,12 @@ jobs:
         shell: Rscript {0}
 
       - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
         run: |
-          rcmdcheck::rcmdcheck(
-            args = c("--no-manual", "--as-cran"),
-            check_dir = "check"
+           if (nzchar(Sys.getenv("R_FUTURE_PLAN")) || getRversion() < "3.5.0") Sys.setenv(RCMDCHECK_ERROR_ON = "error")
+           rcmdcheck::rcmdcheck(
+             build_args = if (getRversion() < "3.5.0") "--no-build-vignettes",
+             args = c("--no-manual", "--as-cran", if (getRversion() < "3.5.0") c("--no-vignettes", "--no-build-vignettes", "--ignore-vignettes")),
+             check_dir = "check"
           )
         shell: Rscript {0}
 
