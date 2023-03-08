@@ -50,7 +50,8 @@ y <- foreach(i = 1:3, .combine = rbind, .options.future = list(seed = TRUE)) \%d
 print(y)
 
 ## Random number generation with the foreach() \%:\% nested operator
-y <- foreach(i = 1:3, .combine = rbind) \%:\% foreach(j = 3:5, .combine = rbind, .options.future = list(seed = TRUE)) \%dofuture\% {
+y <- foreach(i = 1:3, .combine = rbind) \%:\%
+       foreach(j = 3:5, .combine = rbind, .options.future = list(seed = TRUE)) \%dofuture\% {
   data.frame(i = i, j = j, random = runif(n = 1L)) 
 }
 print(y)
