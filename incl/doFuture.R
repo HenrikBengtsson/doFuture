@@ -1,5 +1,4 @@
 \donttest{
-library(doFuture)
 library(iterators)  # iter()
 registerDoFuture()  # (a) tell %dopar% to use the future framework
 plan(multisession)  # (b) parallelize futures on the local machine

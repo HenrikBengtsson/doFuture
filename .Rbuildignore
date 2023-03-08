@@ -29,3 +29,4 @@ Rplots.pdf$
 [.]Rdump/
 ^revdep/*
 ^.*[.]tar[.]gz$
+^.Rdump

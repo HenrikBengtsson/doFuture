@@ -1,6 +1,7 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
+strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture - explicitly exported globals ...")
 
@@ -16,7 +17,7 @@ for (strategy in strategies) {
 
   ## (a) automatic
   sub <- function(x, ...) {
-    foreach(i = 1:2) %dopar% { x[c(i, ...)] }
+    foreach(i = 1:2) %dofuture% { x[c(i, ...)] }
   }
   y <- sub(x, 2:3)
   str(y)
@@ -24,7 +25,7 @@ for (strategy in strategies) {
 
   ## (b) explicit and with '...'
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("x", "...")) %dopar% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("x", "..."))) %dofuture% { x[c(i, ...)] }
   }
   y <- sub(x, 2:3)
   str(y)
@@ -32,7 +33,7 @@ for (strategy in strategies) {
 
   ## (c) with '...', but not last
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("...", "x")) %dopar% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("...", "x"))) %dofuture% { x[c(i, ...)] }
   }
   y <- sub(x, 2:3)
   str(y)
@@ -40,7 +41,7 @@ for (strategy in strategies) {
   
   ## (d) explicit, but forgotten '...'
   sub <- function(x, ...) {
-    foreach(i = 1:2, .export = c("x")) %dopar% { x[c(i, ...)] }
+    foreach(i = 1:2, .options.future = list(globals = c("x"))) %dofuture% { x[c(i, ...)] }
   }
   y <- tryCatch(sub(x, 2:3), error = identity)
   str(y)
@@ -75,7 +76,7 @@ for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
 
-  y <- foreach(rr = 1:nrow(X)) %dopar% {
+  y <- foreach(rr = 1:nrow(X)) %dofuture% {
     Vectorize(fibonacci)(X[rr, ])
   }
   str(y)

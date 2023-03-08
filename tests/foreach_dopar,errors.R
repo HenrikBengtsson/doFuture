@@ -4,6 +4,8 @@ strategies <- future:::supportedStrategies()
 
 message("*** doFuture() - error handling w/ 'stop' ...")
 
+registerDoFuture()
+
 for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
@@ -14,12 +16,14 @@ for (strategy in strategies) {
   res <- tryCatch({
     foreach(i = 1:10, .errorhandling = "stop") %dopar% {
       if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
-      dnorm(i, mean = mu, sd = sigma)
+      list(i = i, value = dnorm(i, mean = mu, sd = sigma))
     }
   }, error = identity)
   print(res)
-  stopifnot(inherits(res, "error"),
-            grepl("Index error", conditionMessage(res)))
+  stopifnot(
+    inherits(res, "error"),
+    grepl("Index error", conditionMessage(res))
+  )
 
   # Shutdown current plan
   plan(sequential)
@@ -40,9 +44,13 @@ for (strategy in strategies) {
   sigma <- 2.0
   res <- foreach(i = 1:10, .errorhandling = "pass") %dopar% {
     if (i %% 2 == 0) stop(sprintf("Index error ('pass'), because i = %d", i))
-    dnorm(i, mean = mu, sd = sigma)
+    list(i = i, value = dnorm(i, mean = mu, sd = sigma))
   }
   str(res)
+  stopifnot(
+    is.list(res),
+    length(res) == 10L
+  )
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
@@ -60,9 +68,13 @@ for (strategy in strategies) {
   sigma <- 2.0
   res <- foreach(i = 1:10, .errorhandling = "remove") %dopar% {
     if (i %% 2 == 0) stop(sprintf("Index error ('remove'), because i = %d", i))
-    dnorm(i, mean = mu, sd = sigma)
+    list(i = i, value = dnorm(i, mean = mu, sd = sigma))
   }
   str(res)
+  stopifnot(
+    is.list(res),
+    length(res) == 5L
+  )
 
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)

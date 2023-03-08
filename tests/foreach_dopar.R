@@ -4,6 +4,8 @@ strategies <- future:::supportedStrategies()
 
 message("*** doFuture - reproducibility ...")
 
+registerDoFuture()
+
 res0 <- NULL
 
 for (strategy in strategies) {

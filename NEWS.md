@@ -1,7 +1,5 @@
 # Version (development version)
 
- * ...
- 
 
 # Version 0.12.2 [2022-04-25]
 

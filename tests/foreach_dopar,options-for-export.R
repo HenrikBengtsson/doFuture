@@ -4,6 +4,8 @@ options(future.debug = FALSE)
 
 message("*** options  ...")
 
+registerDoFuture()
+
 globalsAs <- doFuture:::globalsAs
 message("globalsAs: ", globalsAs())
 

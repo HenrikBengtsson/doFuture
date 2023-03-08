@@ -2,7 +2,7 @@
 ovars <- ls()
 oopts <- options(warn = 1L,
                  mc.cores = 2L,
-                 future.debug = TRUE,
+                 future.debug = FALSE,
                  doFuture.debug = TRUE)
 oplan <- future::plan()
 
@@ -12,7 +12,7 @@ future::value(future::future(NULL))
 cons0 <- showConnections(all = FALSE)
 
 future::plan(future::sequential)
-doFuture::registerDoFuture()
+oldDoPar <- doFuture:::.getDoPar()
 
 mdebug <- doFuture:::mdebug
 mprint <- doFuture:::mprint

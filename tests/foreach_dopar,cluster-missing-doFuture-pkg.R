@@ -3,6 +3,8 @@ options(future.debug = FALSE)
 
 message("*** cluster() ...")
 
+registerDoFuture()
+
 message("Library paths: ", paste(sQuote(.libPaths()), collapse = ", "))
 message("Package path: ", sQuote(system.file(package = "future")))
 
@@ -43,6 +45,7 @@ setupClusterWithoutPkgs <- function(type = "PSOCK",
 
   cl
 }
+
 
 cl <- NULL
 for (type in types) {

@@ -5,6 +5,8 @@ strategies <- future:::supportedStrategies()
 ## Adopted from demo("doRNG", package = "doRNG")
 if (require("doRNG")) {
 
+  registerDoFuture()
+
   message("*** doFuture() w/ doRNG + %dorng% ...")
   print(sessionInfo())
 
