@@ -2,7 +2,7 @@
 ovars <- ls()
 oopts <- options(warn = 1L,
                  mc.cores = 2L,
-                 future.debug = TRUE,
+                 future.debug = FALSE,
                  doFuture.debug = TRUE)
 oplan <- future::plan()
 
