@@ -79,7 +79,21 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   } else if (!is.null(obj$packages)) {
     stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
   }
-  
+
+  errors <- options[["errors"]]
+  if (is.null(errors)) {
+    errors <- "future"
+  } else if (is.character(errors)) {
+    if (length(errors) != 1L) {
+      stop(sprintf("Element 'errors' of '.options.future' should be of length one': [n = %d] %s", length(errors), paste(sQuote(errors), collapse = ", ")))
+    }
+    if (! errors %in% c("future", "foreach")) {
+      stop(sprintf("Unknown value of '.options.future' element 'errors': %s", sQuote(errors)))
+    }
+  } else {
+    stop("Unknown type of '.options.future' element 'errors': ", mode(errors))
+  }
+
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 4. Load balancing ("chunking")
@@ -530,22 +544,33 @@ t elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)",
   })
   rm(list = "values")
 
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## 7. Error handling
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## throw an error or return the combined results
-  ## NOTE: This is adopted from foreach:::doSEQ()
-  error_handling <- obj$errorHandling
-  if (debug) {
-    mdebugf("- processing errors (handler = %s)", sQuote(error_handling))
-  }
   error_value <- getErrorValue(it)
-  if (identical(error_handling, "stop") && !is.null(error_value)) {
-    error_index <- getErrorIndex(it)
-    msg <- sprintf('task %d failed - "%s"', error_index,
-                   conditionMessage(error_value))
-    stop(simpleError(msg, call = expr))
+  if (!is.null(error_value)) {
+    ## Report on errors like elsewhere in the Futureverse (default)?
+    if (errors == "future") {
+      stop(error_value)
+    } else {  
+      ## ... or as traditionally with %dopar%, which throws an error
+      ## or return the combined results
+      ## NOTE: This is adopted from foreach:::doSEQ()
+      error_handling <- obj$errorHandling
+      if (debug) {
+        mdebugf("- processing errors (handler = %s)", sQuote(error_handling))
+      }
+      error_value <- getErrorValue(it)
+      if (identical(error_handling, "stop")) {
+        error_index <- getErrorIndex(it)
+        msg <- sprintf('task %d failed - "%s"', error_index,
+                       conditionMessage(error_value))
+        stop(simpleError(msg, call = expr))
+      }
+    }
   }
+
   rm(list = c("expr"))
 
 

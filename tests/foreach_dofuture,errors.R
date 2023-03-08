@@ -5,6 +5,7 @@ strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture() - error handling w/ .errorhandling in c('stop', 'remove', 'pass') ...")
 
+.options.future <- list(errors = "foreach")
 for (strategy in strategies) {
   message(sprintf("- plan('%s') ...", strategy))
   plan(strategy)
@@ -16,7 +17,7 @@ for (strategy in strategies) {
     message(sprintf(".errorhandling = '%s' ...", .errorhandling))
     
     truth <- tryCatch({
-      foreach(i = 1:10, .errorhandling = .errorhandling) %dopar% {
+      foreach(i = 1:10, .errorhandling = .errorhandling, .options.future = .options.future) %dopar% {
         if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
         list(i = i, value = dnorm(i, mean = mu, sd = sigma))
       }
@@ -24,7 +25,7 @@ for (strategy in strategies) {
     str(truth)
     
     res <- tryCatch({
-      foreach(i = 1:10, .errorhandling = .errorhandling) %dofuture% {
+      foreach(i = 1:10, .errorhandling = .errorhandling, .options.future = .options.future) %dofuture% {
         if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
         list(i = i, value = dnorm(i, mean = mu, sd = sigma))
       }
@@ -74,7 +75,7 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
-  res <- foreach(i = 1:10, .errorhandling = "pass") %dofuture% {
+  res <- foreach(i = 1:10, .errorhandling = "pass", .options.future = .options.future) %dofuture% {
     if (i %% 2 == 0) stop(sprintf("Index error ('pass'), because i = %d", i))
     list(i = i, value = dnorm(i, mean = mu, sd = sigma))
   }
@@ -97,7 +98,7 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
-  res <- foreach(i = 1:10, .errorhandling = "remove") %dofuture% {
+  res <- foreach(i = 1:10, .errorhandling = "remove", .options.future = .options.future) %dofuture% {
     if (i %% 2 == 0) stop(sprintf("Index error ('remove'), because i = %d", i))
     list(i = i, value = dnorm(i, mean = mu, sd = sigma))
   }
@@ -116,7 +117,7 @@ message("*** doFuture() - invalid accumulator ...")
 
 ## This replicates how foreach:::doSEQ() handles it
 boom <- function(...) stop("boom!")
-res <- foreach(i = 1:3, .combine = boom) %dofuture% { i }
+res <- foreach(i = 1:3, .combine = boom, .options.future = .options.future) %dofuture% { i }
 print(res)
 stopifnot(is.null(res))
 
