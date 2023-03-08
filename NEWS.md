@@ -1,5 +1,18 @@
 # Version (development version)
 
+## New Features
+
+ * Add `%dofuture%` operator, which can we used like `%dopar%`, but
+   without the need for `registerDoFuture()`, e.g. `y <- foreach(x =
+   1:3) %dofuture% { slow_fcn(x) }`.  One advantage, contrary to using
+   `%dopar%`, is that the developer then have full control on
+   `foreach()`; with `%dopar%` the exact behavior depends also on what
+   `%dopar%` adapter the user has registered.  Another advantage is
+   that `%dofuture%` can hand over random number generation,
+   identification of globals, and error handling to the future
+   ecosystem, which result in a more predictable and concise behavior,
+   similar to that provided by **future.apply** and **furrr**.
+
 
 # Version 0.12.2 [2022-04-25]
 
