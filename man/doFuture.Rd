@@ -10,8 +10,22 @@ The \pkg{doFuture} package provides mechanisms for using the
 \pkg{foreach} package together with the \pkg{future} package
 such that \code{foreach()} parallelizes via \emph{any} future backend.
 }
-\details{
-For example,
+\section{Usage}{
+
+There are two alternative ways to use this package:
+\enumerate{
+\item \code{y <- foreach(...) \%dopar\% { ... }} with \code{registerDoFuture()}
+\item \code{y <- foreach(...) \%dofuture\% { ... }}
+}
+
+The \emph{first alternative} is based on the traditional \strong{foreach}
+approach where one registers a foreach adapter to be used by \verb{\%dopar\%}.
+A popular adapter is \code{doParallel::registerDoParallel()}, which
+parallelizes on the local machine using the \strong{parallel} package.
+This package provides \code{registerDoFuture()}, which parallelizes using
+the \strong{future} package, meaning any future-compliant parallel backend
+can be used.
+An example is:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(doFuture)
 registerDoFuture()
@@ -23,7 +37,26 @@ y <- foreach(x = 1:4, y = 1:10) \%dopar\% \{
 \}
 }\if{html}{\out{</div>}}
 
-will parallelize the foreach iterations on the local machine.
+See \code{\link[=registerDoFuture]{registerDoFuture()}} for more details and examples on this approach.
 
-For more details and examples, see \code{\link[=registerDoFuture]{registerDoFuture()}}.
+The \emph{second alternative}, which uses \verb{\%dofuture\%}, avoids having to use
+\code{registerDoFuture()}.  The \verb{\%dofuture\%} operator provides a more
+consistent behavior than \verb{\%dopar\%}, e.g. there is a unique set of
+foreach arguments instead of one per possible adapter.  Identification
+of globals, random number generation (RNG), and error handling is
+handled by the future ecosystem, just like with other map-reduce
+solutions such as \strong{future.apply} and \strong{furrr}.
+An example is:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(doFuture)
+plan(multisession)
+
+y <- foreach(x = 1:4, y = 1:10) \%dofuture\% \{
+  z <- x + y
+  slow_sqrt(z)
+\}
+}\if{html}{\out{</div>}}
+
+See \code{\link{\%dofuture\%}} for more details and examples on this approach.
 }
+
