@@ -132,9 +132,20 @@ such that <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="ex
     </div>
 
 
-    <div id="details">
-    <h2>Details</h2>
-    <p>For example,</p>
+    <div id="usage">
+    <h2>Usage</h2>
+    
+
+<p>There are two alternative ways to use this package:</p><ol><li><p><code>y &lt;- foreach(...) %dopar% { ... }</code> with <code><a href="registerDoFuture.html">registerDoFuture()</a></code></p></li>
+<li><p><code>y &lt;- foreach(...) %dofuture% { ... }</code></p></li>
+</ol><p>The <em>first alternative</em> is based on the traditional <strong>foreach</strong>
+approach where one registers a foreach adapter to be used by <code>%dopar%</code>.
+A popular adapter is <code><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">doParallel::registerDoParallel()</a></code>, which
+parallelizes on the local machine using the <strong>parallel</strong> package.
+This package provides <code><a href="registerDoFuture.html">registerDoFuture()</a></code>, which parallelizes using
+the <strong>future</strong> package, meaning any future-compliant parallel backend
+can be used.
+An example is:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doFuture.futureverse.org">doFuture</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
@@ -143,8 +154,23 @@ such that <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="ex
 <span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
 <span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre><p></p></div>
-<p>will parallelize the foreach iterations on the local machine.</p>
-<p>For more details and examples, see <code><a href="registerDoFuture.html">registerDoFuture()</a></code>.</p>
+<p>See <code><a href="registerDoFuture.html">registerDoFuture()</a></code> for more details and examples on this approach.</p>
+<p>The <em>second alternative</em>, which uses <code>%dofuture%</code>, avoids having to use
+<code><a href="registerDoFuture.html">registerDoFuture()</a></code>.  The <code>%dofuture%</code> operator provides a more
+consistent behavior than <code>%dopar%</code>, e.g. there is a unique set of
+foreach arguments instead of one per possible adapter.  Identification
+of globals, random number generation (RNG), and error handling is
+handled by the future ecosystem, just like with other map-reduce
+solutions such as <strong>future.apply</strong> and <strong>furrr</strong>.
+An example is:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doFuture.futureverse.org">doFuture</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
+<span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
+<span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre><p></p></div>
+<p>See <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> for more details and examples on this approach.</p>
     </div>
 
   </div>
