@@ -1,7 +1,6 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
 
 options(future.debug = FALSE, doFuture.debug = FALSE)
 
@@ -19,8 +18,7 @@ for (strategy in strategies) {
   }
   str(r1)
   if (is.null(r1_0)) r1_0 <- r1
-  ## FIXME: %dofuture% still does not implement reproducbile RNGs
-  ## stopifnot(identical(r1_0, r1))
+  stopifnot(identical(r1, r1_0))
   
   r2 <- foreach(i = 1:4, .options.future = list(seed = 42)) %dofuture% {
     runif(1)
@@ -34,8 +32,7 @@ for (strategy in strategies) {
   }
   str(r3)
   if (is.null(r3_0)) r3_0 <- r3
-  ## FIXME: %dofuture% still does not implement reproducbile RNGs
-  ## stopifnot(identical(r3_0, r3))
+  stopifnot(identical(r3, r3_0))
   
   set.seed(42)
   r4 <- foreach(i = 1:4, .options.future = list(seed = TRUE)) %dofuture% {
