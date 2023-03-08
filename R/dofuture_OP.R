@@ -34,7 +34,7 @@
 #' @importFrom iterators iter
 #' @importFrom future future resolve value Future FutureError getGlobalsAndPackages
 #' @importFrom parallel splitIndices
-#' @importFrom utils head
+#' @importFrom utils head capture.output
 #' @importFrom globals globalsByName
 #  ## Just a dummy import to please 'R CMD check'
 #' @import future.apply
@@ -538,9 +538,11 @@ t elements in 'X' (= %d). There were in total %d chunks and %d elements (%s)",
   tryCatch({
     accumulator(results2, tags = seq_along(results2))
   }, error = function(e) {
-    cat("error calling combine function:\n")
-    print(e)
-    NULL
+    msg <- capture.output(print(e))
+    msg <- c("Failed to combine foreach() %dofuture% results, which suggests an invalid '.combine' argument. The reported error was:", msg)
+    ex <- FutureError(paste(msg, collapse = "\n"))
+    ex$original_error <- e
+    stop(ex)
   })
   rm(list = "values")
 

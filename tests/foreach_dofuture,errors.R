@@ -13,6 +13,20 @@ for (strategy in strategies) {
   mu <- 1.0
   sigma <- 2.0
 
+  message("Futureverse-style error handling ...")
+  res <- tryCatch({
+    foreach(i = 1:10) %dofuture% {
+      if (i %% 2 == 0) stop(sprintf("Index error ('stop'), because i = %d", i))
+      list(i = i, value = dnorm(i, mean = mu, sd = sigma))
+    }
+  }, error = identity)
+  str(res)
+  stopifnot(
+    inherits(res, "error")
+  )
+  message("Futureverse-style error handling ... DONE")
+
+
   for (.errorhandling in c("stop", "remove", "pass")) {
     message(sprintf(".errorhandling = '%s' ...", .errorhandling))
     
@@ -115,11 +129,15 @@ message("*** doFuture() - error handling w/ 'remove' ... DONE")
 
 message("*** doFuture() - invalid accumulator ...")
 
-## This replicates how foreach:::doSEQ() handles it
 boom <- function(...) stop("boom!")
-res <- foreach(i = 1:3, .combine = boom, .options.future = .options.future) %dofuture% { i }
+res <- tryCatch({
+  foreach(i = 1:3, .combine = boom) %dofuture% { i }
+}, error = identity)
 print(res)
-stopifnot(is.null(res))
+stopifnot(
+  inherits(res, "error"),
+  inherits(res, "FutureError")
+)
 
 message("*** doFuture() - invalid accumulator ... DONE")
 
