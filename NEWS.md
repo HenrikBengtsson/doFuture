@@ -13,6 +13,9 @@
    ecosystem, which result in a more predictable and concise behavior,
    similar to that provided by **future.apply** and **furrr**.
 
+ * Add `withDoRNG()` for evaluating a foreach `%dopar%` expression with
+   `doRNG::registerDoRNG()` temporarily set.
+   
 
 # Version 0.12.2 [2022-04-25]
 

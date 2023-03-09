@@ -39,8 +39,8 @@ y <- foreach(x = 1:4, y = 1:10) \%dopar\% \{
 
 See \code{\link[=registerDoFuture]{registerDoFuture()}} for more details and examples on this approach.
 
-The \emph{second alternative}, which uses \verb{\%dofuture\%}, avoids having to use
-\code{registerDoFuture()}.  The \verb{\%dofuture\%} operator provides a more
+The \emph{second alternative}, which uses \code{\link{\%dofuture\%}}, avoids having to use
+\code{registerDoFuture()}.  The \code{\link{\%dofuture\%}} operator provides a more
 consistent behavior than \verb{\%dopar\%}, e.g. there is a unique set of
 foreach arguments instead of one per possible adapter.  Identification
 of globals, random number generation (RNG), and error handling is
