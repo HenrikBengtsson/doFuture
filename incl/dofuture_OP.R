@@ -14,6 +14,12 @@ y <- foreach(i = 1:3, .combine = rbind, .options.future = list(seed = TRUE)) %do
 }
 print(y)
 
+## Random number generation (alternative specification)
+y <- foreach(i = 1:3, .combine = rbind) %dofuture% {
+  data.frame(i = i, random = runif(n = 1L)) 
+} %seed% TRUE
+print(y)
+
 ## Random number generation with the foreach() %:% nested operator
 y <- foreach(i = 1:3, .combine = rbind) %:%
        foreach(j = 3:5, .combine = rbind, .options.future = list(seed = TRUE)) %dofuture% {

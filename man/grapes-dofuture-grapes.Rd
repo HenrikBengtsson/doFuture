@@ -44,6 +44,12 @@ if you specify argument
 \code{.options.future = list(globals = structure(TRUE, ignore = "b", add = "a"))}
 then globals are automatically identified (\code{TRUE}), but it ignores \code{b} and
 always adds \code{a}.
+
+An alternative to specifying the \code{globals} and the \code{packages} options via
+\code{.options.future}, is to use the \code{\link[future:\%globals\%]{\%globals\%}}
+and the \code{\link[future:\%packages\%]{\%packages\%}} operator.
+See the examples for an illustration.
+
 For further details and instructions, see \code{\link[future:future]{future::future()}}.
 }
 
@@ -84,6 +90,10 @@ As input, \code{seed} may also take a fixed initial seed (integer),
 either as a full L'Ecuyer-CMRG RNG seed (vector of 1+6 integers), or
 as a seed generating such a full L'Ecuyer-CMRG seed. This seed will
 be used to generated one L'Ecuyer-CMRG RNG stream for each iteration.
+
+An alternative to specifying the \code{seed} option via \code{.options.future},
+is to use the \code{\link[future:\%seed\%]{\%seed\%}} operator.  See
+the examples for an illustration.
 
 For further details and instructions, see
 \code{\link[future.apply:future_lapply]{future.apply::future_lapply()}}.
@@ -158,6 +168,12 @@ print(y)
 y <- foreach(i = 1:3, .combine = rbind, .options.future = list(seed = TRUE)) \%dofuture\% {
   data.frame(i = i, random = runif(n = 1L)) 
 }
+print(y)
+
+## Random number generation (alternative specification)
+y <- foreach(i = 1:3, .combine = rbind) \%dofuture\% {
+  data.frame(i = i, random = runif(n = 1L)) 
+} \%seed\% TRUE
 print(y)
 
 ## Random number generation with the foreach() \%:\% nested operator

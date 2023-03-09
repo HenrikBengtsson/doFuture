@@ -32,6 +32,12 @@
 #' `.options.future = list(globals = structure(TRUE, ignore = "b", add = "a"))`
 #' then globals are automatically identified (`TRUE`), but it ignores `b` and
 #' always adds `a`.
+#'
+#' An alternative to specifying the `globals` and the `packages` options via
+#' `.options.future`, is to use the \code{\link[future:%globals%]{%globals%}}
+#' and the \code{\link[future:%packages%]{%packages%}} operator.
+#' See the examples for an illustration.
+#'
 #' For further details and instructions, see [future::future()].
 #'
 #'
@@ -72,6 +78,10 @@
 #' either as a full L'Ecuyer-CMRG RNG seed (vector of 1+6 integers), or
 #' as a seed generating such a full L'Ecuyer-CMRG seed. This seed will
 #' be used to generated one L'Ecuyer-CMRG RNG stream for each iteration.
+#'
+#' An alternative to specifying the `seed` option via `.options.future`,
+#' is to use the \code{\link[future:%seed%]{%seed%}} operator.  See
+#' the examples for an illustration.
 #'
 #' For further details and instructions, see
 #' [future.apply::future_lapply()].
@@ -188,6 +198,12 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
     stop("foreach() does not support argument '.noexport' when using %dofuture%. Use .options.future = list(globals = structure(..., ignore = ...)) instead")
   } else if (!is.null(obj$packages)) {
     stop("foreach() does not support argument '.packages' when using %dofuture%. Use .options.future = list(packages = ...) instead")
+  }
+
+  ## Support %globals%, %packages%, %seed%, ...
+  opts <- getOption("future.disposable", NULL)
+  for (name in names(opts)) {
+    options[[name]] <- opts[[name]]
   }
 
   errors <- options[["errors"]]
