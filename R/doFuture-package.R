@@ -32,8 +32,8 @@
 #'
 #' See [registerDoFuture()] for more details and examples on this approach.
 #'
-#' The _second alternative_, which uses `%dofuture%`, avoids having to use
-#' `registerDoFuture()`.  The `%dofuture%` operator provides a more
+#' The _second alternative_, which uses [`%dofuture%`], avoids having to use
+#' `registerDoFuture()`.  The [`%dofuture%`] operator provides a more
 #' consistent behavior than `%dopar%`, e.g. there is a unique set of
 #' foreach arguments instead of one per possible adapter.  Identification
 #' of globals, random number generation (RNG), and error handling is
