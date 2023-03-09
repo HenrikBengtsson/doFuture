@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9010</span>
       </span>
     </div>
 
@@ -268,16 +268,16 @@ output and conditions are also relayed in that order, that is, out of order.</p>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     x        y    pid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1 1.000000 629046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2 1.414214 629046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   3 1.732051 629049</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   4 2.000000 629043</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   5 2.236068 629044</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   6 2.449490 629050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   7 2.645751 629045</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   8 2.828427 629047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   9 3.000000 629048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 10 3.162278 629048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1 1.000000 841388</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   2 1.414214 841388</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   3 1.732051 841394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   4 2.000000 841387</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   5 2.236068 841390</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   6 2.449490 841391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   7 2.645751 841389</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   8 2.828427 841393</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   9 3.000000 841392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 10 3.162278 841392</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Random number generation</span></span></span>
@@ -286,9 +286,9 @@ output and conditions are also relayed in that order, that is, out of order.</p>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   i    random</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 0.2085397</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 0.2384795</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 3 0.6105187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 0.4844937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2 0.2718792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 3 0.4349602</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Random number generation with the foreach() %:% nested operator</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, .combine <span class="op">=</span> <span class="va">rbind</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">%:%</a></span></span></span>
@@ -296,16 +296,16 @@ output and conditions are also relayed in that order, that is, out of order.</p>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>i <span class="op">=</span> <span class="va">i</span>, j <span class="op">=</span> <span class="va">j</span>, random <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span> </span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   i j       random</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 3 0.0983337933</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1 4 0.7081290347</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1 5 0.6540304495</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2 3 0.9648958842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2 4 0.7112671845</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2 5 0.0006757225</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 3 3 0.7703388429</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 3 4 0.9017426876</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9 3 5 0.3130526543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   i j     random</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 3 0.48659599</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1 4 0.03830654</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1 5 0.11498686</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2 3 0.28211748</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2 4 0.01279614</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2 5 0.83697547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 3 3 0.78340249</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 3 4 0.00170539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 3 5 0.40746916</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Random number generation with the nested foreach() calls</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, .combine <span class="op">=</span> <span class="va">rbind</span>, .options.future <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">%dofuture%</span> <span class="op">{</span></span></span>
@@ -314,16 +314,16 @@ output and conditions are also relayed in that order, that is, out of order.</p>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   i j      random</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 3 0.889180858</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1 4 0.320300706</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1 5 0.003311658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2 3 0.320300706</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2 4 0.003311658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2 5 0.592191199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 3 3 0.003311658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 3 4 0.592191199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9 3 5 0.857912244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   i j    random</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1 3 0.9518051</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1 4 0.5241367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1 5 0.5692883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2 3 0.5241367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2 4 0.5692883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 2 5 0.3075279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 3 3 0.5692883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8 3 4 0.3075279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9 3 5 0.1494599</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>

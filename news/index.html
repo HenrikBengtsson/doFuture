@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9010</span>
       </span>
     </div>
 
@@ -126,7 +126,9 @@
 <h2 class="page-header" data-toc-text="development version" id="version-development-version">Version (development version)<a class="anchor" aria-label="anchor" href="#version-development-version"></a></h2>
 <div class="section level3">
 <h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
-<ul><li>Add <code>%dofuture%</code> operator, which can we used like <code>%dopar%</code>, but without the need for <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code>, e.g. <code>y &lt;- foreach(x =    1:3) %dofuture% { slow_fcn(x) }</code>. One advantage, contrary to using <code>%dopar%</code>, is that the developer then have full control on <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>; with <code>%dopar%</code> the exact behavior depends also on what <code>%dopar%</code> adapter the user has registered. Another advantage is that <code>%dofuture%</code> can hand over random number generation, identification of globals, and error handling to the future ecosystem, which result in a more predictable and concise behavior, similar to that provided by <strong>future.apply</strong> and <strong>furrr</strong>.</li></ul></div>
+<ul><li><p>Add <code>%dofuture%</code> operator, which can we used like <code>%dopar%</code>, but without the need for <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code>, e.g. <code>y &lt;- foreach(x =    1:3) %dofuture% { slow_fcn(x) }</code>. One advantage, contrary to using <code>%dopar%</code>, is that the developer then have full control on <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>; with <code>%dopar%</code> the exact behavior depends also on what <code>%dopar%</code> adapter the user has registered. Another advantage is that <code>%dofuture%</code> can hand over random number generation, identification of globals, and error handling to the future ecosystem, which result in a more predictable and concise behavior, similar to that provided by <strong>future.apply</strong> and <strong>furrr</strong>.</p></li>
+<li><p>Add <code><a href="../reference/withDoRNG.html">withDoRNG()</a></code> for evaluating a foreach <code>%dopar%</code> expression with <code><a href="https://rdrr.io/pkg/doRNG/man/registerDoRNG.html" class="external-link">doRNG::registerDoRNG()</a></code> temporarily set.</p></li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.12.2" id="version-0122">Version 0.12.2<small>2022-04-26</small><a class="anchor" aria-label="anchor" href="#version-0122"></a></h2>

@@ -25,7 +25,7 @@ such that foreach() parallelizes via any future backend."><!-- mathjax --><scrip
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9009</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9010</span>
       </span>
     </div>
 
@@ -155,8 +155,8 @@ An example is:</p>
 <span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre><p></p></div>
 <p>See <code><a href="registerDoFuture.html">registerDoFuture()</a></code> for more details and examples on this approach.</p>
-<p>The <em>second alternative</em>, which uses <code>%dofuture%</code>, avoids having to use
-<code><a href="registerDoFuture.html">registerDoFuture()</a></code>.  The <code>%dofuture%</code> operator provides a more
+<p>The <em>second alternative</em>, which uses <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code>, avoids having to use
+<code><a href="registerDoFuture.html">registerDoFuture()</a></code>.  The <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> operator provides a more
 consistent behavior than <code>%dopar%</code>, e.g. there is a unique set of
 foreach arguments instead of one per possible adapter.  Identification
 of globals, random number generation (RNG), and error handling is
