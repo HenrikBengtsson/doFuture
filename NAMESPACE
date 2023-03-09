@@ -2,6 +2,7 @@
 
 export("%dofuture%")
 export(registerDoFuture)
+export(withDoRNG)
 import(future.apply)
 importFrom(foreach,getErrorIndex)
 importFrom(foreach,getErrorValue)
