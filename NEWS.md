@@ -13,9 +13,15 @@
    ecosystem, which result in a more predictable and concise behavior,
    similar to that provided by **future.apply** and **furrr**.
 
- * Add `withDoRNG()` for evaluating a foreach `%dopar%` expression with
-   `doRNG::registerDoRNG()` temporarily set.
-   
+ * Add `withDoRNG()` for evaluating a foreach `%dopar%` expression
+   with `doRNG::registerDoRNG()` temporarily set.
+
+ * Now **future** operators such as `%stdout%` and `%conditions%` can
+   be used to control the corresponding `options.future` arguments,
+   e.g. `y <- foreach(i = 1:3) %dopar% { my_fun(i) } %stdout% FALSE`
+   is the same as `y <- foreach(i = 1:3, .options.future = list(stdout
+   = FALSE)) %dopar% { my_fun(i) }`.
+
 
 # Version 0.12.2 [2022-04-25]
 

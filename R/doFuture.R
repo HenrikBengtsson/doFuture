@@ -123,16 +123,29 @@ function(obj, expr, envir, data) {   #nolint
 
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## 4. Load balancing ("chunking")
+  ## 4a. Argument '.options.future'
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  options <- obj[["options"]][["future"]]
+  
+  ## Support %globals%, %packages%, ...
+  opts <- getOption("future.disposable", NULL)
+  for (name in names(opts)) {
+    options[[name]] <- opts[[name]]
+  }
+  options(future.disposable = NULL)
+
+
+  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ## 4b. Load balancing ("chunking")
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Options:
   ## (a) .options.future = list(chunk.size = <numeric>)
   ##      cf. future_lapply(..., future.chunk.size)
-  chunk.size <- obj[["options"]][["future"]][["chunk.size"]]
+  chunk.size <- options[["chunk.size"]]
 
   ## (b) .options.future = list(scheduling = <numeric>)
   ##      cf. future_lapply(..., future.scheduling)
-  scheduling <- obj[["options"]][["future"]][["scheduling"]]
+  scheduling <- options[["scheduling"]]
 
   ## If not set, fall back to:
   ## (c) .options.multicore = list(preschedule = <logical>)
@@ -171,10 +184,10 @@ function(obj, expr, envir, data) {   #nolint
   ## 5. Create futures
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ## Relay standard output or conditions?
-  stdout <- obj[["options"]][["future"]][["stdout"]]
+  stdout <- options[["stdout"]]
   if (is.null(stdout)) stdout <- eval(formals(Future)$stdout)
 
-  conditions <- obj[["options"]][["future"]][["conditions"]]
+  conditions <- options[["conditions"]]
   if (is.null(conditions)) conditions <- eval(formals(Future)$conditions)
 
   ## Drop captured standard output and conditions as soon as they have

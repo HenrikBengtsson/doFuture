@@ -205,7 +205,8 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   for (name in names(opts)) {
     options[[name]] <- opts[[name]]
   }
-
+  options(future.disposable = NULL)
+  
   errors <- options[["errors"]]
   if (is.null(errors)) {
     errors <- "future"
