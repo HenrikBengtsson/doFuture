@@ -231,11 +231,10 @@ combined, e.g. **[doMC]**, **[doParallel]**, **[doMPI]**, and
 <th>doNnn usage</th><th>doFuture alternative</th>
 </tr>
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("foreach")
 registerDoSEQ()
-
 </code></pre>
 </td>
 <td>
@@ -246,11 +245,10 @@ plan(sequential)
 </td>
 </tr>
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doMC")
 registerDoMC()
-
 </code></pre>
 </td>
 <td>
@@ -261,11 +259,10 @@ plan(multicore)
 </td>
 </tr>
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doParallel")
 registerDoParallel()
-
 </code></pre>
 </td>
 <td>
@@ -277,7 +274,7 @@ plan(multicore)     ## on Linux, Solaris, and macOS
 </td>
 </tr>
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 N/A
 </td>
@@ -289,61 +286,58 @@ plan(future.callr::callr)
 </td>
 </tr>
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doParallel")
-cl <- makeCluster(4)
+cl &lt;- makeCluster(4)
 registerDoParallel(cl)
-
 </code></pre>
 </td>
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-cl <- makeCluster(4)
+cl &lt;- makeCluster(4)
 plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
 
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doMPI")
-cl <- startMPIcluster(count = 4)
+cl &lt;- startMPIcluster(count = 4)
 registerDoMPI(cl)
-
 </code></pre>
 </td>
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-cl <- makeCluster(4, type = "MPI")
+cl &lt;- makeCluster(4, type = "MPI")
 plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
 
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doSNOW")
-cl <- makeCluster(4)
+cl &lt;- makeCluster(4)
 registerDoSNOW(cl)
-
 </code></pre>
 </td>
 <td>
 <pre><code class="r">library("doFuture")
 registerDoFuture()
-cl <- makeCluster(4)
+cl &lt;- makeCluster(4)
 plan(cluster, workers = cl)
 </code></pre>
 </td>
 </tr>
 
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 N/A
 </td>
@@ -358,7 +352,7 @@ plan(future.batchtools::batchtools_sge)
 </tr>
 
 
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>
 <pre><code class="r">library("doRedis")
 registerDoRedis("jobs")
@@ -370,7 +364,7 @@ N/A.  There is currently no known Redis-based future backend and therefore no kn
 </td>
 </tr>
 
-<table>
+</table>
 
 
 
