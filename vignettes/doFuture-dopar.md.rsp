@@ -1,5 +1,5 @@
 [<%@meta language="R-vignette" content="--------------------------------
-%\VignetteIndexEntry{A Foreach Parallel Adaptor using Futures}
+%\VignetteIndexEntry{Foreach Iteration using Futures via %dopar%}
 %\VignetteAuthor{Henrik Bengtsson}
 %\VignetteKeyword{R}
 %\VignetteKeyword{package}
@@ -15,7 +15,7 @@
 %\VignetteEngine{R.rsp::rsp}
 %\VignetteTangle{FALSE}
 --------------------------------------------------------------------"%>
-# A Foreach Parallel Adaptor using Futures
+# Foreach Iteration using Futures via %dopar%
 
 ## Introduction
 
