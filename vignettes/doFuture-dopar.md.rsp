@@ -1,4 +1,4 @@
-[<%@meta language="R-vignette" content="--------------------------------
+<%@meta language="R-vignette" content="--------------------------------
 %\VignetteIndexEntry{Foreach Iteration using Futures via %dopar%}
 %\VignetteAuthor{Henrik Bengtsson}
 %\VignetteKeyword{R}
