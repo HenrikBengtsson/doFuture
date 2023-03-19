@@ -50,17 +50,29 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9010</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9014</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="articles/doFuture.html">Get started</a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/doFuture-dofuture.html">Loop over a Foreach Expression using Futures via %dofuture%</a>
+    </li>
+    <li>
+      <a href="articles/doFuture-dopar.html">A Foreach Parallel Adaptor using Futures</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="news/index.html">Changelog</a>
@@ -306,72 +318,77 @@
 <th>doNnn usage</th>
 <th>doFuture alternative</th>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/foreach" class="external-link">"foreach"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre></td>
+<span><span class="fu"><a href="https://rdrr.io/pkg/foreach/man/registerDoSEQ.html" class="external-link">registerDoSEQ</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">sequential</span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doMC"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/doMC/man/registerDoMC.html" class="external-link">registerDoMC</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre></td>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doMC/man/registerDoMC.html" class="external-link">registerDoMC</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">"doParallel"</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre></td>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span>  <span class="co">## on MS Windows</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multicore</span><span class="op">)</span>     <span class="co">## on Linux, Solaris, and macOS</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>N/A</td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.callr</span><span class="fu">::</span><span class="va"><a href="https://future.callr.futureverse.org/reference/callr.html" class="external-link">callr</a></span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/RevolutionAnalytics/doparallel" class="external-link">"doParallel"</a></span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">registerDoParallel</a></span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doMPI"</span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu">startMPIcluster</span><span class="op">(</span>count <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu">registerDoMPI</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span>, type <span class="op">=</span> <span class="st">"MPI"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doSNOW"</span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu">registerDoSNOW</span><span class="op">(</span><span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">cl</span> </span></code></pre></td>
+<span><span class="va">cl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/makeCluster.html" class="external-link">makeCluster</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">cluster</span>, workers <span class="op">=</span> <span class="va">cl</span><span class="op">)</span></span></code></pre></td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td>N/A</td>
 <td>High-performance compute (HPC) schedulers, e.g. SGE, Slurm, and TORQUE / PBS.<pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://doFuture.futureverse.org">"doFuture"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/registerDoFuture.html">registerDoFuture</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="fu">future.batchtools</span><span class="fu">::</span><span class="va"><a href="https://future.batchtools.futureverse.org/reference/batchtools_template.html" class="external-link">batchtools_sge</a></span><span class="op">)</span></span></code></pre>
 </td>
 </tr>
-<tr style="vertical-align: center;">
+<tr style="vertical-align: top;">
 <td><pre><code class="r"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"doRedis"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/doRedis/man/registerDoRedis.html" class="external-link">registerDoRedis</a></span><span class="op">(</span><span class="st">"jobs"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/doRedis/man/startLocalWorkers.html" class="external-link">startLocalWorkers</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>, queue <span class="op">=</span> <span class="st">"jobs"</span><span class="op">)</span></span></code></pre></td>
 <td>N/A. There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis" class="external-link">doRedis</a> package.</td>
 </tr>
-<table class="table"><div class="section level2">
+</table>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>R package doFuture is available on <a href="https://cran.r-project.org/package=doFuture" class="external-link">CRAN</a> and can be installed in R as:</p>
@@ -385,8 +402,6 @@
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"HenrikBengtsson/doFuture"</span>, ref<span class="op">=</span><span class="st">"develop"</span><span class="op">)</span></span></code></pre></div>
 <p>This will install the package from source.</p>
 </div>
-</div></table>
-</table>
 </div>
 </div>
 
