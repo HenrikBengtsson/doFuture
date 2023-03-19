@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   doFuture-dofuture: doFuture-dofuture.html
   doFuture-dopar: doFuture-dopar.html
-last_built: 2023-03-19T21:32Z
+last_built: 2023-03-19T21:34Z
 urls:
   reference: https://doFuture.futureverse.org/reference
   article: https://doFuture.futureverse.org/articles
