@@ -19,18 +19,6 @@
 
 ## Introduction
 
-The **[future]** package provides a generic API for using futures in
-R.  A future is a simple yet powerful mechanism to evaluate an R
-expression and retrieve its value at some point in time.  Futures can
-be resolved in many different ways depending on which strategy is
-used.  There are various types of synchronous and asynchronous futures
-to choose from in the **[future]** package.  Additional future
-backends are implemented in other packages.  For instance, the
-**[future.batchtools]** package provides futures for _any_ type of
-backend that the **[batchtools]** package supports.  For an
-introduction to futures in R, please consult the vignettes of the
-**[future]** package.
-
 The **[doFuture]** package provides a `%dopar%` adapter for the
 **[foreach]** package that works with _any_ type of future backend.
 The **doFuture** package is cross platform just as the **future**

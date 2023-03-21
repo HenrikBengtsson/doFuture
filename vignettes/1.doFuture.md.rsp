@@ -1,0 +1,113 @@
+<%@meta language="R-vignette" content="--------------------------------
+%\VignetteIndexEntry{doFuture: An Overview on using Foreach to Parallelize via the Future Framework}
+%\VignetteAuthor{Henrik Bengtsson}
+%\VignetteKeyword{R}
+%\VignetteKeyword{package}
+%\VignetteKeyword{vignette}
+%\VignetteKeyword{foreach}
+%\VignetteKeyword{future}
+%\VignetteKeyword{promise}
+%\VignetteKeyword{lazy evaluation}
+%\VignetteKeyword{synchronous}
+%\VignetteKeyword{asynchronous}
+%\VignetteKeyword{parallel}
+%\VignetteKeyword{cluster}
+%\VignetteEngine{R.rsp::rsp}
+%\VignetteTangle{FALSE}
+--------------------------------------------------------------------"%>
+# doFuture: An Overview on using Foreach to Parallelize via the Future Framework
+
+The **[doFuture]** package provides mechanisms for using the
+**foreach** package together with the **future** package such that
+`foreach()` and `times()` parallelizes via _any_ future backend.
+
+
+## Introduction
+
+The **[future]** package provides a generic API for using futures in
+R.  A future is a simple yet powerful mechanism to evaluate an R
+expression and retrieve its value at some point in time.  Futures can
+be resolved in many different ways depending on which strategy is
+used.  There are various types of synchronous and asynchronous futures
+to choose from in the **[future]** package.  Additional future
+backends are implemented in other packages.  For instance, the
+**[future.batchtools]** package provides futures for _any_ type of
+backend that the **[batchtools]** package supports.  For an
+introduction to futures in R, please consult the vignettes of the
+**[future]** package.
+
+The **[foreach]** package implements a map-reduce API with functions
+`foreach()` and `times()` that provides us with powerful methods for
+iterating over one or more sets of elements with the option to do it
+in parallel.
+
+
+## Two alternatives
+
+The **[doFuture]** package provides two alternatives for using futures
+with **foreach**:
+
+ 1. `registerDoFuture()` + `y <- foreach(...) %dopar% { ... }`.
+ 
+ 2. `y <- foreach(...) %dofuture% { ... }`
+
+
+### Alternative 1: `registerDoFuture()` + `%dopar%`
+
+The _first alternative_ is based on the traditional **foreach**
+approach where one registers a foreach adapter to be used by `%dopar%`.
+A popular adapter is `doParallel::registerDoParallel()`, which
+parallelizes on the local machine using the **parallel** package.
+This package provides `registerDoFuture()`, which parallelizes using
+the **future** package, meaning any future-compliant parallel backend
+can be used.
+
+An example is:
+
+```r
+library(doFuture)
+registerDoFuture()
+plan(multisession)
+
+y <- foreach(x = 1:4, y = 1:10) %dopar% {
+  z <- x + y
+  slow_sqrt(z)
+}
+```
+
+See `help("registerDoFuture", package = "doFuture")` for more details
+and examples on this approach.
+
+
+### Alternative 2: `%dofuture%`
+
+The _second alternative_, which uses `%dofuture%`, avoids having to use
+`registerDoFuture()`.  The `%dofuture%` operator provides a more
+consistent behavior than `%dopar%`, e.g. there is a unique set of
+foreach arguments instead of one per possible adapter.  Identification
+of globals, random number generation (RNG), and error handling is
+handled by the future ecosystem, just like with other map-reduce
+solutions such as **[future.apply]** and **[furrr]**.
+An example is:
+
+```r
+library(doFuture)
+plan(multisession)
+
+y <- foreach(x = 1:4, y = 1:10) %dofuture% {
+  z <- x + y
+  slow_sqrt(z)
+}
+```
+
+See `help("%dofuture%", package = "doFuture")` for more details and
+examples on this approach.
+
+
+[doFuture]: https://doFuture.futureverse.org
+[future]: https://future.futureverse.org
+[foreach]: https://cran.r-project.org/package=foreach
+[batchtools]: https://cran.r-project.org/package=batchtools
+[future.batchtools]: https://future.batchtools.futureverse.org
+[future.apply]: https://future.apply.futureverse.org
+[furrr]: https://furrr.futureverse.org
