@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9015</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9016</span>
       </span>
     </div>
 
@@ -64,6 +64,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/1.doFuture.html">doFuture: An Overview on using Foreach to Parallelize via the Future Framework</a>
+    </li>
+    <li>
       <a href="../articles/doFuture-dofuture.html">Foreach Iteration using Futures via %dofuture%</a>
     </li>
     <li>
@@ -178,7 +181,6 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>The <strong><a href="https://cran.r-project.org/package=future" class="external-link">future</a></strong> package provides a generic API for using futures in R. A future is a simple yet powerful mechanism to evaluate an R expression and retrieve its value at some point in time. Futures can be resolved in many different ways depending on which strategy is used. There are various types of synchronous and asynchronous futures to choose from in the <strong><a href="https://cran.r-project.org/package=future" class="external-link">future</a></strong> package. Additional future backends are implemented in other packages. For instance, the <strong><a href="https://cran.r-project.org/package=future.batchtools" class="external-link">future.batchtools</a></strong> package provides futures for <em>any</em> type of backend that the <strong><a href="https://cran.r-project.org/package=batchtools" class="external-link">batchtools</a></strong> package supports. For an introduction to futures in R, please consult the vignettes of the <strong><a href="https://cran.r-project.org/package=future" class="external-link">future</a></strong> package.</p>
 <p>The <strong><a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a></strong> package provides a <code>%dopar%</code> adapter for the <strong><a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a></strong> package that works with <em>any</em> type of future backend. The <strong>doFuture</strong> package is cross platform just as the <strong>future</strong> package.</p>
 <p>Below is an example showing how to make <code>%dopar%</code> work with <em>multisession</em> futures. A multisession future will be evaluated in parallel using background R process.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
