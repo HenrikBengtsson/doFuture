@@ -47,7 +47,7 @@ always adds \code{a}.
 
 An alternative to specifying the \code{globals} and the \code{packages} options via
 \code{.options.future}, is to use the \code{\link[future:\%globals\%]{\%globals\%}}
-and the \code{\link[future:\%packages\%]{\%packages\%}} operator.
+and the \code{\link[future:\%packages\%]{\%packages\%}} operators.
 See the examples for an illustration.
 
 For further details and instructions, see \code{\link[future:future]{future::future()}}.
