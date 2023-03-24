@@ -4,7 +4,7 @@
 <a href="https://CRAN.R-project.org/web/checks/check_results_doFuture.html"><img border="0" src="https://www.r-pkg.org/badges/version/doFuture" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/doFuture/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/doFuture/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>     <a href="https://app.codecov.io/gh/HenrikBengtsson/doFuture"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
 </div>
 
-# doFuture: Use Foreach to Parallelize via Future Framework 
+# doFuture: Use Foreach to Parallelize via the Future Framework 
 
 ## Introduction
 
@@ -20,368 +20,99 @@ backend that the **[batchtools]** package supports.  For an
 introduction to futures in R, please consult the vignettes of the
 **[future]** package.
 
-The **[doFuture]** package provides a `%dopar%` adapter for the
-**[foreach]** package that works with _any_ type of future backend.
-The **doFuture** package is cross platform just as the **future**
-package.
+The **[foreach]** package implements a map-reduce API with functions
+`foreach()` and `times()` that provides us with powerful methods for
+iterating over one or more sets of elements with the option to do it
+in parallel.
 
-Below is an example showing how to make `%dopar%` work with
-_multisession_ futures.  A multisession future will be evaluated in
-parallel using background R process.
+
+## Two alternatives
+
+The **[doFuture]** package provides two alternatives for using futures
+with **foreach**:
+
+ 1. `registerDoFuture()` + `y <- foreach(...) %dopar% { ... }`.
+ 
+ 2. `y <- foreach(...) %dofuture% { ... }`
+
+
+### Alternative 1: `registerDoFuture()` + `%dopar%`
+
+The _first alternative_ is based on the traditional **foreach**
+approach where one registers a foreach adapter to be used by `%dopar%`.
+A popular adapter is `doParallel::registerDoParallel()`, which
+parallelizes on the local machine using the **parallel** package.
+This package provides `registerDoFuture()`, which parallelizes using
+the **future** package, meaning any future-compliant parallel backend
+can be used.
+
+An example is:
 
 ```r
-library("doFuture")
+library(doFuture)
 registerDoFuture()
 plan(multisession)
 
-cutoff <- 0.10
-y <- foreach(x = mtcars, .export = c("cutoff")) %dopar% {
-  mean(x, trim = cutoff)
+y <- foreach(x = 1:4, y = 1:10) %dopar% {
+  z <- x + y
+  slow_sqrt(z)
 }
-names(y) <- colnames(mtcars)
 ```
 
-## Futures bring foreach to the HPC cluster
+This alternative is useful if you already have a lot of R code that
+uses `%dopar%` and you just want to switch to using the future
+framework for parallelization.  Using `registerDoFuture()` is also
+useful when you wish to use the future framework with packages and
+functions that uses `foreach()` and `%dopar%` internally,
+e.g. **[caret]**, **[plyr]**, **[NMF]**, and **[glmnet]**.  It can
+also be used to configure the Bioconductor **[BiocParallel]** package,
+and any package that rely on it, to parallelize via the future
+framework.
 
-To do the same on high-performance computing (HPC) cluster, the
-**[future.batchtools]** package can be used.  Assuming batchtools has
-been configured correctly, then following foreach iterations will be
-submitted to the HPC job scheduler and distributed for evaluation on
-the compute nodes.
-
-```r
-library("doFuture")
-registerDoFuture()
-plan(future.batchtools::batchtools_slurm)
-
-cutoff <- 0.10
-y <- foreach(x = mtcars, .export = c("cutoff")) %dopar% {
-  mean(x, trim = cutoff)
-}
-names(y) <- colnames(mtcars)
-```
+See `help("registerDoFuture", package = "doFuture")` for more details
+and examples on this approach.
 
 
-## Futures for plyr
+### Alternative 2: `%dofuture%`
 
-The **[plyr]** package uses **[foreach]** as a parallel backend.  This
-means that with **[doFuture]** any type of futures can be used for
-asynchronous (and synchronous) **plyr** processing including
-multicore, multisession, MPI, ad hoc clusters and HPC job schedulers.
-For example,
+The _second alternative_, which uses `%dofuture%`, avoids having to use
+`registerDoFuture()`.  The `%dofuture%` operator provides a more
+consistent behavior than `%dopar%`, e.g. there is a unique set of
+foreach arguments instead of one per possible adapter.  Identification
+of globals, random number generation (RNG), and error handling is
+handled by the future ecosystem, just like with other map-reduce
+solutions such as **[future.apply]** and **[furrr]**.
+An example is:
 
 ```r
-library("doFuture")
-registerDoFuture()
+library(doFuture)
 plan(multisession)
-library("plyr")
 
-cutoff <- 0.10
-y <- llply(mtcars, mean, trim = cutoff, .parallel = TRUE)
-## $a
-##  25%  50%  75%
-## 3.25 5.50 7.75
-##
-## $beta
-##       25%       50%       75%
-## 0.2516074 1.0000000 5.0536690
-##
-## $logic
-## 25% 50% 75%
-## 0.0 0.5 1.0
-```
-
-
-## Futures and BiocParallel
-
-The **[BiocParallel]** package supports any `%dopar%` adapter as a
-parallel backend.  This means that with **[doFuture]**,
-**BiocParallel** supports any type of future.  For example,
-
-```r
-library("doFuture")
-registerDoFuture()
-plan(multisession)
-library("BiocParallel")
-register(DoparParam(), default = TRUE)
-
-cutoff <- 0.10
-x <- bplapply(mtcars, mean, trim = cutoff)
-```
-
-
-## doFuture takes care of exports and packages automatically
-
-The **foreach** package itself has some support for automated handling
-of globals but unfortunately it does not work in all cases.
-Specifically, if `foreach()` is called from within a function, you do
-need to export globals explicitly.  For example, although global
-`cutoff` is properly exported when we do
-
-```r
-library("doParallel")
-registerDoParallel(parallel::makeCluster(2))
-
-cutoff <- 0.10
-y <- foreach(x = mtcars) %dopar% {
-  mean(x, trim = cutoff)
+y <- foreach(x = 1:4, y = 1:10) %dofuture% {
+  z <- x + y
+  slow_sqrt(z)
 }
-names(y) <- colnames(mtcars)
 ```
 
-it falls short as soon as we try to do the same from within a
-function:
+This alternative is the recommended way to let `foreach()` parallelize
+via the future framework if you start out from scratch.
 
-```r
-my_mean <- function() {
-  y <- foreach(x = mtcars) %dopar% {
-    mean(x, trim = cutoff)
-  }
-  names(y) <- colnames(mtcars)
-  y
-}
-
-x <- my_mean()
-## Error in { : task 1 failed - "object 'cutoff' not found"
-```
-
-The solution is to explicitly export global variables, e.g.
-
-```r
-my_mean <- function() {
-  y <- foreach(x = mtcars, .export = "cutoff") %dopar% {
-    mean(x, trim = cutoff)
-  }
-  names(y) <- colnames(mtcars)
-  y
-}
-
-y <- my_mean()
-```
-
-In contrast, when using the `%dopar%` adapter of **doFuture**, all of
-the **[future]** machinery comes in to play including automatic
-handling of global variables, e.g.
-
-```r
-library("doFuture")
-registerDoFuture()
-plan(multisession, workers = 2)
-
-my_mean <- function() {
-  y <- foreach(x = mtcars) %dopar% {
-    mean(x, trim = cutoff)
-  }
-  names(y) <- colnames(mtcars)
-  y
-}
-
-x <- my_mean()
-```
-
-will indeed work.
-
-Another advantage with **doFuture** is that, contrary to
-**doParallel**, packages that need to be attached are also
-automatically taken care of, e.g.
-
-```r
-registerDoFuture()
-library("tools")
-ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
-unlist(ext)
-## [1] "txt" "log"
-```
-
-whereas
-
-```r
-registerDoParallel(parallel::makeCluster(2))
-library("tools")
-ext <- foreach(file = c("abc.txt", "def.log")) %dopar% file_ext(file)
-## Error in file_ext(file) : 
-##   task 1 failed - "could not find function "file_ext""
-```
-
-Having said all this, in order to write foreach code that works
-everywhere, it is better to be conservative and not assume that all
-end users will use a **doFuture** backend.  Because of this, it is
-still recommended to explicitly specify all objects that need to be
-export whenever using the foreach API.  The **doFuture** framework can
-help you identify what should go into the `.export` argument.  By
-setting `options(doFuture.foreach.export =
-".export-and-automatic-with-warning")`, **doFuture** will in warn if
-it finds globals not listed in `.export` and produce an informative
-warning message suggesting that those should be added.  To assert that
-argument `.export` is correct, test the code with
-`options(doFuture.foreach.export = ".export")`, which will disable
-automatic identification of globals such that only the globals
-specified by the `.export` argument is used.
+See `help("%dofuture%", package = "doFuture")` for more details and
+examples on this approach.
 
 
-## doFuture replaces existing doNnn packages
-
-Due to the generic nature of futures, the **[doFuture]** package
-provides the same functionality as many of the existing doNnn packages
-combined, e.g. **[doMC]**, **[doParallel]**, **[doMPI]**, and
-**[doSNOW]**.
-
-<table style="width: 100%;">
-<tr>
-<th>doNnn usage</th><th>doFuture alternative</th>
-</tr>
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("foreach")
-registerDoSEQ()
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-plan(sequential)
-</code></pre>
-</td>
-</tr>
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doMC")
-registerDoMC()
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-plan(multicore)
-</code></pre>
-</td>
-</tr>
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doParallel")
-registerDoParallel()
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-plan(multisession)  ## on MS Windows
-plan(multicore)     ## on Linux, Solaris, and macOS
-</code></pre>
-</td>
-</tr>
-
-<tr style="vertical-align: top;">
-<td>
-N/A
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-plan(future.callr::callr)
-</code></pre>
-</td>
-</tr>
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doParallel")
-cl &lt;- makeCluster(4)
-registerDoParallel(cl)
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-cl &lt;- makeCluster(4)
-plan(cluster, workers = cl)
-</code></pre>
-</td>
-</tr>
-
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doMPI")
-cl &lt;- startMPIcluster(count = 4)
-registerDoMPI(cl)
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-cl &lt;- makeCluster(4, type = "MPI")
-plan(cluster, workers = cl)
-</code></pre>
-</td>
-</tr>
-
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doSNOW")
-cl &lt;- makeCluster(4)
-registerDoSNOW(cl)
-</code></pre>
-</td>
-<td>
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-cl &lt;- makeCluster(4)
-plan(cluster, workers = cl)
-</code></pre>
-</td>
-</tr>
-
-
-<tr style="vertical-align: top;">
-<td>
-N/A
-</td>
-<td>
-High-performance compute (HPC) schedulers, e.g.
-SGE, Slurm, and TORQUE / PBS.
-<pre><code class="r">library("doFuture")
-registerDoFuture()
-plan(future.batchtools::batchtools_sge)
-</code></pre>
-</td>
-</tr>
-
-
-<tr style="vertical-align: top;">
-<td>
-<pre><code class="r">library("doRedis")
-registerDoRedis("jobs")
-startLocalWorkers(n = 4, queue = "jobs")
-</code></pre>
-</td>
-<td>
-N/A.  There is currently no known Redis-based future backend and therefore no known doFuture alternative to the <a href="https://cran.r-project.org/package=doRedis">doRedis</a> package.
-</td>
-</tr>
-
-</table>
-
-
-
-[batchtools]: https://cran.r-project.org/package=batchtools
-[BiocParallel]: https://bioconductor.org/packages/release/bioc/html/BiocParallel.html
-[callr]: https://cran.r-project.org/package=callr
-[doFuture]: https://cran.r-project.org/package=doFuture
-[doMC]: https://cran.r-project.org/package=doMC
-[doMPI]: https://cran.r-project.org/package=doMPI
-[doParallel]: https://cran.r-project.org/package=doParallel
-[doRedis]: https://cran.r-project.org/package=doRedis
-[doSNOW]: https://cran.r-project.org/package=doSNOW
+[doFuture]: https://doFuture.futureverse.org
+[future]: https://future.futureverse.org
 [foreach]: https://cran.r-project.org/package=foreach
-[future]: https://cran.r-project.org/package=future
-[future.callr]: https://cran.r-project.org/package=future.callr
-[future.batchtools]: https://cran.r-project.org/package=future.batchtools
+[batchtools]: https://cran.r-project.org/package=batchtools
+[future.batchtools]: https://future.batchtools.futureverse.org
+[future.apply]: https://future.apply.futureverse.org
+[furrr]: https://furrr.futureverse.org
+[caret]: https://cran.r-project.org/package=caret
 [plyr]: https://cran.r-project.org/package=plyr
+[NMF]: https://cran.r-project.org/package=NMF
+[glmnet]: https://cran.r-project.org/package=glmnet
+[BiocParallel]: https://bioconductor.org/packages/BiocParallel/
 
 ## Installation
 R package doFuture is available on [CRAN](https://cran.r-project.org/package=doFuture) and can be installed in R as:
