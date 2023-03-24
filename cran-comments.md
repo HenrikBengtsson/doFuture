@@ -21,7 +21,7 @@ The package has been verified using `R CMD check --as-cran` on:
 | 4.0.x         | L      |          |                 |
 | 4.1.x         | L M W  |          |                 |
 | 4.2.x         | L M W  | L M M1 W | M1 W            |
-| devel         |   M W  | L        | M1 W            |
+| devel         |   M W  | L      W | M1 W            |
 
 *Legend: OS: L = Linux, M = macOS, M1 = macOS M1, W = Windows*
 
@@ -34,7 +34,8 @@ res <- rhub::check(platforms = c(
   "fedora-gcc-devel",
   "debian-gcc-patched", 
   "macos-highsierra-release-cran",
-  "windows-x86_64-release"
+  "windows-x86_64-release",
+  "windows-x86_64-devel"
 ))
 print(res)
 ```
@@ -96,4 +97,13 @@ gives
   Warning: package 'future' was built under R version 4.2.3
 
 0 errors ✔ | 1 warning ✖ | 0 notes ✔
+
+── doFuture 1.0.0: OK
+
+  Build ID:   doFuture_1.0.0.tar.gz-8760d1742ea6455b9079a5c3fe6d632c
+  Platform:   Windows Server 2022, R-devel, 64 bit
+  Submitted:  5m 28.7s ago
+  Build time: 4m 8.8s
+
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 ```
