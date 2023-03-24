@@ -203,7 +203,7 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   ## Support %globals%, %packages%, %seed%, ...
   opts <- getOption("future.disposable", NULL)
   for (name in names(opts)) {
-    options[[name]] <- opts[[name]]
+    options[name] <- opts[name]
   }
   options(future.disposable = NULL)
   
@@ -254,9 +254,10 @@ doFuture2 <- function(obj, expr, envir, data) {   #nolint
   if (is.null(stdout)) {
     stdout <- eval(formals(future)$stdout)
   }
-  
-  conditions <- options[["conditions"]]
-  if (is.null(conditions)) {
+
+  if ("conditions" %in% names(options)) {
+    conditions <- options[["conditions"]]
+  } else {
     conditions <- eval(formals(future)$conditions)
   }
 

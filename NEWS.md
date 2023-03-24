@@ -1,5 +1,13 @@
 # Version (development version)
 
+## Bug Fixes
+
+ * Using `.options.future = list(conditions = NULL)` would be ignored
+   as if it would never had been specified.
+
+
+# Version 1.0.0 (2023-03-23)
+
 ## New Features
 
  * Add `%dofuture%` operator, which can be used like `%dopar%`, but
