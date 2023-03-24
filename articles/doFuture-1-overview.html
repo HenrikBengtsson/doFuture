@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9016</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9017</span>
       </span>
     </div>
 
@@ -207,6 +207,7 @@
 <span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
 <span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<p>This alternative is useful if you already have a lot of R code that uses <code>%dopar%</code> and you just want to switch to using the future framework for parallelization. Using <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code> is also useful when you wish to use the future framework with packages and functions that uses <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> and <code>%dopar%</code> internally, e.g. <strong><a href="https://cran.r-project.org/package=caret" class="external-link">caret</a></strong>, <strong><a href="https://cran.r-project.org/package=plyr" class="external-link">plyr</a></strong>, <strong><a href="https://cran.r-project.org/package=NMF" class="external-link">NMF</a></strong>, and <strong><a href="https://cran.r-project.org/package=glmnet" class="external-link">glmnet</a></strong>. It can also be used to configure the Bioconductor <strong><a href="https://bioconductor.org/packages/BiocParallel/" class="external-link">BiocParallel</a></strong> package, and any package that rely on it, to parallelize via the future framework.</p>
 <p>See <code><a href="../reference/registerDoFuture.html">help("registerDoFuture", package = "doFuture")</a></code> for more details and examples on this approach.</p>
 </div>
 <div class="section level3">
@@ -221,6 +222,7 @@
 <span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
 <span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<p>This alternative is the recommended way to let <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> parallelize via the future framework if you start out from scratch.</p>
 <p>See <code><a href="../reference/grapes-dofuture-grapes.html">help("%dofuture%", package = "doFuture")</a></code> for more details and examples on this approach.</p>
 </div>
 </div>
