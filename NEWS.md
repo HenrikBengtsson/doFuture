@@ -2,10 +2,10 @@
 
 ## New Features
 
- * Add `%dofuture%` operator, which can we used like `%dopar%`, but
+ * Add `%dofuture%` operator, which can be used like `%dopar%`, but
    without the need for `registerDoFuture()`, e.g. `y <- foreach(x =
    1:3) %dofuture% { slow_fcn(x) }`.  One advantage, contrary to using
-   `%dopar%`, is that the developer then have full control on
+   `%dopar%`, is that a developer then has full control on
    `foreach()`; with `%dopar%` the exact behavior depends also on what
    `%dopar%` adapter the user has registered.  Another advantage is
    that `%dofuture%` can hand over random number generation,
@@ -13,14 +13,14 @@
    ecosystem, which result in a more predictable and concise behavior,
    similar to that provided by **future.apply** and **furrr**.
 
- * Add `withDoRNG()` for evaluating a foreach `%dopar%` expression
-   with `doRNG::registerDoRNG()` temporarily set.
-
  * Now **future** operators such as `%stdout%` and `%conditions%` can
    be used to control the corresponding `options.future` arguments,
    e.g. `y <- foreach(i = 1:3) %dopar% { my_fun(i) } %stdout% FALSE`
    is the same as `y <- foreach(i = 1:3, .options.future = list(stdout
    = FALSE)) %dopar% { my_fun(i) }`.
+   
+ * Add `withDoRNG()` for evaluating a foreach `%dopar%` expression
+   with `doRNG::registerDoRNG()` temporarily set.
 
 
 # Version 0.12.2 [2022-04-25]

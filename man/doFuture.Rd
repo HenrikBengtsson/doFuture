@@ -7,7 +7,7 @@
 \title{doFuture: Foreach Parallel Adapter using Futures}
 \description{
 The \pkg{doFuture} package provides mechanisms for using the
-\pkg{foreach} package together with the \pkg{future} package
+\strong{\link{foreach}} package together with the \strong{\link{future}} package
 such that \code{foreach()} parallelizes via \emph{any} future backend.
 }
 \section{Usage}{
@@ -37,6 +37,16 @@ y <- foreach(x = 1:4, y = 1:10) \%dopar\% \{
 \}
 }\if{html}{\out{</div>}}
 
+This alternative is useful if you already have a lot of R code that
+uses \verb{\%dopar\%} and you just want to switch to using the future
+framework for parallelization.  Using \code{registerDoFuture()} is also
+useful when you wish to use the future framework with packages and
+functions that uses \code{foreach()} and \verb{\%dopar\%} internally,
+e.g. \strong{\href{https://cran.r-project.org/package=caret}{caret}}, \strong{\href{https://cran.r-project.org/package=plyr}{plyr}}, \strong{\href{https://cran.r-project.org/package=NMF}{NMF}}, and \strong{\href{https://cran.r-project.org/package=glmnet}{glmnet}}.  It can
+also be used to configure the Bioconductor \strong{\href{https://bioconductor.org/packages/BiocParallel/}{BiocParallel}} package,
+and any package that rely on it, to parallelize via the future
+framework.
+
 See \code{\link[=registerDoFuture]{registerDoFuture()}} for more details and examples on this approach.
 
 The \emph{second alternative}, which uses \code{\link{\%dofuture\%}}, avoids having to use
@@ -45,7 +55,7 @@ consistent behavior than \verb{\%dopar\%}, e.g. there is a unique set of
 foreach arguments instead of one per possible adapter.  Identification
 of globals, random number generation (RNG), and error handling is
 handled by the future ecosystem, just like with other map-reduce
-solutions such as \strong{future.apply} and \strong{furrr}.
+solutions such as \strong{\href{https://cran.r-project.org/package=future.apply}{future.apply}} and \strong{\href{https://cran.r-project.org/package=furrr}{furrr}}.
 An example is:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{library(doFuture)
@@ -56,6 +66,9 @@ y <- foreach(x = 1:4, y = 1:10) \%dofuture\% \{
   slow_sqrt(z)
 \}
 }\if{html}{\out{</div>}}
+
+This alternative is the recommended way to let \code{foreach()} parallelize
+via the future framework if you start out from scratch.
 
 See \code{\link{\%dofuture\%}} for more details and examples on this approach.
 }

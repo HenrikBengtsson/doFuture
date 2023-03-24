@@ -75,6 +75,16 @@ y <- foreach(x = 1:4, y = 1:10) %dopar% {
 }
 ```
 
+This alternative is useful if you already have a lot of R code that
+uses `%dopar%` and you just want to switch to using the future
+framework for parallelization.  Using `registerDoFuture()` is also
+useful when you wish to use the future framework with packages and
+functions that uses `foreach()` and `%dopar%` internally,
+e.g. **[caret]**, **[plyr]**, **[NMF]**, and **[glmnet]**.  It can
+also be used to configure the Bioconductor **[BiocParallel]** package,
+and any package that rely on it, to parallelize via the future
+framework.
+
 See `help("registerDoFuture", package = "doFuture")` for more details
 and examples on this approach.
 
@@ -100,6 +110,9 @@ y <- foreach(x = 1:4, y = 1:10) %dofuture% {
 }
 ```
 
+This alternative is the recommended way to let `foreach()` parallelize
+via the future framework if you start out from scratch.
+
 See `help("%dofuture%", package = "doFuture")` for more details and
 examples on this approach.
 
@@ -111,3 +124,8 @@ examples on this approach.
 [future.batchtools]: https://future.batchtools.futureverse.org
 [future.apply]: https://future.apply.futureverse.org
 [furrr]: https://furrr.futureverse.org
+[caret]: https://cran.r-project.org/package=caret
+[plyr]: https://cran.r-project.org/package=plyr
+[NMF]: https://cran.r-project.org/package=NMF
+[glmnet]: https://cran.r-project.org/package=glmnet
+[BiocParallel]: https://bioconductor.org/packages/BiocParallel/
