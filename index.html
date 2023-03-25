@@ -20,7 +20,7 @@
 <script src="pkgdown.js"></script><!-- docsearch --><script src="docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
 <link href="docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Use Foreach to Parallelize via the Future Framework">
-<meta property="og:description" content="The future package provides a unifying parallelization framework for R that supports many parallel and distributed backends. The foreach package provides a powerful API for iterating over an R expression in parallel. The doFuture package brings the best of the two together. There are two alternative ways to use this package. The first is the traditional foreach approach by registering the foreach adapter `registerDoFuture()` and so that `y &lt;- foreach(...) %dopar% { ... }` parallelizes with the future framework. The other alternative is to use `y &lt;- foreach(...) %dofuture% { ... }`, which does not require using `registerDoFuture()` and has many advantages over `%dopar%`.">
+<meta property="og:description" content="The future package provides a unifying parallelization framework for R that supports many parallel and distributed backends. The foreach package provides a powerful API for iterating over an R expression in parallel. The doFuture package brings the best of the two together. There are two alternative ways to use this package. The first is the traditional foreach approach by registering the foreach adapter registerDoFuture() and so that y &lt;- foreach(...) %dopar% { ... } runs in parallelizes with the future framework. The other alternative is to use y &lt;- foreach(...) %dofuture% { ... }, which does not require using registerDoFuture() and has many advantages over %dopar%.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9017</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 

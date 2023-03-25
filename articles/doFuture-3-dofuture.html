@@ -47,7 +47,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9017</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -164,11 +164,13 @@
 
       
 
-      </header><script src="doFuture-3-dofuture_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Foreach Iteration using Futures via %dofuture%</h1>
-                        <h4 data-toc-skip class="author">Henrik Bengtsson</h4>
+      <h1 data-toc-skip>Foreach Iteration using Futures via
+%dofuture%</h1>
+                        <h4 data-toc-skip class="author">Henrik
+Bengtsson</h4>
             
       
       <small class="dont-index">Source: <a href="https://github.com/HenrikBengtsson/doFuture/blob/HEAD/vignettes/doFuture-3-dofuture.md.rsp" class="external-link"><code>vignettes/doFuture-3-dofuture.md.rsp</code></a></small>
@@ -178,7 +180,12 @@
 
     
     
-<p>In addition to providing a <strong><a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a></strong> adapter to be used with the <code>%dopar%</code> operator of <strong>foreach</strong>, the <strong><a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a></strong> package provides an alternative <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> operator called <code>%dofuture%</code> that ties more directly into the <strong><a href="https://cran.r-project.org/package=future" class="external-link">future</a></strong> framework. For example,</p>
+<p>In addition to providing a <strong><a href="https://cran.r-project.org/package=foreach" class="external-link">foreach</a></strong>
+adapter to be used with the <code>%dopar%</code> operator of
+<strong>foreach</strong>, the <strong><a href="https://cran.r-project.org/package=doFuture" class="external-link">doFuture</a></strong>
+package provides an alternative <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> operator called
+<code>%dofuture%</code> that ties more directly into the <strong><a href="https://cran.r-project.org/package=future" class="external-link">future</a></strong>
+framework. For example,</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doFuture.futureverse.org">doFuture</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
@@ -188,46 +195,78 @@
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">x</span>, trim <span class="op">=</span> <span class="va">cutoff</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></code></pre></div>
-<p>There are several advantages of using <code>%dofuture%</code> instead of <code>%dopar%</code>. When you use <code>%dofuture%</code>,</p>
+<p>There are several advantages of using <code>%dofuture%</code> instead
+of <code>%dopar%</code>. When you use <code>%dofuture%</code>,</p>
 <ul>
 <li><p>there is no need to use <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code></p></li>
-<li><p>there is no need to use <code>%dorng%</code> of the <strong>doRNG</strong> package (but you need to specify <code>.options.future = list(seed = TRUE)</code> whenever using random numbers in the <code>expr</code> expression)</p></li>
-<li><p>global variables and packages are identified automatically by the <strong>future</strong> framework</p></li>
-<li><p>errors are relayed as-is (with <code>%dopar%</code> they captured and modified)</p></li>
+<li><p>there is no need to use <code>%dorng%</code> of the
+<strong>doRNG</strong> package (but you need to specify
+<code>.options.future = list(seed = TRUE)</code> whenever using random
+numbers in the <code>expr</code> expression)</p></li>
+<li><p>global variables and packages are identified automatically by the
+<strong>future</strong> framework</p></li>
+<li><p>errors are relayed as-is (with <code>%dopar%</code> they captured
+and modified)</p></li>
 </ul>
-<p>This makes <code>foreach(...) %dofuture% { ... }</code> more in line with how sibling packages <strong>future.apply</strong> and <strong>furrr</strong> work.</p>
+<p>This makes <code>foreach(...) %dofuture% { ... }</code> more in line
+with how sibling packages <strong>future.apply</strong> and
+<strong>furrr</strong> work.</p>
 <div class="section level2">
 <h2 id="global-variables-and-packages">Global variables and packages<a class="anchor" aria-label="anchor" href="#global-variables-and-packages"></a>
 </h2>
-<p>When using <code>%dofuture%</code>, the future framework identifies globals and packages automatically (via static code inspection).</p>
-<p>However, there are cases where it fails to find some of the globals or packages. When this happens, one can specify the <code><a href="https://future.futureverse.org/reference/future.html" class="external-link">future()</a></code> arguments <code>globals</code> and <code>packages</code> via foreach argument <code>.options.future</code>. For example, if you specify argument <code>.options.future = list(globals = structure(TRUE, ignore = "b", add = "a"))</code> then globals are automatically identified (<code>TRUE</code>), but it ignores <code>b</code> and always adds <code>a</code>.</p>
-<p>An alternative to specifying the <code>globals</code> and the <code>packages</code> options via <code>.options.future</code>, is to use the <code>%globals%</code> and <code>%packages%</code> operators.</p>
-<p>For further details and instructions, see <code><a href="https://future.futureverse.org/reference/future.html" class="external-link">help("future", package = "future")</a></code>.</p>
+<p>When using <code>%dofuture%</code>, the future framework identifies
+globals and packages automatically (via static code inspection).</p>
+<p>However, there are cases where it fails to find some of the globals
+or packages. When this happens, one can specify the
+<code><a href="https://future.futureverse.org/reference/future.html" class="external-link">future()</a></code> arguments <code>globals</code> and
+<code>packages</code> via foreach argument <code>.options.future</code>.
+For example, if you specify argument
+<code>.options.future = list(globals = structure(TRUE, ignore = "b", add = "a"))</code>
+then globals are automatically identified (<code>TRUE</code>), but it
+ignores <code>b</code> and always adds <code>a</code>.</p>
+<p>An alternative to specifying the <code>globals</code> and the
+<code>packages</code> options via <code>.options.future</code>, is to
+use the <code>%globals%</code> and <code>%packages%</code>
+operators.</p>
+<p>For further details and instructions, see
+<code><a href="https://future.futureverse.org/reference/future.html" class="external-link">help("future", package = "future")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="random-number-generation-rng">Random Number Generation (RNG)<a class="anchor" aria-label="anchor" href="#random-number-generation-rng"></a>
 </h2>
-<p>The <code>%dofuture%</code> uses the future ecosystem to generate proper random numbers in parallel in the same way they are generated in, for instance, <strong>future.apply</strong> and <strong>furrr</strong>. For this to work, you need to specify <code>.options.future = list(seed = TRUE)</code>. For example,</p>
+<p>The <code>%dofuture%</code> uses the future ecosystem to generate
+proper random numbers in parallel in the same way they are generated in,
+for instance, <strong>future.apply</strong> and <strong>furrr</strong>.
+For this to work, you need to specify
+<code>.options.future = list(seed = TRUE)</code>. For example,</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, .options.future <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>An alternative to specifying the <code>seed</code> option via <code>.options.future</code>, is to use the <code>%seed%</code> operator.</p>
+<p>An alternative to specifying the <code>seed</code> option via
+<code>.options.future</code>, is to use the <code>%seed%</code>
+operator.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>i <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="op"><a href="https://future.futureverse.org/reference/grapes-seed-grapes.html" class="external-link">%seed%</a></span> <span class="cn">TRUE</span></span></code></pre></div>
-<p>For further details and instructions, see <code><a href="https://future.futureverse.org/reference/future.html" class="external-link">help("future", package = "future")</a></code>.</p>
+<p>For further details and instructions, see
+<code><a href="https://future.futureverse.org/reference/future.html" class="external-link">help("future", package = "future")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="load-balancing-chunking">Load balancing (“chunking”)<a class="anchor" aria-label="anchor" href="#load-balancing-chunking"></a>
 </h2>
-<p>Whether load balancing (“chunking”) should take place or not can be controlled by specifying either argument <code>.options.future = list(scheduling = &lt;ratio&gt;)</code> or <code>.options.future = list(chunk.size = &lt;count&gt;)</code> to <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>. For example,</p>
+<p>Whether load balancing (“chunking”) should take place or not can be
+controlled by specifying either argument
+<code>.options.future = list(scheduling = &lt;ratio&gt;)</code> or
+<code>.options.future = list(chunk.size = &lt;count&gt;)</code> to
+<code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>. For example,</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, .options.future <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>scheduling <span class="op">=</span> <span class="fl">2.0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
 <span>  <span class="fu">slow_fcn</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>For further details and instructions, see <code><a href="https://future.apply.futureverse.org/reference/future_lapply.html" class="external-link">help("future_lapply", package = "future.apply")</a></code>.</p>
+<p>For further details and instructions, see
+<code><a href="https://future.apply.futureverse.org/reference/future_lapply.html" class="external-link">help("future_lapply", package = "future.apply")</a></code>.</p>
 </div>
   </div>
 

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.12.2-9017</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -136,9 +136,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="development version" id="version-development-version">Version (development version)<a class="anchor" aria-label="anchor" href="#version-development-version"></a></h2>
+<h2 class="page-header" data-toc-text="1.0.0" id="version-100">Version 1.0.0<small>2023-03-24</small><a class="anchor" aria-label="anchor" href="#version-100"></a></h2>
 <div class="section level3">
-<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<h3 id="new-features-1-0-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-1-0-0"></a></h3>
 <ul><li><p>Add <code>%dofuture%</code> operator, which can be used like <code>%dopar%</code>, but without the need for <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code>, e.g. <code>y &lt;- foreach(x =    1:3) %dofuture% { slow_fcn(x) }</code>. One advantage, contrary to using <code>%dopar%</code>, is that a developer then has full control on <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>; with <code>%dopar%</code> the exact behavior depends also on what <code>%dopar%</code> adapter the user has registered. Another advantage is that <code>%dofuture%</code> can hand over random number generation, identification of globals, and error handling to the future ecosystem, which result in a more predictable and concise behavior, similar to that provided by <strong>future.apply</strong> and <strong>furrr</strong>.</p></li>
 <li><p>Now <strong>future</strong> operators such as <code>%stdout%</code> and <code>%conditions%</code> can be used to control the corresponding <code>options.future</code> arguments, e.g. <code>y &lt;- foreach(i = 1:3) %dopar% { my_fun(i) } %stdout% FALSE</code> is the same as <code>y &lt;- foreach(i = 1:3, .options.future = list(stdout    = FALSE)) %dopar% { my_fun(i) }</code>.</p></li>
 <li><p>Add <code><a href="../reference/withDoRNG.html">withDoRNG()</a></code> for evaluating a foreach <code>%dopar%</code> expression with <code><a href="https://rdrr.io/pkg/doRNG/man/registerDoRNG.html" class="external-link">doRNG::registerDoRNG()</a></code> temporarily set.</p></li>
@@ -148,17 +148,20 @@
 <h2 class="page-header" data-toc-text="0.12.2" id="version-0122">Version 0.12.2<small>2022-04-26</small><a class="anchor" aria-label="anchor" href="#version-0122"></a></h2>
 <div class="section level3">
 <h3 id="performance-0-12-2">Performance<a class="anchor" aria-label="anchor" href="#performance-0-12-2"></a></h3>
-<ul><li>Now captured standard output and conditions are deleted as soon as they have been relayed. This requires <strong>future</strong> (&gt;= 1.25.0).</li></ul></div>
+<ul><li>Now captured standard output and conditions are deleted as soon as they have been relayed. This requires <strong>future</strong> (&gt;= 1.25.0).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.12.1" id="version-0121">Version 0.12.1<small>2022-03-31</small><a class="anchor" aria-label="anchor" href="#version-0121"></a></h2>
 <div class="section level3">
 <h3 id="performance-0-12-1">Performance<a class="anchor" aria-label="anchor" href="#performance-0-12-1"></a></h3>
 <ul><li>
-<code>options(doFuture.rng.onMisuse = "ignore")</code> is now a tad faster than before.</li></ul></div>
+<code>options(doFuture.rng.onMisuse = "ignore")</code> is now a tad faster than before.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="miscellaneous-0-12-1">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-12-1"></a></h3>
-<ul><li>Moved all internal opt-in package tests that test <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code> with popular packages (e.g. <strong>BiocParallel</strong>, <strong>foreach</strong>, <strong>plyr</strong>, <strong>caret</strong>, <strong>glmnet</strong>, <strong>NSP</strong>, and <strong>TSP</strong>) relying on <strong>foreach</strong> to a separate <strong>doFuture.tests.extra</strong> package. This reduced the size of the package tarball from 140 kB to 40 kB.</li></ul></div>
+<ul><li>Moved all internal opt-in package tests that test <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code> with popular packages (e.g. <strong>BiocParallel</strong>, <strong>foreach</strong>, <strong>plyr</strong>, <strong>caret</strong>, <strong>glmnet</strong>, <strong>NSP</strong>, and <strong>TSP</strong>) relying on <strong>foreach</strong> to a separate <strong>doFuture.tests.extra</strong> package. This reduced the size of the package tarball from 140 kB to 40 kB.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.12.0" id="version-0120">Version 0.12.0<small>2021-01-04</small><a class="anchor" aria-label="anchor" href="#version-0120"></a></h2>
@@ -181,23 +184,28 @@
 <div class="section level3">
 <h3 id="bug-fixes-0-11-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-11-0"></a></h3>
 <ul><li>
-<code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> argument <code>.noexport</code> was completely ignored by <strong>doFuture</strong>.</li></ul></div>
+<code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> argument <code>.noexport</code> was completely ignored by <strong>doFuture</strong>.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="deprecated-and-defunct-0-11-0">Deprecated and Defunct<a class="anchor" aria-label="anchor" href="#deprecated-and-defunct-0-11-0"></a></h3>
-<ul><li>Removed defunct option <code>doFuture.foreach.export</code> values <code>"automatic"</code> and <code>"automatic-unless-.export"</code>. They were made defunct in <strong>doFuture</strong> 0.8.2.</li></ul></div>
+<ul><li>Removed defunct option <code>doFuture.foreach.export</code> values <code>"automatic"</code> and <code>"automatic-unless-.export"</code>. They were made defunct in <strong>doFuture</strong> 0.8.2.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.10.0" id="version-0100">Version 0.10.0<small>2020-09-24</small><a class="anchor" aria-label="anchor" href="#version-0100"></a></h2>
 <div class="section level3">
 <h3 id="significant-changes-0-10-0">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-0-10-0"></a></h3>
-<ul><li>Package now only imports packages <strong>globals</strong>, <strong>iterators</strong>, <strong>parallel</strong> and <strong>utils</strong> - packages that were attached previously.</li></ul></div>
+<ul><li>Package now only imports packages <strong>globals</strong>, <strong>iterators</strong>, <strong>parallel</strong> and <strong>utils</strong> - packages that were attached previously.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="new-features-0-10-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-10-0"></a></h3>
 <ul><li>
-<code>%dorng%</code> of the <strong>doRNG</strong> package no longer produces a warning on ‘Foreach loop had changed the current RNG type: RNG was restored to same type, next state’ when using the <strong>doFuture</strong> adapter.</li></ul></div>
+<code>%dorng%</code> of the <strong>doRNG</strong> package no longer produces a warning on ‘Foreach loop had changed the current RNG type: RNG was restored to same type, next state’ when using the <strong>doFuture</strong> adapter.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="documentation-0-10-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-10-0"></a></h3>
-<ul><li>The package help incorrectly mentioned <code>chunk_size</code>, which now has been corrected to mention <code>chunk.size</code>.</li></ul></div>
+<ul><li>The package help incorrectly mentioned <code>chunk_size</code>, which now has been corrected to mention <code>chunk.size</code>.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.9.0" id="version-090">Version 0.9.0<small>2020-01-11</small><a class="anchor" aria-label="anchor" href="#version-090"></a></h2>
@@ -211,22 +219,27 @@
 <h2 class="page-header" data-toc-text="0.8.2" id="version-082">Version 0.8.2<small>2019-10-30</small><a class="anchor" aria-label="anchor" href="#version-082"></a></h2>
 <div class="section level3">
 <h3 id="documentation-0-8-2">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-8-2"></a></h3>
-<ul><li>Document also <code>.options.future = list(chunk.size = &lt;count&gt;)</code> to <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>.</li></ul></div>
+<ul><li>Document also <code>.options.future = list(chunk.size = &lt;count&gt;)</code> to <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code>.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="deprecated-and-defunct-0-8-2">Deprecated and Defunct<a class="anchor" aria-label="anchor" href="#deprecated-and-defunct-0-8-2"></a></h3>
-<ul><li>Option <code>doFuture.foreach.export</code> values <code>automatic-unless-.export</code> and <code>automatic</code> are defunct. They have been deprecated since <strong>doFuture</strong> 0.7.0.</li></ul></div>
+<ul><li>Option <code>doFuture.foreach.export</code> values <code>automatic-unless-.export</code> and <code>automatic</code> are defunct. They have been deprecated since <strong>doFuture</strong> 0.7.0.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-8-2">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-8-2"></a></h3>
-<ul><li>Package could set <code>.Random.seed</code> to NULL, instead of removing it, which in turn would produce a warning on “.Random.seed is not an integer vector but of type <code>NULL</code>, so ignored” when the next random number generated.</li></ul></div>
+<ul><li>Package could set <code>.Random.seed</code> to NULL, instead of removing it, which in turn would produce a warning on “.Random.seed is not an integer vector but of type <code>NULL</code>, so ignored” when the next random number generated.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.1" id="version-081">Version 0.8.1<small>2019-07-20</small><a class="anchor" aria-label="anchor" href="#version-081"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-8-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-8-1"></a></h3>
-<ul><li>Standard output and conditions are now relayed as soon as possible.</li></ul></div>
+<ul><li>Standard output and conditions are now relayed as soon as possible.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-8-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-8-1"></a></h3>
-<ul><li>One of the package tests had a <code>_R_CHECK_LENGTH_1_LOGIC2_=true</code> bug. This bug did <em>not</em> affect how the package worked or any of its results.</li></ul></div>
+<ul><li>One of the package tests had a <code>_R_CHECK_LENGTH_1_LOGIC2_=true</code> bug. This bug did <em>not</em> affect how the package worked or any of its results.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.8.0" id="version-080">Version 0.8.0<small>2019-03-17</small><a class="anchor" aria-label="anchor" href="#version-080"></a></h2>
@@ -242,7 +255,8 @@
 <h2 class="page-header" data-toc-text="0.7.0" id="version-070">Version 0.7.0<small>2019-01-07</small><a class="anchor" aria-label="anchor" href="#version-070"></a></h2>
 <div class="section level3">
 <h3 id="significant-changes-0-7-0">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-0-7-0"></a></h3>
-<ul><li>Globals are now searched for also among elements that <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> iterates over, e.g. <code>foreach(f = F, g = G) %dopar% { f() + g() }</code>.</li></ul></div>
+<ul><li>Globals are now searched for also among elements that <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> iterates over, e.g. <code>foreach(f = F, g = G) %dopar% { f() + g() }</code>.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="new-features-0-7-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
 <ul><li><p>The maximum total size of globals allowed (option <code>future.globals.maxSize</code>) per future (“chunk”) is now scaled up by the number of elements processed by the future (“chunk”) making the protection approximately invariant to the amount of chunking done by <strong>foreach</strong>.</p></li>
@@ -250,7 +264,8 @@
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-7-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-7-0"></a></h3>
-<ul><li>Added section on Random Number Generation (RNG) to <code><a href="../reference/doFuture.html">help("doFuture")</a></code> and updated <code>example("doFuture")</code> with a best-practices RNG example.</li></ul></div>
+<ul><li>Added section on Random Number Generation (RNG) to <code><a href="../reference/doFuture.html">help("doFuture")</a></code> and updated <code>example("doFuture")</code> with a best-practices RNG example.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="software-quality-0-7-0">Software Quality<a class="anchor" aria-label="anchor" href="#software-quality-0-7-0"></a></h3>
 <ul><li><p>TESTS: The opt-in tests for third-party packages now run their examples with <code>example(..., run.dontrun = TRUE)</code> to cover even more use cases.</p></li>
@@ -275,11 +290,13 @@
 <ul><li><p><strong>doFuture</strong> now respects option <code>future.globals.resolve</code> instead of being hardcoded to always resolve globals (<code>future.globals.resolve = TRUE</code>). This makes <strong>doFuture</strong> consistent with other future frontends.</p></li>
 <li>
 <p>Added option <code>doFuture.foreach.export</code> making it possible ignore a faulty <code>.export</code> argument to <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> and instead rely on the future framework to identify globals. For instance, all examples of <strong>caret</strong> 6.0-77 works with <strong>doFuture</strong> and any backend when setting this option to <code>"automatic"</code> (or <code>".export-and-automatic"</code>) whereas they will only work on forked backends if using <code>".export"</code> or the default <code>"automatic-unless-.export"</code>. If using <code>".export-and-automatic-with-warning"</code>, a warning that lists globals potentially missing from the <code>.export</code> argument is produced</p>
-<ul><li>this is helpful for developers writing <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> code.</li></ul></li>
+<ul><li>this is helpful for developers writing <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> code.</li>
+</ul></li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-6-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-6-0"></a></h3>
-<ul><li>Added <code><a href="../reference/doFuture.options.html">help("doFuture.options")</a></code>.</li></ul></div>
+<ul><li>Added <code><a href="../reference/doFuture.options.html">help("doFuture.options")</a></code>.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="software-quality-0-6-0">Software Quality<a class="anchor" aria-label="anchor" href="#software-quality-0-6-0"></a></h3>
 <ul><li><p>TESTS: The <strong>doFuture</strong> package gained more opt-in tests for third-party packages across all known future backends. These tests are not performed on the CRAN servers; instead they are performed on Travis CI. Third-party packages that are currently tested are: <strong>caret</strong>, <strong>foreach</strong>, <strong>glmnet</strong>, <strong>NMF</strong>, <strong>plyr</strong>, and <strong>TSP</strong>.</p></li>
@@ -290,19 +307,23 @@
 <h2 class="page-header" data-toc-text="0.5.1" id="version-051">Version 0.5.1<small>2017-09-12</small><a class="anchor" aria-label="anchor" href="#version-051"></a></h2>
 <div class="section level3">
 <h3 id="random-number-generation-0-5-1">Random Number Generation<a class="anchor" aria-label="anchor" href="#random-number-generation-0-5-1"></a></h3>
-<ul><li>Package now suggests <strong>doRNG</strong> (&gt;= 1.6.6), which fixes several bugs in <strong>doRNG</strong> (&gt;= 1.6) previously suggested.</li></ul></div>
+<ul><li>Package now suggests <strong>doRNG</strong> (&gt;= 1.6.6), which fixes several bugs in <strong>doRNG</strong> (&gt;= 1.6) previously suggested.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="software-quality-0-5-1">Software Quality<a class="anchor" aria-label="anchor" href="#software-quality-0-5-1"></a></h3>
-<ul><li>TESTS: Adding tests for globals part of other packages for <strong>future.BatchJobs</strong> and <strong>future.batchtools</strong> futures because in previous versions of those, such globals would not be found because the corresponding package was never attached in the worker.</li></ul></div>
+<ul><li>TESTS: Adding tests for globals part of other packages for <strong>future.BatchJobs</strong> and <strong>future.batchtools</strong> futures because in previous versions of those, such globals would not be found because the corresponding package was never attached in the worker.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.5.0" id="version-050">Version 0.5.0<small>2017-04-01</small><a class="anchor" aria-label="anchor" href="#version-050"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-5-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
-<ul><li>Added <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> option to control whether scheduling (“chunking”) should take place or not, and if so, how granular it should be. This is specified as <code>foreach(..., .options.future =    list(scheduling = &lt;value&gt;))</code>. With <code>scheduling = 1.0</code> (or equivalently <code>scheduling = TRUE</code>), the the elements (iterations) will be split up in equally sized chunks such that each backend worker will process exactly one chunk. With <code>scheduling = Inf</code> (or equivalently <code>scheduling = FALSE</code>), chunking is disabled, i.e. each worker process exactly one element at the time. If <code>scheduling =    0.0</code>, then a single workers processes all elements (and the other workers will not be used). If <code>2.0</code>, then each worker will process two chunks, and so on. If above option is not set, then <code>.options.multicore = list(preschedule = &lt;logical&gt;))</code> which is defined by <strong>doParallel</strong>, is used to mean scheduling = preschedule. If that is not set, then <code>scheduling = 1.0</code> is used by default.</li></ul></div>
+<ul><li>Added <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> option to control whether scheduling (“chunking”) should take place or not, and if so, how granular it should be. This is specified as <code>foreach(..., .options.future =    list(scheduling = &lt;value&gt;))</code>. With <code>scheduling = 1.0</code> (or equivalently <code>scheduling = TRUE</code>), the the elements (iterations) will be split up in equally sized chunks such that each backend worker will process exactly one chunk. With <code>scheduling = Inf</code> (or equivalently <code>scheduling = FALSE</code>), chunking is disabled, i.e. each worker process exactly one element at the time. If <code>scheduling =    0.0</code>, then a single workers processes all elements (and the other workers will not be used). If <code>2.0</code>, then each worker will process two chunks, and so on. If above option is not set, then <code>.options.multicore = list(preschedule = &lt;logical&gt;))</code> which is defined by <strong>doParallel</strong>, is used to mean scheduling = preschedule. If that is not set, then <code>scheduling = 1.0</code> is used by default.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="software-quality-0-5-0">Software Quality<a class="anchor" aria-label="anchor" href="#software-quality-0-5-0"></a></h3>
-<ul><li>TESTS: Now the <strong>doFuture</strong> package tests can be configured to also run the the help examples of the <strong>foreach</strong> and <strong>plyr</strong> packages with the <strong>doFuture</strong> adapter. To further increase the coverage of these tests, the <strong>plyr</strong> example code is tweaked on-the-fly to set <code>.parallel = TRUE</code>. The default is to test against all of the future strategies that comes with the <strong>future</strong> package, but it is possible to also test against <strong>future.BatchJobs</strong>, <strong>future.batchtools</strong>, and so on. These tests are performed on all possible future backends before each release (as well as via continuous integration).</li></ul></div>
+<ul><li>TESTS: Now the <strong>doFuture</strong> package tests can be configured to also run the the help examples of the <strong>foreach</strong> and <strong>plyr</strong> packages with the <strong>doFuture</strong> adapter. To further increase the coverage of these tests, the <strong>plyr</strong> example code is tweaked on-the-fly to set <code>.parallel = TRUE</code>. The default is to test against all of the future strategies that comes with the <strong>future</strong> package, but it is possible to also test against <strong>future.BatchJobs</strong>, <strong>future.batchtools</strong>, and so on. These tests are performed on all possible future backends before each release (as well as via continuous integration).</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-5-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-0"></a></h3>
 <ul><li><p>Using a nested <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> call would incorrectly produce an error on not being able to locate the iterator variable of the inner-most <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> as a global variable.</p></li>
@@ -313,10 +334,12 @@
 <h2 class="page-header" data-toc-text="0.4.0" id="version-040">Version 0.4.0<small>2017-03-14</small><a class="anchor" aria-label="anchor" href="#version-040"></a></h2>
 <div class="section level3">
 <h3 id="significant-changes-0-4-0">Significant Changes<a class="anchor" aria-label="anchor" href="#significant-changes-0-4-0"></a></h3>
-<ul><li>SPEED / LOAD BALANCING: The <strong>doFuture</strong> <code>%dopar%</code> backend now processes all elements in chunks such that each backend worker will process a subset of data at once (and only once). This significantly speeds up processing time when iterating over a large number of elements that each has short a processing time.</li></ul></div>
+<ul><li>SPEED / LOAD BALANCING: The <strong>doFuture</strong> <code>%dopar%</code> backend now processes all elements in chunks such that each backend worker will process a subset of data at once (and only once). This significantly speeds up processing time when iterating over a large number of elements that each has short a processing time.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="globals-0-4-0">Globals<a class="anchor" aria-label="anchor" href="#globals-0-4-0"></a></h3>
-<ul><li>For consistency, globals and packages are now identified the same way as they are when using regular futures.</li></ul></div>
+<ul><li>For consistency, globals and packages are now identified the same way as they are when using regular futures.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="software-quality-0-4-0">Software Quality<a class="anchor" aria-label="anchor" href="#software-quality-0-4-0"></a></h3>
 <ul><li><p>Now the package tests <strong>future.batchtools</strong> with <strong>foreach</strong> by itself, in combination with <strong>plyr</strong> (<code>parallel = TRUE</code>) as well as with <code><a href="https://rdrr.io/pkg/BiocParallel/man/bplapply.html" class="external-link">BiocParallel::bplapply()</a></code> and friends. Similar tests are already done using <strong>future.BatchJobs</strong>.</p></li>
@@ -328,16 +351,19 @@
 <h2 class="page-header" data-toc-text="0.3.0" id="version-030">Version 0.3.0<small>2016-10-28</small><a class="anchor" aria-label="anchor" href="#version-030"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-3-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
-<ul><li>Now argument <code>.export</code> of <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> is acknowledged such that if a character vector of variables names to be exported is specified, then those variables and nothing else are exported to the future. If NULL, then automatic lookup of global variables is used.</li></ul></div>
+<ul><li>Now argument <code>.export</code> of <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> is acknowledged such that if a character vector of variables names to be exported is specified, then those variables and nothing else are exported to the future. If NULL, then automatic lookup of global variables is used.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="bug-fixes-0-3-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h3>
-<ul><li>Nested future strategies were not respected by nested <code>%dopar%</code> calls, because <strong>doFuture</strong> forgot to remind <strong>foreach</strong> that <strong>doFuture</strong> should be used also deeper down. Thank you Alex Vorobiev for reporting on this.</li></ul></div>
+<ul><li>Nested future strategies were not respected by nested <code>%dopar%</code> calls, because <strong>doFuture</strong> forgot to remind <strong>foreach</strong> that <strong>doFuture</strong> should be used also deeper down. Thank you Alex Vorobiev for reporting on this.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.1" id="version-021">Version 0.2.1<small>2016-09-08</small><a class="anchor" aria-label="anchor" href="#version-021"></a></h2>
 <div class="section level3">
 <h3 id="bug-fixes-0-2-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-1"></a></h3>
-<ul><li>Internal R expression created to attach packages was not fully correct (but it still worked).</li></ul></div>
+<ul><li>Internal R expression created to attach packages was not fully correct (but it still worked).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.2.0" id="version-020">Version 0.2.0<small>2016-06-25</small><a class="anchor" aria-label="anchor" href="#version-020"></a></h2>
@@ -351,26 +377,31 @@
 <h2 class="page-header" data-toc-text="0.1.3" id="version-013">Version 0.1.3<a class="anchor" aria-label="anchor" href="#version-013"></a></h2>
 <div class="section level3">
 <h3 id="documentation-0-1-3">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-3"></a></h3>
-<ul><li>Added package help page, i.e. <code><a href="../reference/doFuture.html">help("doFuture")</a></code>.</li></ul></div>
+<ul><li>Added package help page, i.e. <code><a href="../reference/doFuture.html">help("doFuture")</a></code>.</li>
+</ul></div>
 <div class="section level3">
 <h3 id="random-number-generation-0-1-3">Random Number Generation<a class="anchor" aria-label="anchor" href="#random-number-generation-0-1-3"></a></h3>
-<ul><li>Added package tests asserting random number generator (RNG) reproducibility when using the <strong>doRNG</strong> package.</li></ul></div>
+<ul><li>Added package tests asserting random number generator (RNG) reproducibility when using the <strong>doRNG</strong> package.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.2" id="version-012">Version 0.1.2<a class="anchor" aria-label="anchor" href="#version-012"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-1-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-2"></a></h3>
-<ul><li>Now <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParWorkers()</a></code> gives useful information with <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code> in most cases. In cases where the number of workers cannot be inferred easily from <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> it will default to returning a large number (= 99).</li></ul></div>
+<ul><li>Now <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParWorkers()</a></code> gives useful information with <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code> in most cases. In cases where the number of workers cannot be inferred easily from <code><a href="https://future.futureverse.org/reference/plan.html" class="external-link">future::plan()</a></code> it will default to returning a large number (= 99).</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.1" id="version-011">Version 0.1.1<a class="anchor" aria-label="anchor" href="#version-011"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-1-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1"></a></h3>
-<ul><li>Now <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParName()</a></code> and <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParVersion()</a></code> gives useful information with <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code>.</li></ul></div>
+<ul><li>Now <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParName()</a></code> and <code><a href="https://rdrr.io/pkg/foreach/man/getDoParWorkers.html" class="external-link">foreach::getDoParVersion()</a></code> gives useful information with <code><a href="../reference/registerDoFuture.html">registerDoFuture()</a></code>.</li>
+</ul></div>
 </div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.1.0" id="version-010">Version 0.1.0<a class="anchor" aria-label="anchor" href="#version-010"></a></h2>
-<ul><li>Created.</li></ul></div>
+<ul><li>Created.</li>
+</ul></div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
