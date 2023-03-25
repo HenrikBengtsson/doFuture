@@ -1,10 +1,26 @@
+<%@meta language="R-vignette" content="--------------------------------
+%\VignetteIndexEntry{doFuture: An Overview on using Foreach to Parallelize via the Future Framework}
+%\VignetteAuthor{Henrik Bengtsson}
+%\VignetteKeyword{R}
+%\VignetteKeyword{package}
+%\VignetteKeyword{vignette}
+%\VignetteKeyword{foreach}
+%\VignetteKeyword{future}
+%\VignetteKeyword{promise}
+%\VignetteKeyword{lazy evaluation}
+%\VignetteKeyword{synchronous}
+%\VignetteKeyword{asynchronous}
+%\VignetteKeyword{parallel}
+%\VignetteKeyword{cluster}
+%\VignetteEngine{R.rsp::rsp}
+%\VignetteTangle{FALSE}
+--------------------------------------------------------------------"%>
+# doFuture: An Overview on using Foreach to Parallelize via the Future Framework
 
+The **[doFuture]** package provides mechanisms for using the
+**foreach** package together with the **future** package such that
+`foreach()` and `times()` parallelizes via _any_ future backend.
 
-<div id="badges"><!-- pkgdown markup -->
-<a href="https://CRAN.R-project.org/web/checks/check_results_doFuture.html"><img border="0" src="https://www.r-pkg.org/badges/version/doFuture" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/doFuture/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/doFuture/actions/workflows/R-CMD-check.yaml/badge.svg?branch=develop" alt="R CMD check status"/></a>     <a href="https://app.codecov.io/gh/HenrikBengtsson/doFuture"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/doFuture/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
-</div>
-
-# doFuture: Use Foreach to Parallelize via the Future Framework 
 
 ## Introduction
 
@@ -113,26 +129,3 @@ examples on this approach.
 [NMF]: https://cran.r-project.org/package=NMF
 [glmnet]: https://cran.r-project.org/package=glmnet
 [BiocParallel]: https://bioconductor.org/packages/BiocParallel/
-
-## Installation
-R package doFuture is available on [CRAN](https://cran.r-project.org/package=doFuture) and can be installed in R as:
-```r
-install.packages("doFuture")
-```
-
-
-### Pre-release version
-
-To install the pre-release version that is available in Git branch `develop` on GitHub, use:
-```r
-remotes::install_github("HenrikBengtsson/doFuture", ref="develop")
-```
-This will install the package from source.  
-
-<!-- pkgdown-drop-below -->
-
-
-## Contributing
-
-To contribute to this package, please see [CONTRIBUTING.md](CONTRIBUTING.md).
-

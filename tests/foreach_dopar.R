@@ -1,9 +1,10 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
-strategies <- setdiff(strategies, "multiprocess")
 
 message("*** doFuture - reproducibility ...")
+
+registerDoFuture()
 
 res0 <- NULL
 

@@ -5,11 +5,11 @@
 ^.git
 ^.make
 ^.local
-INSTALL[.]md
-OVERVIEW[.]md
-README[.]md
-CONDUCT[.]md
-CONTRIBUTING[.]md
+INSTALL[.]md$
+OVERVIEW[.]md$
+README[.]md$
+CONDUCT[.]md$
+CONTRIBUTING[.]md$
 ^docs
 ^pkgdown
 ^_pkgdown\.yml$
@@ -29,3 +29,4 @@ Rplots.pdf$
 [.]Rdump/
 ^revdep/*
 ^.*[.]tar[.]gz$
+^.Rdump

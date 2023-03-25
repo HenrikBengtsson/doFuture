@@ -19,26 +19,24 @@ options(doFuture.debug = FALSE)
 
 plan_nested <- "sequential"
 
-message("*** doFuture - nested %dopar% ...")
+message("*** doFuture - nested %dofuture% ...")
 
-registerDoFuture()
-
-message("*** doFuture - nested %dopar%  and tricky globals ...")
+message("*** doFuture - nested %dofuture%  and tricky globals ...")
 
 ## This works ...
-x <- foreach(j = 1) %dopar% { j }
+x <- foreach(j = 1) %dofuture% { j }
 str(x)
 rm(list = "x")
 
 ## ... but this would give a "globals-not-found" error in
 ## doFuture (<= 0.4.0) because 'j' was interpreted as global variable
-x <- foreach(i = 1, .packages = "foreach") %dopar% {
-  foreach(j = 1) %dopar% { j }
+x <- foreach(i = 1, .options.future = list(packages = "foreach")) %dofuture% {
+  foreach(j = 1) %dofuture% { j }
 }
 str(x)
 rm(list = "x")
 
-message("*** doFuture - nested %dopar%  and tricky globals ... DONE")
+message("*** doFuture - nested %dofuture%  and tricky globals ... DONE")
 
 
 for (strategy1 in strategies) {
@@ -52,8 +50,7 @@ for (strategy1 in strategies) {
     stopifnot(!exists("a", inherits = FALSE), !exists("b", inherits = FALSE))
 
     message("foreach() - level 1 ...")
-    x <- foreach(a = as, .export = c("bs", "strategy2"),
-                 .packages = "foreach") %dopar% {
+    x <- foreach(a = as, .options.future = list(globals = c("bs", "strategy2"), packages = "foreach")) %dofuture% {
       plan_list <- future::plan("next")
       stopifnot(inherits(plan_list, strategy2))
       plan_a <- future::plan("list")
@@ -61,7 +58,7 @@ for (strategy1 in strategies) {
       stopifnot(inherits(plan_a[[1]], strategy2))
 
       message("foreach() - level 2 ...")
-      y <- foreach(b = bs, .export = c("a", "plan_a")) %dopar% {
+      y <- foreach(b = bs, .options.future = list(globals = c("a", "plan_a"))) %dofuture% {
         plan_list <- future::plan("next")
         message(capture.output(print(plan_list)))
 
@@ -119,13 +116,13 @@ for (strategy1 in strategies) {
     ## from 'R CMD check --as-cran' when running on MS Windows. This looks
     ## like a bug in R, cf. https://bugs.r-project.org/show_bug.cgi?id=18133    
     message("- shut down nested workers")
-    dummy <- foreach(ii = 1:nbrOfWorkers()) %dopar% plan("sequential")
+    dummy <- foreach(ii = 1:nbrOfWorkers()) %dofuture% plan("sequential")
     plan("sequential")
     
     message(sprintf("- plan(list('%s', '%s')) ... DONE", strategy1, strategy2))
   }
 }
 
-message("*** doFuture - nested %dopar% ... DONE")
+message("*** doFuture - nested %dofuture% ... DONE")
 
 source("incl/end.R")

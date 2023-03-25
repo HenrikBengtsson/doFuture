@@ -1,0 +1,123 @@
+<%@meta language="R-vignette" content="--------------------------------
+%\VignetteIndexEntry{Foreach Iteration using Futures via %dofuture%}
+%\VignetteAuthor{Henrik Bengtsson}
+%\VignetteKeyword{R}
+%\VignetteKeyword{package}
+%\VignetteKeyword{vignette}
+%\VignetteKeyword{foreach}
+%\VignetteKeyword{future}
+%\VignetteKeyword{promise}
+%\VignetteKeyword{lazy evaluation}
+%\VignetteKeyword{synchronous}
+%\VignetteKeyword{asynchronous}
+%\VignetteKeyword{parallel}
+%\VignetteKeyword{cluster}
+%\VignetteEngine{R.rsp::rsp}
+%\VignetteTangle{FALSE}
+--------------------------------------------------------------------"%>
+# Foreach Iteration using Futures via %dofuture%
+
+In addition to providing a **[foreach]** adapter to be used with the
+`%dopar%` operator of **foreach**, the **[doFuture]** package provides
+an alternative `foreach()` operator called `%dofuture%` that ties more
+directly into the **[future]** framework.  For example,
+
+```r
+library(doFuture)
+plan(multisession)
+
+cutoff <- 0.10
+y <- foreach(x = mtcars, .export = c("cutoff")) %dofuture% {
+  mean(x, trim = cutoff)
+}
+names(y) <- colnames(mtcars)
+```
+
+
+There are several advantages of using `%dofuture%` instead of
+`%dopar%`.  When you use `%dofuture%`,
+
+ * there is no need to use `registerDoFuture()`
+ 
+ * there is no need to use `%dorng%` of the **doRNG** package
+   (but you need to specify `.options.future = list(seed = TRUE)`
+    whenever using random numbers in the `expr` expression)
+    
+ * global variables and packages are identified automatically by
+   the **future** framework
+   
+ * errors are relayed as-is (with `%dopar%` they captured and modified)
+
+
+This makes `foreach(...) %dofuture% { ... }` more in line with how
+sibling packages **future.apply** and **furrr** work.
+
+
+## Global variables and packages
+
+When using `%dofuture%`, the future framework identifies globals and
+packages automatically (via static code inspection).
+
+However, there are cases where it fails to find some of the globals or
+packages. When this happens, one can specify the `future()` arguments
+`globals` and `packages` via foreach argument `.options.future`.  For
+example, if you specify argument `.options.future = list(globals =
+structure(TRUE, ignore = "b", add = "a"))` then globals are
+automatically identified (`TRUE`), but it ignores `b` and always adds
+`a`.
+
+An alternative to specifying the `globals` and the `packages` options
+via `.options.future`, is to use the `%globals%` and `%packages%`
+operators.
+
+For further details and instructions, see `help("future", package =
+"future")`.
+
+
+## Random Number Generation (RNG)
+
+The `%dofuture%` uses the future ecosystem to generate proper random
+numbers in parallel in the same way they are generated in, for
+instance, **future.apply** and **furrr**. For this to work, you need
+to specify `.options.future = list(seed = TRUE)`.  For example,
+
+```r
+y <- foreach(i = 1:3, .options.future = list(seed = TRUE)) %dofuture% {
+  rnorm(1)
+}
+```
+
+An alternative to specifying the `seed` option via `.options.future`,
+is to use the `%seed%` operator.
+
+```r
+y <- foreach(i = 1:3) %dofuture% {
+  rnorm(1)
+} %seed% TRUE
+```
+
+For further details and instructions, see `help("future", package =
+"future")`.
+
+
+## Load balancing ("chunking")
+
+Whether load balancing ("chunking") should take place or not can be
+controlled by specifying either argument `.options.future =
+list(scheduling = <ratio>)` or `.options.future = list(chunk.size =
+<count>)` to `foreach()`.  For example,
+
+```r
+y <- foreach(x = 1:10, .options.future = list(scheduling = 2.0)) %dofuture% {
+  slow_fcn(x)
+}
+```
+
+For further details and instructions, see `help("future_lapply",
+package = "future.apply")`.
+
+
+
+[doFuture]: https://cran.r-project.org/package=doFuture
+[foreach]: https://cran.r-project.org/package=foreach
+[future]: https://cran.r-project.org/package=future

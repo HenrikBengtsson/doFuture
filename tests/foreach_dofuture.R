@@ -1,8 +1,9 @@
 source("incl/start.R")
 
 strategies <- future:::supportedStrategies()
+strategies <- setdiff(strategies, "multiprocess")
 
-message("*** times() ...")
+message("*** doFuture - reproducibility ...")
 
 res0 <- NULL
 
@@ -12,12 +13,8 @@ for (strategy in strategies) {
 
   mu <- 1.0
   sigma <- 2.0
-  ## NOTE: Using times() with %dopar% without proper parallel RNG will likely
-  ## produce unreliable results.  Here we don't produce random numbers so it
-  ## is ok, but it's a toy example because just like base::replicate(),
-  ## foreach::times() is commonly used for resampling purposes.
-  res <- times(3L) %dopar% {
-    dnorm(2L, mean = mu, sd = sigma)
+  res <- foreach(i = 1:3, .options.future = list(packages = "stats")) %dofuture% {
+    dnorm(i, mean = mu, sd = sigma)
   }
   print(res)
 
@@ -29,10 +26,10 @@ for (strategy in strategies) {
 
   # Shutdown current plan
   plan(sequential)
-  
+
   message(sprintf("- plan('%s') ... DONE", strategy))
 } ## for (strategy ...)
 
-message("*** times() ... DONE")
+message("*** doFuture - reproducibility ... DONE")
 
 source("incl/end.R")

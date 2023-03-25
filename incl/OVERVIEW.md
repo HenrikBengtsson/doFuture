@@ -1,6 +1,6 @@
 <%
 ## Reuse the future vignette
-md <- R.rsp::rstring(file="vignettes/doFuture.md.rsp", postprocess=FALSE)
+md <- R.rsp::rstring(file="vignettes/doFuture-1-overview.md.rsp", postprocess=FALSE)
 
 ## Drop the header, i.e. anything before the first "H2" header
 md <- unlist(strsplit(md, split="\n", fixed=TRUE))

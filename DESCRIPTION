@@ -1,10 +1,11 @@
 Package: doFuture
-Version: 0.12.2
-Title: A Universal Foreach Parallel Adapter using the Future API of the 'future' Package
+Version: 1.0.0
+Title: Use Foreach to Parallelize via the Future Framework
 Depends:
     foreach (>= 1.5.0),
-    future (>= 1.22.1)
+    future (>= 1.32.0)
 Imports:
+    future.apply,
     globals,
     iterators,
     parallel,
@@ -17,11 +18,10 @@ VignetteBuilder:
     R.rsp
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
-Description: Provides a '%dopar%' adapter such that any type of futures can
-    be used as backends for the 'foreach' framework.
+Description: The 'future' package provides a unifying parallelization framework for R that supports many parallel and distributed backends. The 'foreach' package provides a powerful API for iterating over an R expression in parallel. The 'doFuture' package brings the best of the two together. There are two alternative ways to use this package. The first is the traditional 'foreach' approach by registering the 'foreach' adapter 'registerDoFuture()' and so that 'y <- foreach(...) %dopar% { ... }' runs in parallelizes with the 'future' framework. The other alternative is to use 'y <- foreach(...) %dofuture% { ... }', which does not require using 'registerDoFuture()' and has many advantages over '%dopar%'.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://doFuture.futureverse.org, https://github.com/HenrikBengtsson/doFuture
 BugReports: https://github.com/HenrikBengtsson/doFuture/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)

@@ -4,7 +4,7 @@ future::plan("sequential")
 ## Restore original state
 options(oopts)
 future::plan(oplan)
-foreach::registerDoSEQ()
+with(oldDoPar, foreach::setDoPar(fun=fun, data=data, info=info))
 
 cons1 <- showConnections(all = FALSE)
 diff <- all.equal(cons1, cons0)
