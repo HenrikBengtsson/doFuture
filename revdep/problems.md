@@ -189,38 +189,6 @@ Run `revdep_details(, "momentuHMM")` for more info
         libs   6.6Mb
     ```
 
-# mslp
-
-<details>
-
-* Version: 1.0.1
-* GitHub: NA
-* Source code: https://github.com/cran/mslp
-* Date/Publication: 2022-11-20
-* Number of recursive dependencies: 88
-
-Run `revdep_details(, "mslp")` for more info
-
-</details>
-
-## In both
-
-*   checking re-building of vignette outputs ... ERROR
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘mslp.Rmd’ using rmarkdown
-    Error: processing vignette 'mslp.Rmd' failed with diagnostics:
-    there is no package called ‘BiocStyle’
-    --- failed re-building ‘mslp.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘mslp.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
-    ```
-
 # oncomsm
 
 <details>

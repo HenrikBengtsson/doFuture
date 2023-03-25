@@ -10,7 +10,7 @@
 |collate  |en_US.UTF-8                                               |
 |ctype    |en_US.UTF-8                                               |
 |tz       |America/Los_Angeles                                       |
-|date     |2023-03-23                                                |
+|date     |2023-03-24                                                |
 |pandoc   |3.0.1 @ /software/c4/cbi/software/pandoc-3.0.1/bin/pandoc |
 
 # Dependencies
@@ -48,7 +48,7 @@
 |LWFBrook90R       |0.5.2   |      |        |     |
 |mikropml          |1.5.0   |      |        |     |
 |[momentuHMM](problems.md#momentuhmm)|1.5.5   |      |        |1    |
-|[mslp](problems.md#mslp)|1.0.1   |1     |        |     |
+|mslp              |1.0.2   |      |        |     |
 |multilevelcoda    |1.0.0   |      |        |     |
 |[oncomsm](problems.md#oncomsm)|0.1.3   |      |        |3    |
 |progressr         |0.13.0  |      |        |     |
