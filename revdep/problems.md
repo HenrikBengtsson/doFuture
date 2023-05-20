@@ -6,7 +6,7 @@
 * GitHub: https://github.com/lance-waller-lab/envi
 * Source code: https://github.com/cran/envi
 * Date/Publication: 2023-02-02 00:40:02 UTC
-* Number of recursive dependencies: 153
+* Number of recursive dependencies: 121
 
 Run `revdep_details(, "envi")` for more info
 
@@ -21,15 +21,20 @@ Run `revdep_details(, "envi")` for more info
     See ‘/c4/home/henrik/repositories/doFuture/revdep/checks/envi/new/envi.Rcheck/00install.out’ for details.
     ```
 
+*   checking package dependencies ... NOTE
+    ```
+    Package suggested but not available for checking: ‘RStoolbox’
+    ```
+
 # hwep
 
 <details>
 
-* Version: 2.0.1
+* Version: 2.0.2
 * GitHub: https://github.com/dcgerard/hwep
 * Source code: https://github.com/cran/hwep
-* Date/Publication: 2023-03-15 16:40:05 UTC
-* Number of recursive dependencies: 110
+* Date/Publication: 2023-05-16 17:40:02 UTC
+* Number of recursive dependencies: 112
 
 Run `revdep_details(, "hwep")` for more info
 
@@ -39,9 +44,9 @@ Run `revdep_details(, "hwep")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 69.0Mb
+      installed size is 70.9Mb
       sub-directories of 1Mb or more:
-        libs  68.5Mb
+        libs  70.4Mb
     ```
 
 *   checking for GNU extensions in Makefiles ... NOTE
@@ -53,11 +58,11 @@ Run `revdep_details(, "hwep")` for more info
 
 <details>
 
-* Version: 1.8.1
+* Version: 1.10.1
 * GitHub: https://github.com/calabrialab/ISAnalytics
 * Source code: https://github.com/cran/ISAnalytics
-* Date/Publication: 2022-12-01
-* Number of recursive dependencies: 171
+* Date/Publication: 2023-05-09
+* Number of recursive dependencies: 172
 
 Run `revdep_details(, "ISAnalytics")` for more info
 
@@ -65,103 +70,33 @@ Run `revdep_details(, "ISAnalytics")` for more info
 
 ## In both
 
-*   checking examples ... ERROR
-    ```
-    Running examples in ‘ISAnalytics-Ex.R’ failed
-    The error most likely occurred in:
-    
-    > ### Name: import_Vispa2_stats
-    > ### Title: Import Vispa2 stats given the aligned association file.
-    > ### Aliases: import_Vispa2_stats
-    > 
-    > ### ** Examples
-    > 
-    > fs_path <- generate_default_folder_structure(type = "correct")
-    ...
-      2. │ ├─ISAnalytics:::.manage_association_file(...)
-      3. │ │ └─ISAnalytics:::.check_file_system_alignment(...)
-      4. │ │   └─proj_fold_col %in% colnames(df)
-      5. │ └─dplyr::if_else(...)
-      6. │   └─dplyr:::vec_case_when(...)
-      7. │     └─vctrs::list_check_all_vectors(values, arg = values_arg, call = call)
-      8. └─vctrs:::stop_scalar_type(`<fn>`(NULL), "false", `<env>`)
-      9.   └─vctrs:::stop_vctrs(...)
-     10.     └─rlang::abort(message, class = c(class, "vctrs_error"), ..., call = call)
-    Execution halted
-    ```
-
-*   checking tests ...
-    ```
-      Running ‘testthat.R’
-     ERROR
-    Running the tests in ‘tests/testthat.R’ failed.
-    Complete output:
-      > library(testthat)
-      > library(ISAnalytics)
-      Loading required package: magrittr
-      
-      Attaching package: 'magrittr'
-      
-    ...
-       13. │                       ├─ISAnalytics:::.manage_association_file(...)
-       14. │                       │ └─ISAnalytics:::.check_file_system_alignment(...)
-       15. │                       │   └─proj_fold_col %in% colnames(df)
-       16. │                       └─dplyr::if_else(...)
-       17. │                         └─dplyr:::vec_case_when(...)
-       18. │                           └─vctrs::list_check_all_vectors(values, arg = values_arg, call = call)
-       19. └─vctrs:::stop_scalar_type(`<fn>`(NULL), "false", `<env>`)
-       20.   └─vctrs:::stop_vctrs(...)
-       21.     └─rlang::abort(message, class = c(class, "vctrs_error"), ..., call = call)
-      Execution halted
-    ```
-
-*   checking re-building of vignette outputs ... ERROR
-    ```
-    Error(s) in re-building vignettes:
-      ...
-    --- re-building ‘ISAnalytics.Rmd’ using rmarkdown
-    --- finished re-building ‘ISAnalytics.Rmd’
-    
-    --- re-building ‘sharing_analyses.Rmd’ using rmarkdown
-    --- finished re-building ‘sharing_analyses.Rmd’
-    
-    --- re-building ‘workflow_start.Rmd’ using rmarkdown
-    Quitting from lines 466-470 (workflow_start.Rmd) 
-    Error: processing vignette 'workflow_start.Rmd' failed with diagnostics:
-    `false` must be a vector, not `NULL`.
-    --- failed re-building ‘workflow_start.Rmd’
-    
-    SUMMARY: processing the following file failed:
-      ‘workflow_start.Rmd’
-    
-    Error: Vignette re-building failed.
-    Execution halted
-    ```
-
 *   checking installed package size ... NOTE
     ```
-      installed size is  7.9Mb
+      installed size is  7.1Mb
       sub-directories of 1Mb or more:
         data   1.4Mb
-        doc    4.4Mb
+        doc    3.4Mb
     ```
 
-*   checking R code for possible problems ... NOTE
+# ldsr
+
+<details>
+
+* Version: 0.0.2
+* GitHub: https://github.com/ntthung/ldsr
+* Source code: https://github.com/cran/ldsr
+* Date/Publication: 2020-05-04 14:40:09 UTC
+* Number of recursive dependencies: 79
+
+Run `revdep_details(, "ldsr")` for more info
+
+</details>
+
+## In both
+
+*   checking C++ specification ... NOTE
     ```
-    .sh_row_permut: no visible global function definition for ‘.’
-    .sharing_multdf_mult_key: no visible binding for global variable ‘.’
-    .sharing_multdf_single_key: no visible binding for global variable ‘.’
-    .sharing_singledf_mult_key: no visible binding for global variable ‘.’
-    .sharing_singledf_single_key: no visible binding for global variable
-      ‘.’
-    cumulative_is: no visible binding for global variable ‘is’
-    gene_frequency_fisher: no visible binding for global variable ‘.’
-    Undefined global functions or variables:
-      . is
-    Consider adding
-      importFrom("methods", "is")
-    to your NAMESPACE file (and ensure that your DESCRIPTION Imports field
-    contains 'methods').
+      Specified C++11: please drop specification unless essential
     ```
 
 # momentuHMM
@@ -172,7 +107,7 @@ Run `revdep_details(, "ISAnalytics")` for more info
 * GitHub: https://github.com/bmcclintock/momentuHMM
 * Source code: https://github.com/cran/momentuHMM
 * Date/Publication: 2022-10-18 20:52:35 UTC
-* Number of recursive dependencies: 142
+* Number of recursive dependencies: 145
 
 Run `revdep_details(, "momentuHMM")` for more info
 
@@ -182,22 +117,22 @@ Run `revdep_details(, "momentuHMM")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 10.1Mb
+      installed size is 10.2Mb
       sub-directories of 1Mb or more:
         R      1.2Mb
         doc    1.7Mb
-        libs   6.6Mb
+        libs   6.7Mb
     ```
 
 # oncomsm
 
 <details>
 
-* Version: 0.1.3
+* Version: 0.1.4
 * GitHub: https://github.com/Boehringer-Ingelheim/oncomsm
 * Source code: https://github.com/cran/oncomsm
-* Date/Publication: 2023-03-11 10:20:02 UTC
-* Number of recursive dependencies: 123
+* Date/Publication: 2023-04-17 07:00:02 UTC
+* Number of recursive dependencies: 124
 
 Run `revdep_details(, "oncomsm")` for more info
 
@@ -207,16 +142,10 @@ Run `revdep_details(, "oncomsm")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 55.7Mb
+      installed size is 56.6Mb
       sub-directories of 1Mb or more:
         doc    1.0Mb
-        libs  53.6Mb
-    ```
-
-*   checking dependencies in R code ... NOTE
-    ```
-    Namespace in Imports field not imported from: ‘rstantools’
-      All declared Imports should be used.
+        libs  54.5Mb
     ```
 
 *   checking for GNU extensions in Makefiles ... NOTE
@@ -228,11 +157,11 @@ Run `revdep_details(, "oncomsm")` for more info
 
 <details>
 
-* Version: 2.4.0
+* Version: 2.5.0
 * GitHub: https://github.com/stan-dev/projpred
 * Source code: https://github.com/cran/projpred
-* Date/Publication: 2023-02-12 13:30:02 UTC
-* Number of recursive dependencies: 149
+* Date/Publication: 2023-04-05 18:50:02 UTC
+* Number of recursive dependencies: 151
 
 Run `revdep_details(, "projpred")` for more info
 
@@ -245,6 +174,29 @@ Run `revdep_details(, "projpred")` for more info
     Package suggested but not available for checking: ‘cmdstanr’
     ```
 
+# rpm
+
+<details>
+
+* Version: 0.7-1
+* GitHub: https://github.com/handcock/rpm
+* Source code: https://github.com/cran/rpm
+* Date/Publication: 2023-04-21 23:30:02 UTC
+* Number of recursive dependencies: 66
+
+Run `revdep_details(, "rpm")` for more info
+
+</details>
+
+## In both
+
+*   checking installed package size ... NOTE
+    ```
+      installed size is 11.6Mb
+      sub-directories of 1Mb or more:
+        libs  11.1Mb
+    ```
+
 # sparrpowR
 
 <details>
@@ -253,7 +205,7 @@ Run `revdep_details(, "projpred")` for more info
 * GitHub: https://github.com/machiela-lab/sparrpowR
 * Source code: https://github.com/cran/sparrpowR
 * Date/Publication: 2023-02-02 01:00:02 UTC
-* Number of recursive dependencies: 133
+* Number of recursive dependencies: 134
 
 Run `revdep_details(, "sparrpowR")` for more info
 
@@ -276,13 +228,18 @@ Run `revdep_details(, "sparrpowR")` for more info
 * GitHub: https://github.com/egarpor/sphunif
 * Source code: https://github.com/cran/sphunif
 * Date/Publication: 2021-09-02 07:40:02 UTC
-* Number of recursive dependencies: 74
+* Number of recursive dependencies: 76
 
 Run `revdep_details(, "sphunif")` for more info
 
 </details>
 
 ## In both
+
+*   checking C++ specification ... NOTE
+    ```
+      Specified C++11: please drop specification unless essential
+    ```
 
 *   checking installed package size ... NOTE
     ```
@@ -300,17 +257,22 @@ Run `revdep_details(, "sphunif")` for more info
 
 <details>
 
-* Version: 1.14.0
+* Version: 1.16.0
 * GitHub: https://github.com/vivekkohar/sRACIPE
 * Source code: https://github.com/cran/sRACIPE
-* Date/Publication: 2022-11-01
-* Number of recursive dependencies: 99
+* Date/Publication: 2023-04-25
+* Number of recursive dependencies: 103
 
 Run `revdep_details(, "sRACIPE")` for more info
 
 </details>
 
 ## In both
+
+*   checking C++ specification ... NOTE
+    ```
+      Specified C++11: please drop specification unless essential
+    ```
 
 *   checking R code for possible problems ... NOTE
     ```
@@ -334,11 +296,11 @@ Run `revdep_details(, "sRACIPE")` for more info
 
 <details>
 
-* Version: 1.0.2
+* Version: 1.0.4
 * GitHub: https://github.com/bcgov/ssdtools
 * Source code: https://github.com/cran/ssdtools
-* Date/Publication: 2022-05-14 23:50:02 UTC
-* Number of recursive dependencies: 147
+* Date/Publication: 2023-05-17 04:40:02 UTC
+* Number of recursive dependencies: 119
 
 Run `revdep_details(, "ssdtools")` for more info
 
@@ -348,10 +310,10 @@ Run `revdep_details(, "ssdtools")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 23.0Mb
+      installed size is 22.9Mb
       sub-directories of 1Mb or more:
         doc    1.2Mb
-        libs  20.6Mb
+        libs  20.5Mb
     ```
 
 # updog
@@ -362,13 +324,18 @@ Run `revdep_details(, "ssdtools")` for more info
 * GitHub: https://github.com/dcgerard/updog
 * Source code: https://github.com/cran/updog
 * Date/Publication: 2022-10-18 08:00:02 UTC
-* Number of recursive dependencies: 146
+* Number of recursive dependencies: 149
 
 Run `revdep_details(, "updog")` for more info
 
 </details>
 
 ## In both
+
+*   checking C++ specification ... NOTE
+    ```
+      Specified C++11: please drop specification unless essential
+    ```
 
 *   checking installed package size ... NOTE
     ```
@@ -385,7 +352,7 @@ Run `revdep_details(, "updog")` for more info
 * GitHub: NA
 * Source code: https://github.com/cran/vmeasur
 * Date/Publication: 2021-11-11 19:00:02 UTC
-* Number of recursive dependencies: 117
+* Number of recursive dependencies: 118
 
 Run `revdep_details(, "vmeasur")` for more info
 
@@ -398,5 +365,46 @@ Run `revdep_details(, "vmeasur")` for more info
     Found the following significant warnings:
       Warning: no DISPLAY variable so Tk is not available
     See ‘/c4/home/henrik/repositories/doFuture/revdep/checks/vmeasur/new/vmeasur.Rcheck/00install.out’ for details.
+    ```
+
+# WeightedCluster
+
+<details>
+
+* Version: 1.6-2
+* GitHub: NA
+* Source code: https://github.com/cran/WeightedCluster
+* Date/Publication: 2023-05-17 05:40:02 UTC
+* Number of recursive dependencies: 42
+
+Run `revdep_details(, "WeightedCluster")` for more info
+
+</details>
+
+## In both
+
+*   checking re-building of vignette outputs ... WARNING
+    ```
+    Error(s) in re-building vignettes:
+    --- re-building ‘WeightedCluster.Rnw’ using knitr
+    --- finished re-building ‘WeightedCluster.Rnw’
+    
+    --- re-building ‘WeightedClusterFR.Rnw’ using knitr
+    --- finished re-building ‘WeightedClusterFR.Rnw’
+    
+    --- re-building ‘WeightedClusterPreview.Rnw’ using knitr
+    Error: processing vignette 'WeightedClusterPreview.Rnw' failed with diagnostics:
+    Running 'texi2dvi' on 'WeightedClusterPreview.tex' failed.
+    ...
+    l.85 \usepackage
+                    {tikz}^^M
+    !  ==> Fatal error occurred, no output PDF file produced!
+    --- failed re-building ‘WeightedClusterPreview.Rnw’
+    
+    SUMMARY: processing the following file failed:
+      ‘WeightedClusterPreview.Rnw’
+    
+    Error: Vignette re-building failed.
+    Execution halted
     ```
 
