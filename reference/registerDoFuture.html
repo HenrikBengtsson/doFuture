@@ -31,7 +31,7 @@ Neither the developer nor the end user has to change any code."><!-- mathjax -->
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0-9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0-9003</span>
       </span>
     </div>
 
@@ -317,6 +317,28 @@ that calling your function will break their setup.
 context where multiple packages and functions are involved and those might
 also rely on the foreach framework, so it is important to avoid stepping on
 others' toes.</em></p>
+    </div>
+    <div id="reporting-on-progress">
+    <h2>Reporting on progress</h2>
+    
+
+<p>How to report on progress is a frequently asked question, especially
+in long-running tasks and parallel processing.  The <strong>foreach</strong>
+framework does <em>not</em> have a built-in mechanism for progress
+reporting(*).</p>
+<p>When using <strong>doFuture</strong>, and the Futureverse in general, for
+processing, the <strong>progressr</strong> package can be used to signal progress
+updates in a near-live fashion.  There is special argument related to
+<code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> or <strong>doFuture</strong> to achieve this. Instead, one calls a
+a, so called, "progressor" function within each iteration.  See
+the <a href="https://cran.r-project.org/package=progressr" class="external-link"><strong>progressr</strong></a>
+package and its <code>vignette(package = "progressr")</code> for examples.</p>
+<p>(*) The legacy <strong>doSNOW</strong> package uses a special <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> argument
+<code>.options.doSNOW$progress</code> that can be used to make a progress update
+each time results from a parallel workers is returned. This approach
+is limited by how chunking works, requires the developer to set that
+argument, and the code becomes incompatible with foreach adaptors
+registered by other <strong>doNnn</strong> packages.</p>
     </div>
 
     <div id="ref-examples">
