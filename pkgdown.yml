@@ -1,11 +1,11 @@
-pandoc: 3.1.1
+pandoc: 3.1.9
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   doFuture-1-overview: doFuture-1-overview.html
   doFuture-2-dopar: doFuture-2-dopar.html
   doFuture-3-dofuture: doFuture-3-dofuture.html
-last_built: 2023-07-31T13:12Z
+last_built: 2023-12-12T01:54Z
 urls:
   reference: https://doFuture.futureverse.org/reference
   article: https://doFuture.futureverse.org/articles

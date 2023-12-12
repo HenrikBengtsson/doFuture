@@ -25,7 +25,7 @@ such that foreach() parallelizes via any future backend."><!-- mathjax --><scrip
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">doFuture</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0-9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0-9002</span>
       </span>
     </div>
 
@@ -155,9 +155,27 @@ such that <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="ex
     <h2>Usage</h2>
     
 
-<p>There are two alternative ways to use this package:</p><ol><li><p><code>y &lt;- foreach(...) %dopar% { ... }</code> with <code><a href="registerDoFuture.html">registerDoFuture()</a></code></p></li>
-<li><p><code>y &lt;- foreach(...) %dofuture% { ... }</code></p></li>
-</ol><p>The <em>first alternative</em> is based on the traditional <strong>foreach</strong>
+<p>There are two alternative ways to use this package:</p><ol><li><p><code>y &lt;- foreach(...) %dofuture% { ... }</code></p></li>
+<li><p><code>y &lt;- foreach(...) %dopar% { ... }</code> with <code><a href="registerDoFuture.html">registerDoFuture()</a></code></p></li>
+</ol><p>The <em>first alternative</em> (recommended), which uses <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code>, avoids
+having to use <code><a href="registerDoFuture.html">registerDoFuture()</a></code>.  The <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> operator provides
+a more consistent behavior than <code>%dopar%</code>, e.g. there is a unique set of
+foreach arguments instead of one per possible adapter.  Identification
+of globals, random number generation (RNG), and error handling is
+handled by the future ecosystem, just like with other map-reduce
+solutions such as <strong><a href="https://cran.r-project.org/package=future.apply" class="external-link">future.apply</a></strong> and <strong><a href="https://cran.r-project.org/package=furrr" class="external-link">furrr</a></strong>.
+An example is:</p>
+<p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doFuture.futureverse.org">doFuture</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
+<span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
+<span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre><p></p></div>
+<p>This alternative is the recommended way to let <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> parallelize
+via the future framework if you start out from scratch.</p>
+<p>See <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> for more details and examples on this approach.</p>
+<p>The <em>second alternative</em> is based on the traditional <strong>foreach</strong>
 approach where one registers a foreach adapter to be used by <code>%dopar%</code>.
 A popular adapter is <code><a href="https://rdrr.io/pkg/doParallel/man/registerDoParallel.html" class="external-link">doParallel::registerDoParallel()</a></code>, which
 parallelizes on the local machine using the <strong>parallel</strong> package.
@@ -183,24 +201,6 @@ also be used to configure the Bioconductor <strong><a href="https://bioconductor
 and any package that rely on it, to parallelize via the future
 framework.</p>
 <p>See <code><a href="registerDoFuture.html">registerDoFuture()</a></code> for more details and examples on this approach.</p>
-<p>The <em>second alternative</em>, which uses <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code>, avoids having to use
-<code><a href="registerDoFuture.html">registerDoFuture()</a></code>.  The <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> operator provides a more
-consistent behavior than <code>%dopar%</code>, e.g. there is a unique set of
-foreach arguments instead of one per possible adapter.  Identification
-of globals, random number generation (RNG), and error handling is
-handled by the future ecosystem, just like with other map-reduce
-solutions such as <strong><a href="https://cran.r-project.org/package=future.apply" class="external-link">future.apply</a></strong> and <strong><a href="https://cran.r-project.org/package=furrr" class="external-link">furrr</a></strong>.
-An example is:</p>
-<p></p><div class="sourceCode r"><pre><code><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://doFuture.futureverse.org">doFuture</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://future.futureverse.org/reference/plan.html" class="external-link">plan</a></span><span class="op">(</span><span class="va">multisession</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/grapes-dofuture-grapes.html">%dofuture%</a></span> <span class="op">{</span></span>
-<span>  <span class="va">z</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
-<span>  <span class="fu">slow_sqrt</span><span class="op">(</span><span class="va">z</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre><p></p></div>
-<p>This alternative is the recommended way to let <code><a href="https://rdrr.io/pkg/foreach/man/foreach.html" class="external-link">foreach()</a></code> parallelize
-via the future framework if you start out from scratch.</p>
-<p>See <code><a href="grapes-dofuture-grapes.html">%dofuture%</a></code> for more details and examples on this approach.</p>
     </div>
 
   </div>
