@@ -22,14 +22,14 @@ jobs:
           - {os: macOS-latest,   r: 'devel'    }
           - {os: macOS-latest,   r: 'release'  }
           - {os: macOS-latest,   r: 'oldrel'   }
-#          - {os: ubuntu-20.04,   r: 'devel'    }
-          - {os: ubuntu-20.04,   r: 'release'  }
-          - {os: ubuntu-20.04,   r: 'oldrel'   }
-          - {os: ubuntu-20.04,   r: 'oldrel-1' }
-          - {os: ubuntu-20.04,   r: 'oldrel-2' }
-          - {os: ubuntu-20.04,   r: '3.4'      }
-          - {os: ubuntu-20.04,   r: 'release'  , plan: multicore,    label: 'w/ multicore'    }
-          - {os: ubuntu-20.04,   r: 'release'  , plan: multisession, label: 'w/ multisession' }
+#          - {os: ubuntu-latest,  r: 'devel'    }
+          - {os: ubuntu-latest,  r: 'release'  }
+          - {os: ubuntu-latest,  r: 'oldrel'   }
+          - {os: ubuntu-latest,  r: 'oldrel-1' }
+          - {os: ubuntu-latest,  r: 'oldrel-2' }
+          - {os: ubuntu-latest,  r: '3.6'      }
+          - {os: ubuntu-latest,  r: 'release'  , plan: multicore,    label: 'w/ multicore'    }
+          - {os: ubuntu-latest,  r: 'release'  , plan: multisession, label: 'w/ multisession' }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -51,7 +51,7 @@ jobs:
       R_FUTURE_GLOBALS_ONREFERENCE: "warning"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 

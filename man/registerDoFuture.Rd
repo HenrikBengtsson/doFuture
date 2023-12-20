@@ -175,6 +175,29 @@ also rely on the foreach framework, so it is important to avoid stepping on
 others' toes.}
 }
 
+\section{Reporting on progress}{
+
+How to report on progress is a frequently asked question, especially
+in long-running tasks and parallel processing.  The \strong{foreach}
+framework does \emph{not} have a built-in mechanism for progress
+reporting(*).
+
+When using \strong{doFuture}, and the Futureverse in general, for
+processing, the \strong{progressr} package can be used to signal progress
+updates in a near-live fashion.  There is special argument related to
+\code{foreach()} or \strong{doFuture} to achieve this. Instead, one calls a
+a, so called, "progressor" function within each iteration.  See
+the \href{https://cran.r-project.org/package=progressr}{\strong{progressr}}
+package and its \code{vignette(package = "progressr")} for examples.
+
+(*) The legacy \strong{doSNOW} package uses a special \code{foreach()} argument
+\code{.options.doSNOW$progress} that can be used to make a progress update
+each time results from a parallel workers is returned. This approach
+is limited by how chunking works, requires the developer to set that
+argument, and the code becomes incompatible with foreach adaptors
+registered by other \strong{doNnn} packages.
+}
+
 \examples{
 \donttest{
 library(iterators)  # iter()

@@ -157,6 +157,27 @@
 #' also rely on the foreach framework, so it is important to avoid stepping on 
 #' others' toes._
 #'
+#' @section Reporting on progress:
+#' How to report on progress is a frequently asked question, especially
+#' in long-running tasks and parallel processing.  The **foreach**
+#' framework does _not_ have a built-in mechanism for progress
+#' reporting(*).
+#'
+#' When using **doFuture**, and the Futureverse in general, for
+#' processing, the **progressr** package can be used to signal progress
+#' updates in a near-live fashion.  There is special argument related to
+#' `foreach()` or **doFuture** to achieve this. Instead, one calls a
+#' a, so called, "progressor" function within each iteration.  See
+#' the [**progressr**](https://cran.r-project.org/package=progressr)
+#' package and its `vignette(package = "progressr")` for examples.
+#'
+#' (*) The legacy **doSNOW** package uses a special `foreach()` argument
+#' `.options.doSNOW$progress` that can be used to make a progress update
+#' each time results from a parallel workers is returned. This approach
+#' is limited by how chunking works, requires the developer to set that
+#' argument, and the code becomes incompatible with foreach adaptors
+#' registered by other **doNnn** packages.
+#'
 #' @return 
 #' `registerDoFuture()` returns, invisibly, the previously registered 
 #' foreach `%dopar%` backend.

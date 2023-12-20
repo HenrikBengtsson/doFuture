@@ -18,11 +18,15 @@ mdebug <- doFuture:::mdebug
 mprint <- doFuture:::mprint
 mstr <- doFuture:::mstr
 
-## To please R CMD check when using require().
-future.batchtools <- "future.batchtools"  #nolint
-caret <- "caret"                          #nolint
-plyr <- "plyr"                            #nolint
-BiocParallel <- "BiocParallel"            #nolint
-NMF <- "NMF"                              #nolint
+supportedStrategies <- function(cores = 1L, excl = c("cluster"), ...) {
+  strategies <- future:::supportedStrategies(...)
+  strategies <- setdiff(strategies, excl)
+  if (cores > 1) {
+    strategies <- setdiff(strategies, c("sequential", "uniprocess"))
+  }
+  strategies
+}
+
+availCores <- min(2L, future::availableCores())
 
 print(sessionInfo())

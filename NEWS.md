@@ -1,4 +1,12 @@
-# Version 1.0.0 [2023-03-23]
+# Version 1.0.1 (2023-12-19)
+
+## Bug Fixes
+
+ * Using `.options.future = list(conditions = NULL)` would be ignored
+   as if it would never had been specified.
+
+
+# Version 1.0.0 (2023-03-23)
 
 ## New Features
 

@@ -187,8 +187,11 @@ function(obj, expr, envir, data) {   #nolint
   stdout <- options[["stdout"]]
   if (is.null(stdout)) stdout <- eval(formals(Future)$stdout)
 
-  conditions <- options[["conditions"]]
-  if (is.null(conditions)) conditions <- eval(formals(Future)$conditions)
+  if ("conditions" %in% names(options)) {
+    conditions <- options[["conditions"]]
+  } else {
+    conditions <- eval(formals(future)$conditions)
+  }
 
   ## Drop captured standard output and conditions as soon as they have
   ## been relayed?
