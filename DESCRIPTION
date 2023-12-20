@@ -1,5 +1,5 @@
 Package: doFuture
-Version: 1.0.0-9005
+Version: 1.0.1
 Title: Use Foreach to Parallelize via the Future Framework
 Depends:
     foreach (>= 1.5.0),
@@ -16,9 +16,11 @@ Suggests:
     R.rsp
 VignetteBuilder:
     R.rsp
-Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
-                                          email = "henrikb@braju.com"))
-Description: The 'future' package provides a unifying parallelization framework for R that supports many parallel and distributed backends. The 'foreach' package provides a powerful API for iterating over an R expression in parallel. The 'doFuture' package brings the best of the two together. There are two alternative ways to use this package. The first is the traditional 'foreach' approach by registering the 'foreach' adapter 'registerDoFuture()' and so that 'y <- foreach(...) %dopar% { ... }' runs in parallelizes with the 'future' framework. The other alternative is to use 'y <- foreach(...) %dofuture% { ... }', which does not require using 'registerDoFuture()' and has many advantages over '%dopar%'.
+Authors@R: c(person("Henrik", "Bengtsson",
+                    role = c("aut", "cre", "cph"),
+                    email = "henrikb@braju.com",
+                    comment = c(ORCID = "0000-0002-7579-5165")))
+Description: The 'future' package provides a unifying parallelization framework for R that supports many parallel and distributed backends. The 'foreach' package provides a powerful API for iterating over an R expression in parallel. The 'doFuture' package brings the best of the two together. There are two alternative ways to use this package. The recommended approach is to use 'y <- foreach(...) %dofuture% { ... }', which does not require using 'registerDoFuture()' and has many advantages over '%dopar%'. The alternative is the traditional 'foreach' approach by registering the 'foreach' adapter 'registerDoFuture()' and so that 'y <- foreach(...) %dopar% { ... }' runs in parallelizes with the 'future' framework.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 URL: https://doFuture.futureverse.org, https://github.com/HenrikBengtsson/doFuture
